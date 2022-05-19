@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="10dp"
+    android:layout_marginTop="10dp"
+    android:orientation="vertical"
+    >
+
+    <LinearLayout
+        android:id="@+id/lo1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="visible">
+
+        <ImageView
+            android:layout_width="52dp"
+            android:layout_height="80dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_baseline_warning_24"></ImageView>
+
+        <TextView
+            android:layout_width="225dp"
+            android:layout_height="80dp"
+            android:textSize="18sp"
+            android:text="Một thiết bị lạ vừa đăng nhập gần Quảng Nam - Đà Nẵng, Việt Nam, VN 3 tuần"
+            android:lines="4"
+            android:ellipsize="end"
+            android:paddingBottom="3sp"
+            android:gravity="center_vertical"
+            android:paddingLeft="5sp">
+        </TextView>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:gravity="right|center_vertical"
+            android:src="@drawable/icon_map"></ImageView>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/lo2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone">
+        <ImageView
+            android:layout_width="52dp"
+            android:layout_height="80dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_baseline_person_24"></ImageView>
+
+        <TextView
+            android:layout_width="225dp"
+            android:layout_height="80dp"
+            android:textSize="18sp"
+            android:text="Người liên hệ Dũ đang sử dụng instagram dưới tên Valentines. 4 tuần"
+            android:lines="4"
+            android:ellipsize="end"
+            android:paddingBottom="3sp"
+            android:gravity="center_vertical"
+            android:paddingLeft="5sp">
+        </TextView>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="Theo dõi"
+            android:textSize="14dp"
+            android:layout_gravity="center"></Button>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/lo3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone">
+        <ImageView
+            android:layout_width="52dp"
+            android:layout_height="80dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_baseline_person_24"></ImageView>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:textSize="18sp"
+            android:text="Valentines và duongtruongvu21 đã bắt đầu theo dõi bạn. 4 tuần"
+            android:lines="4"
+            android:ellipsize="end"
+            android:paddingBottom="3sp"
+            android:gravity="center_vertical"
+            android:paddingLeft="5sp">
+        </TextView>
+    </LinearLayout>
+</LinearLayout>
