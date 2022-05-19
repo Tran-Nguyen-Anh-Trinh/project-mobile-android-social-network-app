@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 
-public class LauchScreenActivity extends AppCompatActivity {
+public class LaunchScreenActivity extends AppCompatActivity {
 
     private final int SPLASH_DISPLAY_LENGTH = 1500;
     @Override
@@ -18,9 +18,9 @@ public class LauchScreenActivity extends AppCompatActivity {
             @Override
             public void run() {
                 /* Create an Intent that will start the Menu-Activity. */
-                Intent mainIntent = new Intent(LauchScreenActivity.this, MainActivity.class);
-                LauchScreenActivity.this.startActivity(mainIntent);
-                LauchScreenActivity.this.finish();
+                Intent mainIntent = new Intent(LaunchScreenActivity.this, MainActivity.class);
+                LaunchScreenActivity.this.startActivity(mainIntent);
+                LaunchScreenActivity.this.finish();
             }
         }, SPLASH_DISPLAY_LENGTH);
     }

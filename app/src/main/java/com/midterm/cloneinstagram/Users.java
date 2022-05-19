@@ -1,4 +1,4 @@
-package com.example.tinstagram;
+package com.midterm.cloneinstagram;
 
 public class Users {
     String uid;
