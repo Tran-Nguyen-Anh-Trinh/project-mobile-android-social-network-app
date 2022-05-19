@@ -1,18 +1,17 @@
-package com.example.tinstagram;
+package com.midterm.cloneinstagram;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.tinstagram.Fragment.ProfileFragment;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -20,11 +19,14 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.midterm.cloneinstagram.Fragment.ProfileFragment;
 import com.squareup.picasso.Picasso;
+
 
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+
 
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 

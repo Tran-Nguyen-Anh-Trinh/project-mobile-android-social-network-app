@@ -1,13 +1,6 @@
-package com.example.tinstagram.Fragment;
+package com.midterm.cloneinstagram.Fragment;
 
-import android.app.DownloadManager;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -15,20 +8,25 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
-import com.example.tinstagram.R;
-import com.example.tinstagram.UserAdapter;
-import com.example.tinstagram.Users;
-import com.google.firebase.auth.FirebaseUser;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+
+
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.midterm.cloneinstagram.R;
+import com.midterm.cloneinstagram.UserAdapter;
+import com.midterm.cloneinstagram.Users;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 
 public class SearchFragment extends Fragment {

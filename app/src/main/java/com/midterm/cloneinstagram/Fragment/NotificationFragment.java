@@ -1,14 +1,14 @@
-package com.example.tinstagram.Fragment;
+package com.midterm.cloneinstagram.Fragment;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.tinstagram.R;
+import androidx.fragment.app.Fragment;
+
+import com.midterm.cloneinstagram.R;
+
 
 public class NotificationFragment extends Fragment {
 
