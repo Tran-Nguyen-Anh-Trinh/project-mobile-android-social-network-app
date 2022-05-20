@@ -34,31 +34,33 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull ActivityAdapter.ViewHolder holder, int position) {
         Log.d("DEBUG1", "" + list.get(position));
-//        holder.tv_name.setText("123");
 //        final Contact currContact = Contact.get(position);
-//        holder.itemView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                iClickItemContactListener.onClickItemContact(currContact);
-//            }
-//        });
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d("DEBUG1", "Đến trang " + list.get(position));
+            }
+        });
 
         if(list.get(position) % 3 == 0){
             holder.lo1.setVisibility(View.VISIBLE);
             holder.lo2.setVisibility(View.GONE);
             holder.lo3.setVisibility(View.GONE);
+//            holder.tv1.setText("123");
         }
 
         if(list.get(position) % 3 == 1){
             holder.lo1.setVisibility(View.GONE);
             holder.lo2.setVisibility(View.VISIBLE);
             holder.lo3.setVisibility(View.GONE);
+//            holder.tv2.setText("123");
         }
 
         if(list.get(position) % 3 == 2){
             holder.lo1.setVisibility(View.GONE);
             holder.lo2.setVisibility(View.GONE);
             holder.lo3.setVisibility(View.VISIBLE);
+//            holder.tv3.setText("123");
         }
     }
 
@@ -69,13 +71,17 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.ViewHo
 
     class ViewHolder extends RecyclerView.ViewHolder {
         LinearLayout lo1, lo2, lo3;
+        TextView tv1, tv2, tv3;
 
         public ViewHolder(View view) {
             super(view);
-
             lo1 = view.findViewById(R.id.lo1);
             lo2 = view.findViewById(R.id.lo2);
             lo3 = view.findViewById(R.id.lo3);
+
+            tv1 = view.findViewById(R.id.tv1);
+            tv2 = view.findViewById(R.id.tv2);
+            tv3 = view.findViewById(R.id.tv3);
         }
     }
 }
