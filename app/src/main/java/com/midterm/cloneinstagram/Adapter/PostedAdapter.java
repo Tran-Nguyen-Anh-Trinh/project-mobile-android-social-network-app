@@ -1,4 +1,4 @@
-package com.midterm.cloneinstagram;
+package com.midterm.cloneinstagram.Adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,6 +8,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.midterm.cloneinstagram.R;
 
 import java.util.List;
 
@@ -26,7 +28,7 @@ public class PostedAdapter  extends RecyclerView.Adapter<PostedAdapter.ViewHolde
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.custom_cell_posted, parent, false);
-        return new PostedAdapter.ViewHolder(view);
+        return new ViewHolder(view);
     }
 
     @Override
