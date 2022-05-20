@@ -7,9 +7,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -21,7 +23,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.midterm.cloneinstagram.PostedAdapter;
 import com.midterm.cloneinstagram.R;
+import com.midterm.cloneinstagram.SearchAdapter;
 import com.midterm.cloneinstagram.UserAdapter;
 import com.midterm.cloneinstagram.Users;
 
@@ -31,34 +35,41 @@ import java.util.List;
 
 public class SearchFragment extends Fragment {
 
-    RecyclerView recyclerView;
+    RecyclerView recyclerView, recycleViewSearch;
     UserAdapter userAdapter;
     List<Users> mUsers;
     EditText searchbar;
-    @Override
+    private SearchAdapter searchAdapter;
+    private List<String> list;
+
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_search, container, false);
         recyclerView = view.findViewById(R.id.recycle_view);
-
         recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(),3));
         searchbar = view.findViewById(R.id.search_bar);
         mUsers = new ArrayList<>();
         userAdapter = new UserAdapter(getContext(), mUsers);
         recyclerView.setAdapter(userAdapter);
         readUser();
+
+
+        recycleViewSearch = view.findViewById((R.id.recycle_view_search));
+        recycleViewSearch.setLayoutManager(new GridLayoutManager(getContext(), 3));
+        list = new ArrayList<String>();
+        searchAdapter = new SearchAdapter(getContext(), list);
+        recycleViewSearch.setAdapter(searchAdapter);
         searchbar.addTextChangedListener(new TextWatcher() {
+
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
             }
-
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 searchUser(charSequence.toString().toLowerCase());
             }
-
             @Override
             public void afterTextChanged(Editable editable) {
 
@@ -88,6 +99,7 @@ public class SearchFragment extends Fragment {
     void readUser(){
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("User");
         reference.addValueEventListener(new ValueEventListener() {
+
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (searchbar.getText().toString().equals("")){
