@@ -1,6 +1,7 @@
 package com.midterm.cloneinstagram.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.midterm.cloneinstagram.Model.Story;
 import com.midterm.cloneinstagram.R;
+import com.midterm.cloneinstagram.StoryActivity;
 
 import org.w3c.dom.Text;
 
@@ -41,7 +43,19 @@ public class StoryAdapter extends RecyclerView.Adapter<StoryAdapter.ViewHolder>{
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+//        Story story = mStory.get(position);
+//        userInfo(holder, story.getUserid(), position);
 
+
+        holder.itemView.setOnClickListener((view) -> {
+            if (holder.getAdapterPosition() == 0) {
+
+            }else {
+                Intent intent = new Intent(mContext, StoryActivity.class);
+                intent.putExtra("userid", "username");
+                mContext.startActivity(intent);
+            }
+        });
     }
 
     @Override
