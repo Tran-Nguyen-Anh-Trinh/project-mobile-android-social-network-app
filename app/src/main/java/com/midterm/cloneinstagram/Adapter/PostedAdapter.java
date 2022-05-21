@@ -4,12 +4,15 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.midterm.cloneinstagram.Model.Post;
 import com.midterm.cloneinstagram.R;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -17,9 +20,9 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class PostedAdapter  extends RecyclerView.Adapter<PostedAdapter.ViewHolder> {
     private Context mContext;
-    private List<String> listImage;
+    private List<Post> listImage;
 
-    public PostedAdapter(Context mContext, List<String> listImage) {
+    public PostedAdapter(Context mContext, List<Post> listImage) {
         this.mContext = mContext;
         this.listImage = listImage;
     }
@@ -33,26 +36,20 @@ public class PostedAdapter  extends RecyclerView.Adapter<PostedAdapter.ViewHolde
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-
+        Post post = listImage.get(position);
+        Picasso.get().load(post.getPostimage()).into(holder.image_post_personal);
     }
 
     @Override
     public int getItemCount() {
-        return 10;
+        return listImage.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
-
-        private TextView userName;
-        private  TextView fullName;
-        private TextView button;
-        private CircleImageView imageView;
+        private ImageView image_post_personal;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            userName = itemView.findViewById(R.id.username);
-            fullName = itemView.findViewById(R.id.fullname);
-            button = itemView.findViewById(R.id.btn_follow);
-            imageView = itemView.findViewById(R.id.image_profile);
+            image_post_personal = itemView.findViewById(R.id.image_post_personal);
 
         }
     }

@@ -14,20 +14,35 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.midterm.cloneinstagram.Adapter.PostAdapter;
 import com.midterm.cloneinstagram.Adapter.PostedAdapter;
+import com.midterm.cloneinstagram.Model.Post;
+import com.midterm.cloneinstagram.Model.Users;
 import com.midterm.cloneinstagram.R;
 import com.midterm.cloneinstagram.UpdateInformationActivity;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 
 public class ProfileFragment extends Fragment {
     private RecyclerView recyclerView;
     private TextView tvEditProfile;
     private PostedAdapter postedAdapter;
-    private List<String> list;
+    private List<Post> list;
+    private CircleImageView profile;
+    private TextView name;
+    private TextView tv_posts;
+    private TextView tv_followers;
+    private TextView tv_following;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -76,5 +91,40 @@ public class ProfileFragment extends Fragment {
         list = new ArrayList<>();
         postedAdapter = new PostedAdapter(getContext(), list);
         recyclerView.setAdapter(postedAdapter);
+
+        profile = view.findViewById(R.id.profile);
+        name = view.findViewById(R.id.tv_name);
+        name.setText(Users.getInstance().getName());
+        tv_posts = view.findViewById(R.id.tv_posts);
+        tv_followers = view.findViewById(R.id.tv_followers);
+        tv_following = view.findViewById(R.id.tv_following);
+        Picasso.get().load(Users.getInstance().getImageUri()).into(profile);
+        readPost();
+        tv_followers.setText(Users.getInstance().getFollower().size()+"");
+        tv_following.setText(Users.getInstance().getFollowing().size()+"");
+    }
+
+    private void readPost() {
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Post");
+
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                list.clear();
+                for(DataSnapshot snapshot: dataSnapshot.getChildren()) {
+                    Post post = snapshot.getValue(Post.class);
+                    if(post.getUsers().getUid().equals(Users.getInstance().getUid())){
+                        list.add(post);
+                    }
+                }
+                tv_posts.setText(list.size()+"");
+                postedAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 }

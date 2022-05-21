@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -36,6 +37,7 @@ public class HomeFragment extends Fragment {
     private RecyclerView recyclerView_story;
     private StoryAdapter storyAdapter;
     private List<Story> storyLists;
+    private TextView notify;
 
     private List<String> followingList;
 
@@ -63,7 +65,9 @@ public class HomeFragment extends Fragment {
         storyLists = new ArrayList<>();
         storyAdapter = new StoryAdapter(getContext(), storyLists);
         recyclerView_story.setAdapter(storyAdapter);
-        checkFollowing();
+//        checkFollowing();
+//        readPost();
+        notify = view.findViewById(R.id.notify);
         return view;
     }
 
@@ -93,7 +97,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void readPost() {
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Posts");
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Post");
 
         reference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -101,11 +105,12 @@ public class HomeFragment extends Fragment {
                 postLists.clear();
                 for(DataSnapshot snapshot: dataSnapshot.getChildren()) {
                     Post post = snapshot.getValue(Post.class);
-                    for (String id : followingList) {
-                        if (post.getPublisher().equals(id)) {
-                            postLists.add(post);
-                        }
-                    }
+                    postLists.add(post);
+                }
+                if (postLists.isEmpty()){
+                    notify.setVisibility(View.VISIBLE);
+                } else {
+                    notify.setVisibility(View.GONE);
                 }
 
                 postAdapter.notifyDataSetChanged();
@@ -120,5 +125,11 @@ public class HomeFragment extends Fragment {
 
     private void readStory() {
 
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        readPost();
     }
 }

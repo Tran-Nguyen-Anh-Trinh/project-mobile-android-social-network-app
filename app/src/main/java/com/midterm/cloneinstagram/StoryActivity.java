@@ -3,7 +3,6 @@ package com.midterm.cloneinstagram;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.media.Image;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
@@ -17,6 +16,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.midterm.cloneinstagram.Model.Story;
+import com.midterm.cloneinstagram.Model.Users;
 
 import java.util.ArrayList;
 import java.util.List;

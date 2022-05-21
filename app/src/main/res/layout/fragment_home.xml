@@ -22,15 +22,15 @@
                 >
 
                 <TextView
-                    android:layout_marginTop="20dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginTop="20dp"
                     android:fontFamily="cursive"
                     android:gravity="center"
-                    android:text="Naoneteam"
+                    android:text="NaoneTeam"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/_25sdp"
-                    android:layout_centerVertical="true"/>
+                    android:textSize="@dimen/_25sdp" />
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -54,10 +54,10 @@
             android:orientation="vertical">
 
             <androidx.recyclerview.widget.RecyclerView
-                android:layout_marginTop="20dp"
                 android:id="@+id/recycler_view_story"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp">
 
             </androidx.recyclerview.widget.RecyclerView>
 
@@ -65,6 +65,17 @@
                 android:id="@+id/recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"></androidx.recyclerview.widget.RecyclerView>
+
+            <TextView
+                android:id="@+id/notify"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="No post to display"
+                android:textColor="@color/green"
+                android:textSize="14dp"
+                android:visibility="visible" />
         </androidx.appcompat.widget.LinearLayoutCompat>
     </androidx.core.widget.NestedScrollView>
 

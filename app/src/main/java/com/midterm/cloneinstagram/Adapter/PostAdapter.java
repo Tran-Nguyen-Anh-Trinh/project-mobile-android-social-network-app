@@ -12,7 +12,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -21,18 +20,15 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.midterm.cloneinstagram.Model.Post;
 import com.midterm.cloneinstagram.R;
-import com.midterm.cloneinstagram.Users;
+import com.midterm.cloneinstagram.Model.Users;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
-
-import de.hdodenhof.circleimageview.CircleImageView;
 
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
     public Context mContext;
     public List<Post> mPost;
-
-    private FirebaseUser firebaseUser;
 
     public PostAdapter(Context mContext, List<Post> mPost) {
         this.mContext = mContext;
@@ -48,25 +44,23 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-//        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-//        Post post = mPost.get(position);
-//
-//        Glide.with(mContext).load(post.getPostimage()).into(holder.post_image);
-//
-//        if(post.getDescription().equals("")) {
-//            holder.description.setVisibility(View.GONE);
-//        }else {
-//            holder.description.setVisibility(View.VISIBLE);
-//            holder.description.setText(post.getDescription());
-//        }
-
-//        publisherInfo(holder.image_profile, holder.username, holder.publisher, post.getPublisher());
+        Post post = mPost.get(position);
+        holder.username.setText(post.getUsers().getName());
+        Picasso.get().load(post.getUsers().getImageUri()).into(holder.image_profile);
+        Picasso.get().load(post.getPostimage()).into(holder.post_image);
+        if(post.getDescription().equals("")) {
+            holder.description.setVisibility(View.GONE);
+        }else {
+            holder.description.setVisibility(View.VISIBLE);
+            holder.description.setText(post.getDescription());
+        }
+        holder.publisher.setText(post.getUsers().getName());
+        holder.likes.setText(post.getLike()+" likes");
     }
 
     @Override
     public int getItemCount() {
-        return 10;
-//        return mPost.size();
+        return mPost.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
@@ -79,7 +73,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             image_profile = itemView.findViewById(R.id.image_profile);
             post_image = itemView.findViewById(R.id.post_image);
             comments = itemView.findViewById(R.id.comments);
-            like = itemView.findViewById(R.id.like);
+            likes = itemView.findViewById(R.id.likes);
             comment = itemView.findViewById(R.id.comment);
             save = itemView.findViewById(R.id.save);
             username = itemView.findViewById(R.id.username);
