@@ -29,11 +29,23 @@
         android:layout_marginLeft="10dp"/>
     </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
-
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycle_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/bar"
-        android:id="@+id/recycle_view"/>
-
+        android:layout_below="@+id/bar" />
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="20dp">
+    </Space>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycle_view_search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/bar" />
+</LinearLayout>
 </RelativeLayout>
