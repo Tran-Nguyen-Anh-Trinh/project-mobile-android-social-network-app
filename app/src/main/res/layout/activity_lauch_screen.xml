@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".LaunchScreenActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_centerInParent="true"
+        android:orientation="vertical">
+
+
+        <ImageView
+            android:layout_width="96dp"
+            android:layout_height="92dp"
+            android:background="@drawable/logo_app_green" />
+
+        <TextView
+            android:layout_marginTop="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="cursive"
+            android:gravity="center"
+            android:text="Bring people together"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_14sdp" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/_7sdp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-thin"
+            android:gravity="center"
+            android:text="from"
+            android:textSize="@dimen/_10sdp"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif"
+            android:gravity="center"
+            android:text="Trình Developer"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_10sdp" />
+    </LinearLayout>
+
+</RelativeLayout>
