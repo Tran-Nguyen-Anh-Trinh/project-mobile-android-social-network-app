@@ -12,13 +12,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.midterm.cloneinstagram.PostedAdapter;
+import com.midterm.cloneinstagram.Adapter.PostAdapter;
+import com.midterm.cloneinstagram.Adapter.PostedAdapter;
 import com.midterm.cloneinstagram.R;
 import com.midterm.cloneinstagram.UpdateInformationActivity;
-import com.midterm.cloneinstagram.UserAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
