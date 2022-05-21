@@ -16,13 +16,17 @@
         <entry key="..\:/Ky2_Nam3/Project_Android/CloneInstagram/app/src/main/res/layout/activity_login.xml" value="0.12708333333333333" />
         <entry key="..\:/Ky2_Nam3/Project_Android/CloneInstagram/app/src/main/res/layout/activity_main.xml" value="0.12708333333333333" />
 <<<<<<< HEAD
+<<<<<<< HEAD
         <entry key="..\:/Ky2_Nam3/Project_Android/CloneInstagram/app/src/main/res/layout/activity_post.xml" value="0.15307971014492755" />
 =======
 >>>>>>> 8606db76b902c4a756162881987923ccc4f64b74
+=======
+>>>>>>> feature/ui_active
         <entry key="..\:/Ky2_Nam3/Project_Android/CloneInstagram/app/src/main/res/layout/activity_register.xml" value="0.16666666666666666" />
         <entry key="..\:/Ky2_Nam3/Project_Android/CloneInstagram/app/src/main/res/layout/activity_update_information.xml" value="0.12708333333333333" />
         <entry key="..\:/Ky2_Nam3/Project_Android/CloneInstagram/app/src/main/res/layout/custom_cell_posted.xml" value="0.12708333333333333" />
         <entry key="..\:/Ky2_Nam3/Project_Android/CloneInstagram/app/src/main/res/layout/fragment_home.xml" value="0.41702867072111205" />
+<<<<<<< HEAD
 <<<<<<< HEAD
         <entry key="..\:/Ky2_Nam3/Project_Android/CloneInstagram/app/src/main/res/layout/fragment_notification.xml" value="0.1308876811594203" />
         <entry key="..\:/Ky2_Nam3/Project_Android/CloneInstagram/app/src/main/res/layout/fragment_profile.xml" value="0.2688888888888889" />
@@ -33,6 +37,23 @@
 >>>>>>> 8606db76b902c4a756162881987923ccc4f64b74
         <entry key="..\:/Ky2_Nam3/Project_Android/CloneInstagram/app/src/main/res/layout/signin_shape.xml" value="0.12708333333333333" />
         <entry key="..\:/Ky2_Nam3/Project_Android/CloneInstagram/app/src/main/res/menu/bottom_navigation.xml" value="0.12708333333333333" />
+=======
+        <entry key="..\:/Ky2_Nam3/Project_Android/CloneInstagram/app/src/main/res/layout/fragment_profile.xml" value="0.2688888888888889" />
+        <entry key="..\:/Ky2_Nam3/Project_Android/CloneInstagram/app/src/main/res/layout/signin_shape.xml" value="0.12708333333333333" />
+        <entry key="..\:/Ky2_Nam3/Project_Android/CloneInstagram/app/src/main/res/menu/bottom_navigation.xml" value="0.12708333333333333" />
+        <entry key="..\:/Users/duong/Desktop/git_Trinhf/app/src/main/res/drawable-xhdpi/ic_baseline_person_24.xml" value="0.13" />
+        <entry key="..\:/Users/duong/Desktop/git_Trinhf/app/src/main/res/layout/activity_1_item.xml" value="0.22509057971014493" />
+        <entry key="..\:/Users/duong/Desktop/git_Trinhf/app/src/main/res/layout/activity_lauch_screen.xml" value="0.22509057971014493" />
+        <entry key="..\:/Users/duong/Desktop/git_Trinhf/app/src/main/res/layout/activity_login.xml" value="0.22509057971014493" />
+        <entry key="..\:/Users/duong/Desktop/git_Trinhf/app/src/main/res/layout/activity_main.xml" value="0.12158054711246201" />
+        <entry key="..\:/Users/duong/Desktop/git_Trinhf/app/src/main/res/layout/fragment_home.xml" value="0.22509057971014493" />
+        <entry key="..\:/Users/duong/Desktop/git_Trinhf/app/src/main/res/layout/fragment_notification.xml" value="0.22509057971014493" />
+        <entry key="..\:/Users/duong/Desktop/git_Trinhf/app/src/main/res/layout/fragment_profile.xml" value="0.22509057971014493" />
+        <entry key="..\:/Users/duong/Desktop/git_Trinhf/app/src/main/res/layout/fragment_search.xml" value="0.12158054711246201" />
+        <entry key="..\:/Users/duong/Desktop/git_Trinhf/app/src/main/res/layout/layout_option_image.xml" value="0.22509057971014493" />
+        <entry key="..\:/Users/duong/Desktop/git_Trinhf/app/src/main/res/layout/user_item.xml" value="0.22509057971014493" />
+        <entry key="..\:/Users/duong/Desktop/git_Trinhf/app/src/main/res/menu/bottom_navigation.xml" value="0.25" />
+>>>>>>> feature/ui_active
       </map>
     </option>
   </component>

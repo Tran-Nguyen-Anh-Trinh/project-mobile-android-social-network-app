@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
+import com.midterm.cloneinstagram.Fragment.ActivityFragment;
 import com.midterm.cloneinstagram.Fragment.HomeFragment;
 import com.midterm.cloneinstagram.Fragment.NotificationFragment;
 import com.midterm.cloneinstagram.Fragment.ProfileFragment;
@@ -57,7 +58,8 @@ public class MainActivity extends AppCompatActivity {
                             startActivity(new Intent(MainActivity.this, PostActivity.class));
                             break;
                         case R.id.nav_heart:
-                            selectedFragment = new NotificationFragment();
+//                            selectedFragment = new NotificationFragment();
+                            selectedFragment = new ActivityFragment();
                             break;
                         case R.id.nav_profile:
                             SharedPreferences.Editor editor = getSharedPreferences("PRESS", MODE_PRIVATE).edit();
