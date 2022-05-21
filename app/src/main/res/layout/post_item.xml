@@ -13,6 +13,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
+            <TextView
+                android:id="@+id/back"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:background="@drawable/left"
+                android:backgroundTint="@color/green"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:visibility="gone"/>
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/image_profile"
@@ -20,7 +29,7 @@
                 android:layout_height="30dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginBottom="10dp"
-                android:layout_marginRight="5dp"
+                android:layout_marginRight="10dp"
                 android:layout_marginTop="10dp"
                 android:src="@mipmap/ic_launcher"></de.hdodenhof.circleimageview.CircleImageView>
 
@@ -32,7 +41,18 @@
                 android:text="username"
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="16sp"
-                android:textStyle="bold"></TextView>
+                android:textStyle="bold"
+                android:layout_weight="1"></TextView>
+
+            <TextView
+                android:id="@+id/btn_delete_post"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_margin="10dp"
+                android:layout_gravity="center"
+                android:visibility="gone"
+                android:backgroundTint="@color/green"
+                android:background="@drawable/ic_baseline_close_24"></TextView>
         </LinearLayout>
 
         <ImageView

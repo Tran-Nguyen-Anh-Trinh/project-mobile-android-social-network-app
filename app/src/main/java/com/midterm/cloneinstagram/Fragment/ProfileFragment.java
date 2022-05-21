@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -94,14 +95,11 @@ public class ProfileFragment extends Fragment {
 
         profile = view.findViewById(R.id.profile);
         name = view.findViewById(R.id.tv_name);
-        name.setText(Users.getInstance().getName());
         tv_posts = view.findViewById(R.id.tv_posts);
         tv_followers = view.findViewById(R.id.tv_followers);
         tv_following = view.findViewById(R.id.tv_following);
-        Picasso.get().load(Users.getInstance().getImageUri()).into(profile);
         readPost();
-        tv_followers.setText(Users.getInstance().getFollower().size()+"");
-        tv_following.setText(Users.getInstance().getFollowing().size()+"");
+        updateDataUser();
     }
 
     private void readPost() {
@@ -119,6 +117,52 @@ public class ProfileFragment extends Fragment {
                 }
                 tv_posts.setText(list.size()+"");
                 postedAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    private void updateDataUser(){
+        FirebaseDatabase.getInstance().getReference().child("User").child(FirebaseAuth.getInstance().getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Users users = snapshot.getValue(Users.class);
+                Users.getInstance().setUid(users.getUid());
+                Users.getInstance().setEmail(users.getEmail());
+                Users.getInstance().setName(users.getName());
+                Users.getInstance().setImageUri(users.getImageUri());
+                Users.getInstance().setFollower(users.getFollower());
+                Users.getInstance().setFollowing(users.getFollowing());
+                Users.getInstance().setStatus(users.getStatus());
+                Picasso.get().load(Users.getInstance().getImageUri()).into(profile);
+                tv_followers.setText(Users.getInstance().getFollower().size()+"");
+                tv_following.setText(Users.getInstance().getFollowing().size()+"");
+                name.setText(Users.getInstance().getName());
+
+                DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Post");
+
+                reference.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        for(DataSnapshot snapshot: dataSnapshot.getChildren()) {
+                            Post post = snapshot.getValue(Post.class);
+                            if (post.getUsers().getUid().equals(Users.getInstance().getUid())){
+                                FirebaseDatabase.getInstance().getReference("Post").child(snapshot.getKey()).child("users").setValue(Users.getInstance());
+                                System.out.println(snapshot.getKey().toString());
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
             }
 
             @Override

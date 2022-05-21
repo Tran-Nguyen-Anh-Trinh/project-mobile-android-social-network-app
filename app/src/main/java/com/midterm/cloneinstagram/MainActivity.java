@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        FirebaseDatabase.getInstance().getReference().child("User").child(mAuth.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+        FirebaseDatabase.getInstance().getReference().child("User").child(mAuth.getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 Users users = snapshot.getValue(Users.class);

@@ -110,7 +110,8 @@ public class UpdateInformationActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
         storage = FirebaseStorage.getInstance();
-        DatabaseReference databaseReference = database.getReference().child("Users").child(auth.getUid());
+        DatabaseReference databaseReference = database.getReference().child("User").child(auth.getUid());
+        DatabaseReference databaseReference1 = database.getReference().child("User").child(auth.getUid());
 
 
         progressDialog=new ProgressDialog(this);
@@ -138,6 +139,19 @@ public class UpdateInformationActivity extends AppCompatActivity {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
                                                 if (task.isSuccessful()) {
+                                                    databaseReference1.child("name").setValue(editTextName.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<Void> task) {
+                                                            if (task.isSuccessful()) {
+                                                                progressDialog.dismiss();
+                                                                Toast.makeText(getBaseContext(), "Saved successfully", Toast.LENGTH_SHORT).show();
+                                                                finishAndRemoveTask();
+                                                            } else {
+                                                                progressDialog.dismiss();
+                                                                Toast.makeText(UpdateInformationActivity.this, "Wrong something", Toast.LENGTH_SHORT).show();
+                                                            }
+                                                        }
+                                                    });
                                                 } else {
                                                     progressDialog.dismiss();
                                                     Toast.makeText(UpdateInformationActivity.this, "Wrong something", Toast.LENGTH_SHORT).show();
@@ -153,7 +167,7 @@ public class UpdateInformationActivity extends AppCompatActivity {
                             }
                         }
                     });
-                } else{
+                } else if (bytes!=null){
                     storageReference.putBytes(bytes).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
@@ -166,6 +180,19 @@ public class UpdateInformationActivity extends AppCompatActivity {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
                                                 if (task.isSuccessful()) {
+                                                    databaseReference1.child("name").setValue(editTextName.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<Void> task) {
+                                                            if (task.isSuccessful()) {
+                                                                progressDialog.dismiss();
+                                                                Toast.makeText(getBaseContext(), "Saved successfully", Toast.LENGTH_SHORT).show();
+                                                                finishAndRemoveTask();
+                                                            } else {
+                                                                progressDialog.dismiss();
+                                                                Toast.makeText(UpdateInformationActivity.this, "Wrong something", Toast.LENGTH_SHORT).show();
+                                                            }
+                                                        }
+                                                    });
                                                 } else {
                                                     progressDialog.dismiss();
                                                     Toast.makeText(UpdateInformationActivity.this, "Wrong something", Toast.LENGTH_SHORT).show();
@@ -181,20 +208,22 @@ public class UpdateInformationActivity extends AppCompatActivity {
                             }
                         }
                     });
-                }
-                databaseReference.child("name").setValue(editTextName.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            progressDialog.dismiss();
-                            Toast.makeText(UpdateInformationActivity.this, "Saved successfully", Toast.LENGTH_SHORT).show();
-                            finishAndRemoveTask();
-                        } else {
-                            progressDialog.dismiss();
-                            Toast.makeText(UpdateInformationActivity.this, "Wrong something", Toast.LENGTH_SHORT).show();
+                } else {
+                    databaseReference1.child("name").setValue(editTextName.getText().toString()).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                progressDialog.dismiss();
+                                Toast.makeText(getBaseContext(), "Saved successfully", Toast.LENGTH_SHORT).show();
+                                finishAndRemoveTask();
+                            } else {
+                                progressDialog.dismiss();
+                                Toast.makeText(UpdateInformationActivity.this, "Wrong something", Toast.LENGTH_SHORT).show();
+                            }
                         }
-                    }
-                });
+                    });
+                }
+
             }
         });
 
