@@ -1,33 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="60dp"
-    android:layout_height="wrap_content"
+    android:layout_width="wrap_content"
+    android:layout_height="100dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:layout_marginStart="10dp">
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        app:civ_border_width="2dp"
-        app:civ_border_color="#f23b5a"
-        android:layout_gravity="center"
-        android:src="@drawable/placeholder"
-        android:layout_marginTop="5dp"
-        android:id="@+id/story_photo">
-    </de.hdodenhof.circleimageview.CircleImageView>
+    android:layout_marginStart="15dp"
+    android:gravity="center">
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        app:civ_border_width="2dp"
-        android:visibility="gone"
-        app:civ_border_color="#afafaf"
-        android:layout_gravity="center"
-        android:src="@drawable/placeholder"
-        android:layout_marginTop="5dp"
-        android:id="@+id/story_photo_seen">
-    </de.hdodenhof.circleimageview.CircleImageView>
 
+   <androidx.cardview.widget.CardView
+       android:id="@+id/card_view_for_image"
+       android:foreground="@drawable/shape"
+       android:layout_margin="2dp"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       app:cardCornerRadius="100dp">
+
+       <ImageView
+           android:id="@+id/story_photo"
+           android:layout_width="70dp"
+           android:layout_height="70dp"
+           android:scaleType="centerCrop"
+           android:src="@drawable/placeholder" />
+   </androidx.cardview.widget.CardView>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -35,6 +30,9 @@
         android:id="@+id/story_username"
         android:textColor="@color/colorPrimaryDark"
         android:layout_gravity="center"
+        android:textSize="12dp"
         android:maxLines="1">
     </TextView>
+
+
 </LinearLayout>

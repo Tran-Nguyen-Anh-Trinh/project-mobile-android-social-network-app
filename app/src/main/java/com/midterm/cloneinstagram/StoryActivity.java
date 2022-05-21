@@ -144,7 +144,7 @@ public class StoryActivity extends AppCompatActivity implements StoriesProgressV
                 }
 
                 storiesProgressView.setStoriesCount(3);
-                storiesProgressView.setStoryDuration(5000L);
+                storiesProgressView.setStoryDuration(3000L);
                 storiesProgressView.setStoriesListener(StoryActivity.this);
                 storiesProgressView.startStories(counter);
 //

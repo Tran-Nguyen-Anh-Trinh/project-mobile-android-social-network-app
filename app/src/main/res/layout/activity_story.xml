@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".StoryActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
 
     <ImageView
         android:layout_width="match_parent"
@@ -18,11 +24,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal">
+
         <View
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:id="@+id/skip"></View>
+            android:id="@+id/skip"
+            android:layout_width="wrap_content"
+            android:layout_height="671dp"
+            android:layout_weight="1"></View>
         <View
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -43,67 +50,74 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/stories"
         android:layout_margin="10dp">
+
         <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/story_photo"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:layout_centerVertical="true"
-            android:id="@+id/story_photo"></de.hdodenhof.circleimageview.CircleImageView>
+            android:src="@color/black"
+            android:layout_centerVertical="true"></de.hdodenhof.circleimageview.CircleImageView>
+
         <TextView
+            android:id="@+id/story_username"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_toEndOf="@+id/story_photo"
             android:text="username"
-            android:textStyle="bold"
             android:textColor="#fff"
             android:textSize="15sp"
-            android:id="@+id/story_username"
-            android:layout_centerVertical="true"
-            android:layout_margin="5dp"
-            android:layout_toEndOf="@+id/story_photo"></TextView>
+            android:textStyle="bold"></TextView>
     </RelativeLayout>
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:background="@color/black"
-        android:gravity="center_vertical">
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_alignParentLeft="true">
 
-        <TextView
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
             android:layout_alignParentLeft="true"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="10dp"
-            android:background="@color/white"
-            android:text="Gửi tin nhắn"
-            android:textSize="30sp"></TextView>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:padding="12dp">
+            android:background="@drawable/custom_send_message"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
+            android:hint="Send message"
+            android:layout_weight="1"
+            android:paddingLeft="15dp"
+            android:textSize="14sp"></EditText>
 
             <ImageView
                 android:id="@+id/like"
+                android:src="@drawable/heart_100px"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginRight="10dp"
-                android:src="@drawable/ic_heart_border"></ImageView>
+                android:layout_marginLeft="5dp">
+
+            </ImageView>
 
             <ImageView
                 android:id="@+id/send"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="5dp"
-                android:src="@drawable/ic_send"></ImageView>
-        </LinearLayout>
-    </RelativeLayout>
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:src="@drawable/sent_100px"></ImageView>
 
-</RelativeLayout>
+    </LinearLayout>
+
+</LinearLayout>
