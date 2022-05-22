@@ -1,22 +1,16 @@
-package com.midterm.cloneinstagram;
+package com.midterm.cloneinstagram.Adapter;
 import android.content.Context;
-import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Filter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.squareup.picasso.Picasso;
-import java.util.ArrayList;
-import java.util.List;
+import com.midterm.cloneinstagram.R;
 
-import de.hdodenhof.circleimageview.CircleImageView;
+import java.util.List;
 
 public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder>{
     private Context mContext;

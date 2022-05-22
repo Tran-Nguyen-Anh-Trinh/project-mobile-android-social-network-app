@@ -7,7 +7,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_marginBottom="20dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -30,15 +31,13 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginBottom="10dp"
                 android:layout_marginRight="10dp"
-                android:layout_marginTop="10dp"
-                android:src="@mipmap/ic_launcher"></de.hdodenhof.circleimageview.CircleImageView>
+                android:layout_marginTop="10dp"></de.hdodenhof.circleimageview.CircleImageView>
 
             <TextView
                 android:id="@+id/username"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:text="username"
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="16sp"
                 android:textStyle="bold"
@@ -59,16 +58,22 @@
             android:id="@+id/post_image"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:minHeight="@dimen/_300sdp"
             android:layout_weight="1"
             android:scaleType="centerCrop"
             android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:src="@mipmap/ic_launcher"></ImageView>
+            android:layout_marginBottom="10dp"></ImageView>
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="8dp">
+            <ImageView
+                android:id="@+id/likeed"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/liked"
+                android:visibility="gone"></ImageView>
 
             <ImageView
                 android:id="@+id/like"
@@ -80,9 +85,11 @@
                 android:id="@+id/comment"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:layout_marginStart="10dp"
+                android:layout_marginStart="20dp"
                 android:layout_toEndOf="@+id/like"
-                android:src="@drawable/ic_comment"></ImageView>
+                android:src="@drawable/ic_comment">
+
+            </ImageView>
 
             <ImageView
                 android:id="@+id/save"
@@ -125,7 +132,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="10dp"
-            android:text="View All 20 Comments"
+            android:text="View All Comments"
             android:textColor="@color/colorAccent"></TextView>
     </LinearLayout>
 </LinearLayout>

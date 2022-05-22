@@ -1,4 +1,4 @@
-package com.midterm.cloneinstagram;
+package com.midterm.cloneinstagram.Adapter;
 
 import android.content.Context;
 import android.util.Log;
@@ -10,6 +10,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.midterm.cloneinstagram.R;
 
 import java.util.ArrayList;
 

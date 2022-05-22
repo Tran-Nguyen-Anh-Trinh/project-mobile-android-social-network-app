@@ -1,5 +1,7 @@
 package com.midterm.cloneinstagram.Model;
 
+import com.midterm.cloneinstagram.Adapter.Like;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,8 +11,8 @@ public class Post {
     private String description;
     private String publisher;
     private Users users;
-    private int Like = 0;
-    private List<Comment> comment = new ArrayList<>();
+    private Like like;
+    private Comment comment;
 
     public Post(String postid, String postimage, String description, String publisher) {
         this.postid = postid;
@@ -30,25 +32,20 @@ public class Post {
         this.users = users;
     }
 
-    public int getLike() {
-        return Like;
+    public Like getLike() {
+        return like;
     }
 
-    public void setLike(int like) {
-        Like = like;
+    public void setLike(Like like) {
+        this.like = like;
     }
 
-    public List<Comment> getComment() {
+    public Comment getComment() {
         return comment;
     }
 
-    public void setComment(List<Comment> comment) {
-        this.comment.clear();
-        this.comment.addAll(comment);
-    }
-
-    public void setOneComment(Comment comment) {
-        this.comment.add(comment);
+    public void setComment(Comment comment) {
+        this.comment = comment;
     }
 
     public String getPostid() {

@@ -11,7 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.midterm.cloneinstagram.ActivityAdapter;
+import com.midterm.cloneinstagram.Adapter.ActivityAdapter;
 import com.midterm.cloneinstagram.R;
 
 import java.util.ArrayList;

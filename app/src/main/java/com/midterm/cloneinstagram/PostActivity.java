@@ -143,7 +143,7 @@ public class PostActivity extends AppCompatActivity {
                                         Post post = new Post();
                                         post.setPostid(datetime);
                                         post.setPublisher(datetime);
-                                        post.setDescription(editText.getText().toString());
+                                        post.setDescription(editText.getText().toString().trim());
                                         post.setPostimage(uri.toString());
                                         post.setUsers(Users.getInstance());
 
@@ -153,7 +153,9 @@ public class PostActivity extends AppCompatActivity {
                                                 if (task.isSuccessful()) {
                                                     Toast.makeText(PostActivity.this, "Posted", Toast.LENGTH_SHORT).show();
                                                     progressDialog.dismiss();
-                                                    finishAndRemoveTask();
+                                                    Intent intent = new Intent(PostActivity.this, MainActivity.class);
+                                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+                                                    startActivity(intent);
                                                 } else {
                                                     progressDialog.dismiss();
                                                     Toast.makeText(PostActivity.this, "Error", Toast.LENGTH_SHORT).show();
@@ -180,7 +182,7 @@ public class PostActivity extends AppCompatActivity {
                                         Post post = new Post();
                                         post.setPostid(datetime);
                                         post.setPublisher(datetime);
-                                        post.setDescription(editText.getText().toString());
+                                        post.setDescription(editText.getText().toString().trim());
                                         post.setPostimage(uri.toString());
                                         post.setUsers(Users.getInstance());
 
@@ -190,7 +192,9 @@ public class PostActivity extends AppCompatActivity {
                                                 if (task.isSuccessful()) {
                                                     Toast.makeText(PostActivity.this, "Posted", Toast.LENGTH_SHORT).show();
                                                     progressDialog.dismiss();
-                                                    finishAndRemoveTask();
+                                                    Intent intent = new Intent(PostActivity.this, MainActivity.class);
+                                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+                                                    startActivity(intent);
                                                 } else {
                                                     progressDialog.dismiss();
                                                     Toast.makeText(PostActivity.this, "Error", Toast.LENGTH_SHORT).show();

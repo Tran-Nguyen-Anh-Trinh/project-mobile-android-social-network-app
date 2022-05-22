@@ -22,8 +22,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.midterm.cloneinstagram.R;
-import com.midterm.cloneinstagram.SearchAdapter;
-import com.midterm.cloneinstagram.UserAdapter;
+import com.midterm.cloneinstagram.Adapter.SearchAdapter;
+import com.midterm.cloneinstagram.Adapter.UserAdapter;
 import com.midterm.cloneinstagram.Model.Users;
 
 import java.util.ArrayList;
