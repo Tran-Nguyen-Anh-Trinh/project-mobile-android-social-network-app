@@ -7,12 +7,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
@@ -23,11 +21,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.midterm.cloneinstagram.PostedAdapter;
 import com.midterm.cloneinstagram.R;
-import com.midterm.cloneinstagram.SearchAdapter;
-import com.midterm.cloneinstagram.UserAdapter;
-import com.midterm.cloneinstagram.Users;
+import com.midterm.cloneinstagram.Adapter.SearchAdapter;
+import com.midterm.cloneinstagram.Adapter.UserAdapter;
+import com.midterm.cloneinstagram.Model.Users;
 
 import java.util.ArrayList;
 import java.util.List;

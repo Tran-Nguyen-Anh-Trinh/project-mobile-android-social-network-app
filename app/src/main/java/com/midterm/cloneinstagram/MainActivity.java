@@ -8,17 +8,24 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.midterm.cloneinstagram.Fragment.ActivityFragment;
 import com.midterm.cloneinstagram.Fragment.HomeFragment;
 import com.midterm.cloneinstagram.Fragment.NotificationFragment;
 import com.midterm.cloneinstagram.Fragment.ProfileFragment;
 import com.midterm.cloneinstagram.Fragment.SearchFragment;
+import com.midterm.cloneinstagram.Model.Users;
 
 public class MainActivity extends AppCompatActivity {
 
+    long pressedTime;
     FirebaseAuth mAuth;
     FirebaseDatabase database;
     BottomNavigationView bottomNavigationView;
@@ -35,6 +42,26 @@ public class MainActivity extends AppCompatActivity {
             finish();
             return;
         }
+
+        FirebaseDatabase.getInstance().getReference().child("User").child(mAuth.getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Users users = snapshot.getValue(Users.class);
+                Users.getInstance().setUid(users.getUid());
+                Users.getInstance().setEmail(users.getEmail());
+                Users.getInstance().setName(users.getName());
+                Users.getInstance().setImageUri(users.getImageUri());
+                Users.getInstance().setFollower(users.getFollower());
+                Users.getInstance().setFollowing(users.getFollowing());
+                Users.getInstance().setStatus(users.getStatus());
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
 
         bottomNavigationView = findViewById(R.id.bottom_navigation);
@@ -57,7 +84,8 @@ public class MainActivity extends AppCompatActivity {
                             startActivity(new Intent(MainActivity.this, PostActivity.class));
                             break;
                         case R.id.nav_heart:
-                            selectedFragment = new NotificationFragment();
+//                            selectedFragment = new NotificationFragment();
+                            selectedFragment = new ActivityFragment();
                             break;
                         case R.id.nav_profile:
                             SharedPreferences.Editor editor = getSharedPreferences("PRESS", MODE_PRIVATE).edit();
@@ -72,4 +100,16 @@ public class MainActivity extends AppCompatActivity {
                     return true;
                 }
             };
+    @Override
+    public void onBackPressed() {
+
+        if (pressedTime + 2000 > System.currentTimeMillis()) {
+            super.onBackPressed();
+            finishAffinity();
+        } else {
+            Toast.makeText(getBaseContext(), "Press back again to exit", Toast.LENGTH_SHORT).show();
+        }
+        pressedTime = System.currentTimeMillis();
+    }
+
 }
