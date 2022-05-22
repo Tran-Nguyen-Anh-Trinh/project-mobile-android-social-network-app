@@ -41,6 +41,7 @@ public class CommentActivity extends AppCompatActivity {
     TextView btnCC, duocRep, huyRep;
     EditText comment;
     LinearLayout rep;
+    LinearLayoutManager linearLayoutManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,7 +58,8 @@ public class CommentActivity extends AppCompatActivity {
 
         adapter = new userAdapter(CommentActivity.this, listCmt, comment, send, duocRep, huyRep, rep);
         recyclerView = findViewById(R.id.list_cmt);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        linearLayoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(adapter);
         setUp();
         getDataComment();
@@ -104,6 +106,7 @@ public class CommentActivity extends AppCompatActivity {
                                     if(task.isSuccessful()){
                                         comment.setText("");
                                         userAdapter.idPost = "";
+                                        linearLayoutManager.smoothScrollToPosition(recyclerView, null, adapter.getItemCount());
                                         Toast.makeText(CommentActivity.this, "Added comment", Toast.LENGTH_SHORT).show();
                                     }else{
                                         Toast.makeText(CommentActivity.this, "Error", Toast.LENGTH_SHORT).show();
@@ -119,6 +122,7 @@ public class CommentActivity extends AppCompatActivity {
                                     if (task.isSuccessful()) {
                                         comment.setText("");
                                         userAdapter.idPost = "";
+                                        linearLayoutManager.smoothScrollToPosition(recyclerView, null, adapter.getItemCount());
                                         Toast.makeText(CommentActivity.this, "Added comment", Toast.LENGTH_SHORT).show();
                                     } else {
                                         Toast.makeText(CommentActivity.this, "Error", Toast.LENGTH_SHORT).show();
@@ -140,10 +144,6 @@ public class CommentActivity extends AppCompatActivity {
                 rep.setVisibility(View.GONE);
                 userAdapter.idPost = "";
                 comment.setText("");
-                if(userAdapter.idPost.isEmpty()){
-
-                    System.out.println("da rong");
-                }
             }
         });
     }

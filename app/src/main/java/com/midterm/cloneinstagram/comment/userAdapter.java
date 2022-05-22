@@ -111,11 +111,11 @@ public class userAdapter extends RecyclerView.Adapter<userAdapter.Viewholder> {
         FirebaseDatabase.getInstance().getReference()
                 .child("Post").child(CommentActivity.idPost).child("comment")
                 .child(u.getId())
-                .child("RepComment").addValueEventListener(new ValueEventListener() {
+                .addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot dataSnapshot: snapshot.getChildren()){
-                    if(dataSnapshot.getChildrenCount()!=0){
+                if (snapshot.hasChild("RepComment")) {
+                    if (holder.linearLayoutHide.getVisibility() == View.GONE){
                         holder.linearLayout.setVisibility(View.VISIBLE);
                     }
                 }
