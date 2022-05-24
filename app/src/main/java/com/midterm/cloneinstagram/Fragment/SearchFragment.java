@@ -1,30 +1,26 @@
 package com.midterm.cloneinstagram.Fragment;
 
+import android.graphics.Rect;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
+
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.midterm.cloneinstagram.Model.Post;
 import com.midterm.cloneinstagram.R;
 import com.midterm.cloneinstagram.Adapter.SearchAdapter;
-import com.midterm.cloneinstagram.Adapter.UserAdapter;
-import com.midterm.cloneinstagram.Model.Users;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,80 +28,64 @@ import java.util.List;
 
 public class SearchFragment extends Fragment {
 
-    RecyclerView recyclerView, recycleViewSearch;
-    UserAdapter userAdapter;
-    List<Users> mUsers;
-    EditText searchbar;
+    private RecyclerView recyclerView;
     private SearchAdapter searchAdapter;
-    private List<String> list;
-
+    private List<Post> list;
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_search, container, false);
-        recyclerView = view.findViewById(R.id.recycle_view);
+        return inflater.inflate(R.layout.fragment_search, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        recyclerView = view.findViewById(R.id.recycle_view_search);
         recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(),3));
-        searchbar = view.findViewById(R.id.search_bar);
-        mUsers = new ArrayList<>();
-        userAdapter = new UserAdapter(getContext(), mUsers);
-        recyclerView.setAdapter(userAdapter);
-        readUser();
-
-
-        recycleViewSearch = view.findViewById((R.id.recycle_view_search));
-        recycleViewSearch.setLayoutManager(new GridLayoutManager(getContext(), 3));
-        list = new ArrayList<String>();
-        searchAdapter = new SearchAdapter(getContext(), list);
-        recycleViewSearch.setAdapter(searchAdapter);
-        searchbar.addTextChangedListener(new TextWatcher() {
-
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
+        recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+                int position = parent.getChildAdapterPosition(view);
+                int spanCount = 3;
+                int spacing = 10;
 
-            }
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                searchUser(charSequence.toString().toLowerCase());
-            }
-            @Override
-            public void afterTextChanged(Editable editable) {
+                if (position >= 0) {
+                    int column = position % spanCount; // item column
 
-            }
-        });
-        return view;
-    }
-    private void searchUser(String s){
-        Query query = FirebaseDatabase.getInstance().getReference("User").orderByChild("name").startAt(s).endAt(s+"\uf8ff");
-        query.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                mUsers.clear();
-                for(DataSnapshot dataSnapshot:snapshot.getChildren()){
-                    mUsers.add(dataSnapshot.getValue(Users.class));
-                }
-                userAdapter.notifyDataSetChanged();
-            }
+                    outRect.left = spacing - column * spacing / spanCount;
+                    outRect.right = (column + 1) * spacing / spanCount;
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-    }
-
-    void readUser(){
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("User");
-        reference.addValueEventListener(new ValueEventListener() {
-
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (searchbar.getText().toString().equals("")){
-                    mUsers.clear();
-                    for(DataSnapshot dataSnapshot:snapshot.getChildren()){
-                        mUsers.add(dataSnapshot.getValue(Users.class));
+                    if (position < spanCount) {
+                        outRect.top = spacing;
                     }
-                    userAdapter.notifyDataSetChanged();
+                    outRect.bottom = spacing;
+                } else {
+                    outRect.left = 0;
+                    outRect.right = 0;
+                    outRect.top = 0;
+                    outRect.bottom = 0;
                 }
+            }
+        });
+        list = new ArrayList<>();
+        searchAdapter = new SearchAdapter(getContext(), list);
+        recyclerView.setAdapter(searchAdapter);
+        readPost();
+    }
+
+    private void readPost() {
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Post");
+
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                list.clear();
+                for(DataSnapshot snapshot: dataSnapshot.getChildren()) {
+                    Post post = snapshot.getValue(Post.class);
+                    list.add(post);
+                }
+                searchAdapter.notifyDataSetChanged();
             }
 
             @Override
