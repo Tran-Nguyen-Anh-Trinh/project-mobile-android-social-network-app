@@ -135,12 +135,8 @@ public class ProfileFragment extends Fragment {
                 Users.getInstance().setEmail(users.getEmail());
                 Users.getInstance().setName(users.getName());
                 Users.getInstance().setImageUri(users.getImageUri());
-                Users.getInstance().setFollower(users.getFollower());
-                Users.getInstance().setFollowing(users.getFollowing());
                 Users.getInstance().setStatus(users.getStatus());
                 Picasso.get().load(Users.getInstance().getImageUri()).into(profile);
-                tv_followers.setText(Users.getInstance().getFollower().size()+"");
-                tv_following.setText(Users.getInstance().getFollowing().size()+"");
                 name.setText(Users.getInstance().getName());
 
                 DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Post");
@@ -163,6 +159,28 @@ public class ProfileFragment extends Fragment {
                     }
                 });
 
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        FirebaseDatabase.getInstance().getReference().child("User").child(FirebaseAuth.getInstance().getUid()).child("follower").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                tv_followers.setText(snapshot.getChildrenCount()+"");
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        FirebaseDatabase.getInstance().getReference().child("User").child(FirebaseAuth.getInstance().getUid()).child("following").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                tv_following.setText(snapshot.getChildrenCount()+"");
             }
 
             @Override

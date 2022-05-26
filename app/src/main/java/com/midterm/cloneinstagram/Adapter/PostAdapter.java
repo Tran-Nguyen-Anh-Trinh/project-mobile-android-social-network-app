@@ -1,9 +1,11 @@
 package com.midterm.cloneinstagram.Adapter;
 
 
+import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.view.LayoutInflater;
@@ -14,6 +16,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -29,8 +33,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.midterm.cloneinstagram.CommentActivity;
+import com.midterm.cloneinstagram.MainActivity;
+import com.midterm.cloneinstagram.Model.Comment;
 import com.midterm.cloneinstagram.Model.Post;
 import com.midterm.cloneinstagram.MyView;
+import com.midterm.cloneinstagram.ProfileUserActivity;
+import com.midterm.cloneinstagram.ProfileUserFragment;
 import com.midterm.cloneinstagram.R;
 import com.midterm.cloneinstagram.Model.Users;
 import com.squareup.picasso.Picasso;
@@ -42,13 +50,15 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
     public Context mContext;
     public List<Post> mPost;
+    public FragmentActivity fragmentActivity;
     private static long LAST_CLICK_TIME = 0;
     private final int mDoubleClickInterval = 400; // Milliseconds
 
 
-    public PostAdapter(Context mContext, List<Post> mPost) {
+    public PostAdapter(Context mContext, List<Post> mPost, FragmentActivity fragmentActivity) {
         this.mContext = mContext;
         this.mPost = mPost;
+        this.fragmentActivity = fragmentActivity;
     }
 
     @NonNull
@@ -61,6 +71,37 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Post post = mPost.get(position);
+
+
+        holder.image_profile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Bundle bundle = new Bundle();
+                bundle.putString("idUser", post.getUsers().getUid());
+                ProfileUserFragment nextFrag= new ProfileUserFragment();
+                nextFrag.setArguments(bundle);
+
+                fragmentActivity.getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, nextFrag, "findThisFragment")
+                        .addToBackStack("fmProfile")
+                        .commit();
+            }
+        });
+        holder.username.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Bundle bundle = new Bundle();
+                bundle.putString("idUser", post.getUsers().getUid());
+                ProfileUserFragment nextFrag= new ProfileUserFragment();
+                nextFrag.setArguments(bundle);
+
+                fragmentActivity.getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, nextFrag, "findThisFragment")
+                        .addToBackStack("fmProfile")
+                        .commit();
+            }
+        });
+
         FirebaseDatabase.getInstance().getReference().child("Post").child(post.getPostid()).child("users").child("name").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -141,14 +182,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
             }
         });
-        holder.comment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(mContext, CommentActivity.class);
-                intent.putExtra("id", post.getPostid());
-                mContext.startActivity(intent);
-            }
-        });
 
         // !Warning, Single click action pr
 
@@ -186,6 +219,14 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                 }
             }
         });
+        holder.comment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(mContext, CommentActivity.class);
+                intent.putExtra("id", post.getPostid());
+                mContext.startActivity(intent);
+            }
+        });
 
         holder.comments.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -193,6 +234,20 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                 Intent intent = new Intent(mContext, CommentActivity.class);
                 intent.putExtra("id", post.getPostid());
                 mContext.startActivity(intent);
+            }
+        });
+
+        FirebaseDatabase.getInstance().getReference().child("Post").child(post.getPostid()).child("comment").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(!snapshot.exists()){
+                    holder.comments.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
             }
         });
     }

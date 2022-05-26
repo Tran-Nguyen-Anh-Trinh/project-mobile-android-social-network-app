@@ -141,7 +141,7 @@ public class userAdapter extends RecyclerView.Adapter<userAdapter.Viewholder> {
                                                @Override
                                                public void onClick(View view) {
                                                    idPost = u.getId();
-                                                   sendComment.setText("@" + u.getUsers().getName());
+                                                   sendComment.setText("@" + u.getUsers().getName() + " ");
                                                    rep.setVisibility(View.VISIBLE);
                                                    duocRep.setText(u.getUsers().getName());
                                                    System.out.println("id ne0" + idPost);

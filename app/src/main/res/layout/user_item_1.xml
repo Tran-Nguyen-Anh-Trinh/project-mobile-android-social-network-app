@@ -70,7 +70,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="0dp"
             android:visibility="gone">
             <TextView
                 android:layout_width="match_parent"
@@ -78,14 +78,14 @@
                 android:textColor="@color/black"
                 android:text="View all reply"
                 android:textSize="12dp"
-                android:layout_marginLeft="30dp"/>
+                android:layout_marginLeft="20dp"/>
         </LinearLayout>
         <LinearLayout
             android:id="@+id/liner_hide"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="0dp"
             android:visibility="gone">
             <Space
                 android:layout_width="20dp"
@@ -96,7 +96,7 @@
                 android:textColor="@color/black"
                 android:textStyle="bold"
                 android:textSize="12dp"
-                android:text="Hide feedback"/>
+                android:text="Hide reply"/>
 
         </LinearLayout>
         <androidx.recyclerview.widget.RecyclerView
