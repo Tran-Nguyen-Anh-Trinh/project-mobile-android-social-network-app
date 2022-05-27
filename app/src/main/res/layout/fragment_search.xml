@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Fragment.SearchFragment">
+    tools:context=".Fragment.SearchFragment"
+    android:orientation="vertical">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -40,7 +41,7 @@
         android:layout_below="@+id/bar" />
     <Space
         android:layout_width="match_parent"
-        android:layout_height="20dp">
+        android:layout_height="5dp">
     </Space>
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycle_view_search"
@@ -48,4 +49,4 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/bar" />
 </LinearLayout>
-</RelativeLayout>
+</LinearLayout>
