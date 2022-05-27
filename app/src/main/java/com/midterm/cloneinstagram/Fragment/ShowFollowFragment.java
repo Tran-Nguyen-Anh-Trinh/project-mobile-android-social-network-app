@@ -63,7 +63,6 @@ public class ShowFollowFragment extends Fragment {
         rv_user_follow.setHasFixedSize(true);
         rv_user_follow.setLayoutManager(new LinearLayoutManager(getContext()));
         title = view.findViewById(R.id.title);
-        List<String> listFollower = new ArrayList<>();
         if (checkFollow.equals("followers")) {
             FirebaseDatabase.getInstance().getReference().child("User").child(FirebaseAuth.getInstance().getUid())
                     .child("follower").addListenerForSingleValueEvent(new ValueEventListener() {

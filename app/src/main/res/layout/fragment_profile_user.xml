@@ -18,7 +18,6 @@
             android:layout_height="100dp"
             android:layout_marginStart="15dp"
             android:layout_marginTop="30dp"
-            android:src="@drawable/profile_icon"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -103,7 +102,6 @@
             android:background="@drawable/bg_edit_profile"
             android:paddingTop="5dp"
             android:paddingBottom="5dp"
-            android:text="Follow"
             android:backgroundTint="@color/green"
             android:textAlignment="center"
             android:textColor="@color/white"

@@ -58,7 +58,7 @@ public class ProfileUserActivity extends AppCompatActivity {
                     FirebaseDatabase.getInstance().getReference()
                             .child("User").child(FirebaseAuth.getInstance().getUid())
                             .child("following").child(idUser).setValue(idUser);
-                    tvFollow.setText("Unfollow");
+                    tvFollow.setText("Following");
                 } else {
                     FirebaseDatabase.getInstance().getReference()
                             .child("User").child(idUser).child("follower")
@@ -183,7 +183,7 @@ public class ProfileUserActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()){
-                    tvFollow.setText("Unfollow");
+                    tvFollow.setText("Following");
                 }
             }
 

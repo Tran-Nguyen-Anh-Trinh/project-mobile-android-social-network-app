@@ -1,16 +1,27 @@
 package com.midterm.cloneinstagram.Fragment;
 
+import android.app.Activity;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.text.method.KeyListener;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
+import android.widget.ImageView;
 
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.database.DataSnapshot;
@@ -19,7 +30,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.midterm.cloneinstagram.Adapter.UserAdapter;
 import com.midterm.cloneinstagram.Model.Post;
+import com.midterm.cloneinstagram.Model.Users;
 import com.midterm.cloneinstagram.R;
 import com.midterm.cloneinstagram.Adapter.SearchAdapter;
 
@@ -30,50 +43,108 @@ import java.util.List;
 public class SearchFragment extends Fragment {
 
     private RecyclerView recyclerView;
+    private RecyclerView recycleViewSearch;
     private SearchAdapter searchAdapter;
     private List<Post> list;
+    private EditText searchbar;
+    private ImageView delete;
+    private List<Users> mUsers;
+    private UserAdapter userAdapter;
+    private long ms_press;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_search, container, false);
-//        recyclerView = view.findViewById(R.id.recycle_view);
-//        recyclerView.setHasFixedSize(true);
-//        recyclerView.setLayoutManager(new GridLayoutManager(getContext(),3));
-//        searchbar = view.findViewById(R.id.search_bar);
-//        mUsers = new ArrayList<>();
-//        userAdapter = new UserAdapter(getContext(), mUsers);
-//        recyclerView.setAdapter(userAdapter);
-//        readUser();
-//
-//
-//        recycleViewSearch = view.findViewById((R.id.recycle_view_search));
-//        recycleViewSearch.setLayoutManager(new GridLayoutManager(getContext(), 3));
-//        list = new ArrayList<String>();
-//        searchAdapter = new SearchAdapter(getContext(), list);
-//        recycleViewSearch.setAdapter(searchAdapter);
-//        searchbar.addTextChangedListener(new TextWatcher() {
-//
-//            @Override
-//            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-//
-//            }
-//            @Override
-//            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-//                searchUser(charSequence.toString().toLowerCase());
-//            }
-//            @Override
-//            public void afterTextChanged(Editable editable) {
-//
-//            }
-//        });
+        delete = view.findViewById(R.id.btn_delete);
+        searchbar = view.findViewById(R.id.search_bar);
+        mUsers = new ArrayList<>();
+        userAdapter = new UserAdapter(getContext(), mUsers);
+        recycleViewSearch = view.findViewById(R.id.recycle_view_search);
+        recycleViewSearch.setAdapter(userAdapter);
+        recycleViewSearch.setHasFixedSize(true);
+        recycleViewSearch.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                searchbar.setText("");
+                searchbar.clearFocus();
+            }
+        });
+
+        searchbar.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    hideKeyboard(v);
+                }
+            }
+        });
+
+        searchbar.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+                if(i == keyEvent.KEYCODE_DEL && searchbar.getText().toString().isEmpty()){
+                    mUsers.clear();
+                    userAdapter.notifyDataSetChanged();
+                }
+                return false;
+            }
+        });
+
+        searchbar.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if(charSequence.toString().isEmpty()){
+                    mUsers.clear();
+                    userAdapter.notifyDataSetChanged();
+                } else {
+                    searchUser(charSequence.toString().toLowerCase());
+                }
+            }
+            @Override
+            public void afterTextChanged(Editable editable) {
+            }
+        });
         return view;
+    }
+
+    public void hideKeyboard(View view) {
+        InputMethodManager inputMethodManager =(InputMethodManager)getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    private void searchUser(String key) {
+        FirebaseDatabase.getInstance().getReference().child("User").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                mUsers.clear();
+                for (DataSnapshot dataSnapshot: snapshot.getChildren()){
+                    Users users = dataSnapshot.getValue(Users.class);
+                    if(users.getName().toLowerCase().contains(key)){
+                        mUsers.add(users);
+                    }
+                }
+                userAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        recyclerView = view.findViewById(R.id.recycle_view_search);
+        recyclerView = view.findViewById(R.id.recycle_view);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
         recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {

@@ -96,7 +96,7 @@ public class ProfileUserFragment extends Fragment {
                     FirebaseDatabase.getInstance().getReference()
                             .child("User").child(FirebaseAuth.getInstance().getUid())
                             .child("following").child(idUser).setValue(idUser);
-                    tvFollow.setText("Unfollow");
+                    tvFollow.setText("Following");
                 } else {
                     FirebaseDatabase.getInstance().getReference()
                             .child("User").child(idUser).child("follower")
@@ -173,8 +173,6 @@ public class ProfileUserFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 Users users = snapshot.getValue(Users.class);
                 Picasso.get().load(users.getImageUri()).into(profile);
-//                tv_followers.setText(users.getFollower().size()+"");
-//                tv_following.setText(users.getFollowing().size()+"");
                 name.setText(users.getName());
                 if (idUser.equals(FirebaseAuth.getInstance().getUid())){
                     tvFollow.setEnabled(false);
@@ -216,7 +214,9 @@ public class ProfileUserFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()){
-                    tvFollow.setText("Unfollow");
+                    tvFollow.setText("Following");
+                }else{
+                    tvFollow.setText("Follow");
                 }
             }
 

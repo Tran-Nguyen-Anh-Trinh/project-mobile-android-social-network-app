@@ -65,9 +65,8 @@ public class HomeFragment extends Fragment {
         storyLists = new ArrayList<>();
         storyAdapter = new StoryAdapter(getContext(), storyLists);
         recyclerView_story.setAdapter(storyAdapter);
-//        checkFollowing();
-//        readPost();
         notify = view.findViewById(R.id.notify);
+        checkFollowing();
         return view;
     }
 
@@ -135,6 +134,5 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        checkFollowing();
     }
 }
