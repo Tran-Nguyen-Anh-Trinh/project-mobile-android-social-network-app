@@ -83,7 +83,7 @@
 
             <ImageView
                 android:id="@+id/comment"
-                android:layout_width="30dp"
+                android:layout_width="25dp"
                 android:layout_height="30dp"
                 android:layout_marginStart="20dp"
                 android:layout_toEndOf="@+id/like"

@@ -1,4 +1,4 @@
-package com.midterm.cloneinstagram;
+package com.midterm.cloneinstagram.Fragment;
 
 import android.annotation.SuppressLint;
 import android.content.res.ColorStateList;
@@ -25,6 +25,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.midterm.cloneinstagram.Adapter.PostedAdapter;
 import com.midterm.cloneinstagram.Model.Post;
 import com.midterm.cloneinstagram.Model.Users;
+import com.midterm.cloneinstagram.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;

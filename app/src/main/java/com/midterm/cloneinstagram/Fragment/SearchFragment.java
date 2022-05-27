@@ -42,36 +42,36 @@ public class SearchFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_search, container, false);
-        recyclerView = view.findViewById(R.id.recycle_view);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(),3));
-        searchbar = view.findViewById(R.id.search_bar);
-        mUsers = new ArrayList<>();
-        userAdapter = new UserAdapter(getContext(), mUsers);
-        recyclerView.setAdapter(userAdapter);
-        readUser();
-
-
-        recycleViewSearch = view.findViewById((R.id.recycle_view_search));
-        recycleViewSearch.setLayoutManager(new GridLayoutManager(getContext(), 3));
-        list = new ArrayList<String>();
-        searchAdapter = new SearchAdapter(getContext(), list);
-        recycleViewSearch.setAdapter(searchAdapter);
-        searchbar.addTextChangedListener(new TextWatcher() {
-
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                searchUser(charSequence.toString().toLowerCase());
-            }
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-            }
-        });
+//        recyclerView = view.findViewById(R.id.recycle_view);
+//        recyclerView.setHasFixedSize(true);
+//        recyclerView.setLayoutManager(new GridLayoutManager(getContext(),3));
+//        searchbar = view.findViewById(R.id.search_bar);
+//        mUsers = new ArrayList<>();
+//        userAdapter = new UserAdapter(getContext(), mUsers);
+//        recyclerView.setAdapter(userAdapter);
+//        readUser();
+//
+//
+//        recycleViewSearch = view.findViewById((R.id.recycle_view_search));
+//        recycleViewSearch.setLayoutManager(new GridLayoutManager(getContext(), 3));
+//        list = new ArrayList<String>();
+//        searchAdapter = new SearchAdapter(getContext(), list);
+//        recycleViewSearch.setAdapter(searchAdapter);
+//        searchbar.addTextChangedListener(new TextWatcher() {
+//
+//            @Override
+//            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+//
+//            }
+//            @Override
+//            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+//                searchUser(charSequence.toString().toLowerCase());
+//            }
+//            @Override
+//            public void afterTextChanged(Editable editable) {
+//
+//            }
+//        });
         return view;
     }
     private void searchUser(String s){

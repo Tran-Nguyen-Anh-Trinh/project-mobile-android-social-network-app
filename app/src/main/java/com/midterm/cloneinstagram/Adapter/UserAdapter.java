@@ -45,15 +45,15 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.user_item, parent, false);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.user_follow, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final Users users = mUsers.get(position);
-        holder.userName.setText(users.getUid());
-        holder.fullName.setText(users.getName());
+        holder.userName.setText(users.getName());
+        holder.fullName.setText(users.getEmail());
         Picasso.get().load(users.getImageUri()).into(holder.imageView);
         if(users.getUid().equals(firebaseUser.getUid())){
             holder.button.setVisibility(View.GONE);

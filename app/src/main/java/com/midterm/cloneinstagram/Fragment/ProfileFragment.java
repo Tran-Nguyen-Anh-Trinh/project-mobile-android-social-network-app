@@ -55,12 +55,7 @@ public class ProfileFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         tvEditProfile = view.findViewById(R.id.tv_edit_profile);
-        tvEditProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getContext().startActivity(new Intent(getContext(), UpdateInformationActivity.class));
-            }
-        });
+
         recyclerView = view.findViewById(R.id.rv_posted);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
@@ -100,7 +95,46 @@ public class ProfileFragment extends Fragment {
         tv_following = view.findViewById(R.id.tv_following);
         readPost();
         updateDataUser();
+        addEvent();
     }
+
+    private void addEvent() {
+        tvEditProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getContext().startActivity(new Intent(getContext(), UpdateInformationActivity.class));
+            }
+        });
+        tv_followers.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ShowFollowFragment nextFrag= new ShowFollowFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString("follow", "followers");
+                nextFrag.setArguments(bundle);
+
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, nextFrag, "findThisFragment")
+                        .addToBackStack(null)
+                        .commit();
+            }
+        });
+        tv_following.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ShowFollowFragment nextFrag= new ShowFollowFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString("follow", "following");
+                nextFrag.setArguments(bundle);
+
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, nextFrag, "findThisFragment")
+                        .addToBackStack(null)
+                        .commit();
+            }
+        });
+    }
+
 
     private void readPost() {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Post");

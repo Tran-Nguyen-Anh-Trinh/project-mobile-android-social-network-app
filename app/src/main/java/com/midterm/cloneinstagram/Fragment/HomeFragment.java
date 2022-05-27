@@ -73,7 +73,7 @@ public class HomeFragment extends Fragment {
 
     private void checkFollowing(){
         followingList = new ArrayList<>();
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Follow")
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("User")
                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
                 .child("following");
 
@@ -84,7 +84,6 @@ public class HomeFragment extends Fragment {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     followingList.add(snapshot.getKey());
                 }
-
                 readPost();
             }
 
@@ -105,6 +104,12 @@ public class HomeFragment extends Fragment {
                 postLists.clear();
                 for(DataSnapshot snapshot: dataSnapshot.getChildren()) {
                     Post post = snapshot.getValue(Post.class);
+//                    if(followingList.contains(post.getUsers().getUid())){
+//                        postLists.add(post);
+//                    }
+//                    if(post.getUsers().getUid().equals(FirebaseAuth.getInstance().getUid())){
+//                        postLists.add(post);
+//                    }
                     postLists.add(post);
                 }
                 if (postLists.isEmpty()){
@@ -130,6 +135,6 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        readPost();
+        checkFollowing();
     }
 }

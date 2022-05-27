@@ -21,8 +21,11 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -147,23 +150,35 @@ public class PostActivity extends AppCompatActivity {
                                         post.setPublisher(datetime);
                                         post.setDescription(editText.getText().toString().trim());
                                         post.setPostimage(uri.toString());
-                                        post.setUsers(Users.getInstance());
-
-                                        reference.child("Post").child(datetime).setValue(post).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        FirebaseDatabase.getInstance().getReference().child("User").child(FirebaseAuth.getInstance().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                                             @Override
-                                            public void onComplete(@NonNull Task<Void> task) {
-                                                if (task.isSuccessful()) {
-                                                    Toast.makeText(PostActivity.this, "Posted", Toast.LENGTH_SHORT).show();
-                                                    progressDialog.dismiss();
-                                                    Intent intent = new Intent(PostActivity.this, MainActivity.class);
-                                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
-                                                    startActivity(intent);
-                                                } else {
-                                                    progressDialog.dismiss();
-                                                    Toast.makeText(PostActivity.this, "Error", Toast.LENGTH_SHORT).show();
-                                                }
+                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                Users users = snapshot.getValue(Users.class);
+                                                post.setUsers(users);
+                                                reference.child("Post").child(datetime).setValue(post).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                        if (task.isSuccessful()) {
+                                                            Toast.makeText(PostActivity.this, "Posted", Toast.LENGTH_SHORT).show();
+                                                            progressDialog.dismiss();
+                                                            Intent intent = new Intent(PostActivity.this, MainActivity.class);
+                                                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+                                                            startActivity(intent);
+                                                        } else {
+                                                            progressDialog.dismiss();
+                                                            Toast.makeText(PostActivity.this, "Error", Toast.LENGTH_SHORT).show();
+                                                        }
+                                                    }
+                                                });
+                                            }
+
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError error) {
+
                                             }
                                         });
+
+
                                     }
                                 });
                             } else {
@@ -186,21 +201,32 @@ public class PostActivity extends AppCompatActivity {
                                         post.setPublisher(datetime);
                                         post.setDescription(editText.getText().toString().trim());
                                         post.setPostimage(uri.toString());
-                                        post.setUsers(Users.getInstance());
 
-                                        reference.child("Post").child(datetime).setValue(post).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        FirebaseDatabase.getInstance().getReference().child("User").child(FirebaseAuth.getInstance().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                                             @Override
-                                            public void onComplete(@NonNull Task<Void> task) {
-                                                if (task.isSuccessful()) {
-                                                    Toast.makeText(PostActivity.this, "Posted", Toast.LENGTH_SHORT).show();
-                                                    progressDialog.dismiss();
-                                                    Intent intent = new Intent(PostActivity.this, MainActivity.class);
-                                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
-                                                    startActivity(intent);
-                                                } else {
-                                                    progressDialog.dismiss();
-                                                    Toast.makeText(PostActivity.this, "Error", Toast.LENGTH_SHORT).show();
-                                                }
+                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                Users users = snapshot.getValue(Users.class);
+                                                post.setUsers(users);
+                                                reference.child("Post").child(datetime).setValue(post).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                        if (task.isSuccessful()) {
+                                                            Toast.makeText(PostActivity.this, "Posted", Toast.LENGTH_SHORT).show();
+                                                            progressDialog.dismiss();
+                                                            Intent intent = new Intent(PostActivity.this, MainActivity.class);
+                                                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+                                                            startActivity(intent);
+                                                        } else {
+                                                            progressDialog.dismiss();
+                                                            Toast.makeText(PostActivity.this, "Error", Toast.LENGTH_SHORT).show();
+                                                        }
+                                                    }
+                                                });
+                                            }
+
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError error) {
+
                                             }
                                         });
                                     }

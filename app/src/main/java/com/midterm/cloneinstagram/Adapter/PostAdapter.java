@@ -1,13 +1,9 @@
 package com.midterm.cloneinstagram.Adapter;
 
 
-import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.SystemClock;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,35 +11,23 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.midterm.cloneinstagram.CommentActivity;
-import com.midterm.cloneinstagram.MainActivity;
-import com.midterm.cloneinstagram.Model.Comment;
 import com.midterm.cloneinstagram.Model.Post;
-import com.midterm.cloneinstagram.MyView;
-import com.midterm.cloneinstagram.ProfileUserActivity;
-import com.midterm.cloneinstagram.ProfileUserFragment;
+import com.midterm.cloneinstagram.Fragment.ProfileUserFragment;
 import com.midterm.cloneinstagram.R;
 import com.midterm.cloneinstagram.Model.Users;
 import com.squareup.picasso.Picasso;
 
-import java.util.Calendar;
 import java.util.List;
 
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
@@ -83,7 +67,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
                 fragmentActivity.getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fragment_container, nextFrag, "findThisFragment")
-                        .addToBackStack("fmProfile")
+                        .addToBackStack(null)
                         .commit();
             }
         });
@@ -97,7 +81,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
                 fragmentActivity.getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fragment_container, nextFrag, "findThisFragment")
-                        .addToBackStack("fmProfile")
+                        .addToBackStack(null)
                         .commit();
             }
         });
