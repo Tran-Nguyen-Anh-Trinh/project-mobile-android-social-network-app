@@ -4,6 +4,7 @@ package com.midterm.cloneinstagram.Adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,12 +24,17 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.midterm.cloneinstagram.CommentActivity;
+import com.midterm.cloneinstagram.Fragment.DetailPostFragment;
+import com.midterm.cloneinstagram.Fragment.ShowFollowFragment;
+import com.midterm.cloneinstagram.Model.Notification;
 import com.midterm.cloneinstagram.Model.Post;
 import com.midterm.cloneinstagram.Fragment.ProfileUserFragment;
 import com.midterm.cloneinstagram.R;
 import com.midterm.cloneinstagram.Model.Users;
 import com.squareup.picasso.Picasso;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
@@ -121,6 +127,9 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
             }
         });
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference()
+                .child("Notify").child(post.getUsers().getUid())
+                .push();
 
         holder.post_image.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -130,14 +139,51 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                 long currentClickTime = System.currentTimeMillis();
                 if (currentClickTime - LAST_CLICK_TIME <= mDoubleClickInterval)
                 {
+                    String timeStamp = new SimpleDateFormat("dd/MM/yyyy").format(Calendar.getInstance().getTime());
+                    String idNotify = new SimpleDateFormat("yyyyMMdd_HHmmssss").format(Calendar.getInstance().getTime());
+                    idNotify += System.currentTimeMillis();
                     if (holder.likeed.getVisibility() == View.GONE) {
                         holder.likeed.setVisibility(View.VISIBLE);
                         FirebaseDatabase.getInstance().getReference()
                                 .child("Post").child(post.getPostid()).child("like").child(FirebaseAuth.getInstance().getUid())
                                 .setValue(FirebaseAuth.getInstance().getUid());
+                        Notification notification = new Notification();
+                        notification.setIdNotify(idNotify);
+                        notification.setIdUser(FirebaseAuth.getInstance().getUid());
+                        notification.setType("like");
+                        notification.setDate(timeStamp);
+                        notification.setContent("liked your photo");
+                        notification.setIdPost(post.getPostid());
+
+                        if(!post.getUsers().getUid().equals(FirebaseAuth.getInstance().getUid())){
+                            FirebaseDatabase.getInstance().getReference()
+                                    .child("Notify").child(post.getUsers().getUid())
+                                    .child("isRead").push()
+                                    .setValue(post.getUsers().getUid());
+                            reference.setValue(notification);
+                        }
 
                     } else {
                         holder.likeed.setVisibility(View.GONE);
+                        FirebaseDatabase.getInstance().getReference()
+                                .child("Notify").child(post.getUsers().getUid())
+                                .child("isRead").addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        for (DataSnapshot dataSnapshot: snapshot.getChildren()){
+                                            dataSnapshot.getRef().removeValue();
+                                            break;
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                    }
+                                });
+
+                        reference.removeValue();
+
                         FirebaseDatabase.getInstance().getReference()
                                 .child("Post").child(post.getPostid()).child("like").child(FirebaseAuth.getInstance().getUid()).removeValue();
                     }
@@ -151,9 +197,11 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
         holder.publisher.setText(post.getUsers().getName());
         if(post.getDescription().equals("")) {
+            holder.publisher.setVisibility(View.GONE);
             holder.description.setVisibility(View.GONE);
         }else {
             holder.description.setVisibility(View.VISIBLE);
+            holder.publisher.setVisibility(View.VISIBLE);
             holder.description.setText(post.getDescription());
         }
         FirebaseDatabase.getInstance().getReference().child("Post").child(post.getPostid()).child("like").addValueEventListener(new ValueEventListener() {
@@ -191,14 +239,51 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         holder.like.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                String timeStamp = new SimpleDateFormat("dd/MM/yyyy").format(Calendar.getInstance().getTime());
+                String idNotify = new SimpleDateFormat("yyyyMMdd_HHmmssss").format(Calendar.getInstance().getTime());
+                idNotify += System.currentTimeMillis();
                 if (holder.likeed.getVisibility() == View.GONE) {
                     holder.likeed.setVisibility(View.VISIBLE);
                     FirebaseDatabase.getInstance().getReference()
                             .child("Post").child(post.getPostid()).child("like").child(FirebaseAuth.getInstance().getUid())
                             .setValue(FirebaseAuth.getInstance().getUid());
+                    Notification notification = new Notification();
+                    notification.setIdNotify(idNotify);
+                    notification.setIdUser(FirebaseAuth.getInstance().getUid());
+                    notification.setType("like");
+                    notification.setDate(timeStamp);
+                    notification.setContent("liked your photo");
+                    notification.setIdPost(post.getPostid());
+
+                    if(!post.getUsers().getUid().equals(FirebaseAuth.getInstance().getUid())){
+                        FirebaseDatabase.getInstance().getReference()
+                                .child("Notify").child(post.getUsers().getUid())
+                                .child("isRead").push()
+                                .setValue(post.getUsers().getUid());
+                        reference.setValue(notification);
+                    }
 
                 } else {
                     holder.likeed.setVisibility(View.GONE);
+                    FirebaseDatabase.getInstance().getReference()
+                            .child("Notify").child(post.getUsers().getUid())
+                            .child("isRead").addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    for (DataSnapshot dataSnapshot: snapshot.getChildren()){
+                                        dataSnapshot.getRef().removeValue();
+                                        break;
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
+
+                    reference.removeValue();
+
                     FirebaseDatabase.getInstance().getReference()
                             .child("Post").child(post.getPostid()).child("like").child(FirebaseAuth.getInstance().getUid()).removeValue();
                 }
@@ -209,6 +294,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             public void onClick(View view) {
                 Intent intent = new Intent(mContext, CommentActivity.class);
                 intent.putExtra("id", post.getPostid());
+                intent.putExtra("idUser", post.getUsers().getUid());
                 mContext.startActivity(intent);
             }
         });
@@ -235,6 +321,35 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
             }
         });
+        holder.likes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ShowFollowFragment nextFrag= new ShowFollowFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString("idPost", post.getPostid());
+                nextFrag.setArguments(bundle);
+
+                fragmentActivity.getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, nextFrag, "findThisFragment")
+                        .addToBackStack(null)
+                        .commit();
+            }
+        });
+        holder.date.setText(post.getDate());
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DetailPostFragment nextFrag= new DetailPostFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString("id",  post.getPostid());
+                nextFrag.setArguments(bundle);
+
+                fragmentActivity.getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, nextFrag, "findThisFragment")
+                        .addToBackStack(null)
+                        .commit();
+            }
+        });
     }
 
     @Override
@@ -244,7 +359,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
     public class ViewHolder extends RecyclerView.ViewHolder{
         public ImageView image_profile, post_image, like, likeed,  comment, save;
-        public TextView username, likes, publisher, description, comments;
+        public TextView username, likes, publisher, description, comments, date;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -260,6 +375,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             username = itemView.findViewById(R.id.username);
             publisher = itemView.findViewById(R.id.publisher);
             description = itemView.findViewById(R.id.description);
+            date = itemView.findViewById(R.id.date);
         }
     }
 

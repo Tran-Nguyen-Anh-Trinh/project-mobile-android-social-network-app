@@ -35,6 +35,7 @@ import com.midterm.cloneinstagram.Model.Users;
 import java.io.ByteArrayOutputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 public class PostActivity extends AppCompatActivity {
@@ -145,11 +146,13 @@ public class PostActivity extends AppCompatActivity {
                                 storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                     @Override
                                     public void onSuccess(Uri uri) {
+                                        String timeStamp = new SimpleDateFormat("dd/MM/yyyy").format(Calendar.getInstance().getTime());
                                         Post post = new Post();
                                         post.setPostid(datetime);
                                         post.setPublisher(datetime);
                                         post.setDescription(editText.getText().toString().trim());
                                         post.setPostimage(uri.toString());
+                                        post.setDate(timeStamp);
                                         FirebaseDatabase.getInstance().getReference().child("User").child(FirebaseAuth.getInstance().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                                             @Override
                                             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -196,9 +199,11 @@ public class PostActivity extends AppCompatActivity {
                                 storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                     @Override
                                     public void onSuccess(Uri uri) {
+                                        String timeStamp = new SimpleDateFormat("dd/MM/yyyy").format(Calendar.getInstance().getTime());
                                         Post post = new Post();
                                         post.setPostid(datetime);
                                         post.setPublisher(datetime);
+                                        post.setDate(timeStamp);
                                         post.setDescription(editText.getText().toString().trim());
                                         post.setPostimage(uri.toString());
 

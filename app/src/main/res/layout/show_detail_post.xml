@@ -17,8 +17,8 @@
             android:gravity="center">
             <TextView
                 android:id="@+id/back"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:background="@drawable/left"
                 android:backgroundTint="@color/green"
                 android:layout_gravity="center"
@@ -52,7 +52,7 @@
                 android:layout_gravity="center"
                 android:visibility="gone"
                 android:backgroundTint="@color/green"
-                android:background="@drawable/ic_baseline_close_24"></TextView>
+                android:background="@drawable/delete_48px"></TextView>
         </LinearLayout>
 
         <ImageView

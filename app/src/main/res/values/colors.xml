@@ -15,4 +15,5 @@
     <color name="colorBlack">#000000</color>
     <color name="silver">#D6D6D6</color>
     <color name="gray">#ACACAC</color>
+    <color name="red">#CC0000</color>
 </resources>

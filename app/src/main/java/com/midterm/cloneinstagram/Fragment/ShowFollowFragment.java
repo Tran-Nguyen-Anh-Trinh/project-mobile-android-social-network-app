@@ -33,6 +33,7 @@ public class ShowFollowFragment extends Fragment {
     private String checkFollow;
     private TextView title;
     private TextView btn_close;
+    private String idPost;
 
     public ShowFollowFragment() {
         // Required empty public constructor
@@ -42,6 +43,7 @@ public class ShowFollowFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         if (getArguments() != null) {
             checkFollow = getArguments().getString("follow");
+            idPost = getArguments().getString("idPost");
         }
         super.onCreate(savedInstanceState);
     }
@@ -58,16 +60,17 @@ public class ShowFollowFragment extends Fragment {
         rv_user_follow = view.findViewById(R.id.rv_user_follow);
         btn_close = view.findViewById(R.id.btn_close);
         usersList = new ArrayList<>();
-        adapter = new UserAdapter(getContext(), usersList);
+        adapter = new UserAdapter(getContext(), usersList, getActivity());
         rv_user_follow.setAdapter(adapter);
         rv_user_follow.setHasFixedSize(true);
         rv_user_follow.setLayoutManager(new LinearLayoutManager(getContext()));
         title = view.findViewById(R.id.title);
-        if (checkFollow.equals("followers")) {
+        if ("followers".equals(checkFollow)) {
             FirebaseDatabase.getInstance().getReference().child("User").child(FirebaseAuth.getInstance().getUid())
                     .child("follower").addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            usersList.clear();
                             for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                                 String id = dataSnapshot.getValue(String.class);
                                 FirebaseDatabase.getInstance().getReference().child("User").child(id).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -92,12 +95,14 @@ public class ShowFollowFragment extends Fragment {
 
                         }
                     });
-        } else {
+        }
+        if ("following".equals(checkFollow)){
             title.setText("List following");
             FirebaseDatabase.getInstance().getReference().child("User").child(FirebaseAuth.getInstance().getUid())
                     .child("following").addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            usersList.clear();
                             for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                                 String id = dataSnapshot.getValue(String.class);
                                 FirebaseDatabase.getInstance().getReference().child("User").child(id).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -122,6 +127,36 @@ public class ShowFollowFragment extends Fragment {
 
                         }
                     });
+        }
+        if (idPost!=null){
+            title.setText("Like");
+            FirebaseDatabase.getInstance().getReference().child("Post").child(idPost).child("like").addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    usersList.clear();
+                    for(DataSnapshot dataSnapshot: snapshot.getChildren()){
+                        String id = dataSnapshot.getValue(String.class);
+                        FirebaseDatabase.getInstance().getReference().child("User").child(id).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                Users users = snapshot.getValue(Users.class);
+                                usersList.add(users);
+                                adapter.notifyDataSetChanged();
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
         }
 
         btn_close.setOnClickListener(new View.OnClickListener() {

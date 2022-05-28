@@ -1,15 +1,16 @@
 package com.midterm.cloneinstagram.Adapter;
 import android.content.Context;
-import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.midterm.cloneinstagram.DetailPost;
+import com.midterm.cloneinstagram.Fragment.DetailPostFragment;
 import com.midterm.cloneinstagram.Model.Post;
 import com.midterm.cloneinstagram.R;
 import com.squareup.picasso.Picasso;
@@ -19,12 +20,13 @@ import java.util.List;
 public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder>{
     private Context mContext;
     private List<Post> listImage;
+    public FragmentActivity fragmentActivity;
 
-    public SearchAdapter(Context mContext, List<Post> listImage) {
+    public SearchAdapter(Context mContext, List<Post> listImage, FragmentActivity fragmentActivity) {
         this.mContext = mContext;
         this.listImage = listImage;
+        this.fragmentActivity = fragmentActivity;
     }
-
     @NonNull
     @Override
     public SearchAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -39,9 +41,15 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(mContext, DetailPost.class);
-                intent.putExtra("id", post.getPostid());
-                mContext.startActivity(intent);
+                DetailPostFragment nextFrag= new DetailPostFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString("id",  post.getPostid());
+                nextFrag.setArguments(bundle);
+
+                fragmentActivity.getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, nextFrag, "findThisFragment")
+                        .addToBackStack(null)
+                        .commit();
             }
         });
     }

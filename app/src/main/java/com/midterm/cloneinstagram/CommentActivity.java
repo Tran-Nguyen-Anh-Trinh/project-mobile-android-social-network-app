@@ -18,11 +18,13 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.midterm.cloneinstagram.Model.Comment;
+import com.midterm.cloneinstagram.Model.Notification;
 import com.midterm.cloneinstagram.Model.Users;
 import com.midterm.cloneinstagram.comment.userAdapter;
 import com.midterm.cloneinstagram.comment.userCmt;
@@ -30,6 +32,7 @@ import com.midterm.cloneinstagram.comment.userCmt;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 public class CommentActivity extends AppCompatActivity {
@@ -37,11 +40,13 @@ public class CommentActivity extends AppCompatActivity {
     userAdapter adapter;
     ArrayList<Comment> listCmt= new ArrayList<>();
     public static  String idPost;
+    String idUser;
     ImageView send;
     TextView btnCC, duocRep, huyRep;
     EditText comment;
     LinearLayout rep;
     LinearLayoutManager linearLayoutManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +54,7 @@ public class CommentActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_comment);
         idPost = getIntent().getStringExtra("id");
+        idUser = getIntent().getStringExtra("idUser");
         send = findViewById(R.id.send);
         comment = findViewById(R.id.sendComment);
         btnCC = findViewById(R.id.btnCC);
@@ -84,6 +90,35 @@ public class CommentActivity extends AppCompatActivity {
         });
     }
 
+    private void notifyApp(String child){
+        String idNotify = new SimpleDateFormat("yyyyMMdd_HHmmssss").format(Calendar.getInstance().getTime());
+        idNotify += System.currentTimeMillis();
+        String timeStamp = new SimpleDateFormat("dd/MM/yyyy").format(Calendar.getInstance().getTime());
+
+        Notification notification = new Notification();
+        notification.setIdNotify(idNotify);
+        notification.setIdUser(FirebaseAuth.getInstance().getUid());
+        notification.setType(child);
+        notification.setDate(timeStamp);
+        if(child.equals("comment")){
+            notification.setContent(child+" on your post");
+        } else {
+            notification.setContent("replied to comment on your post");
+        }
+        notification.setIdPost(idPost);
+        if(!idUser.equals(FirebaseAuth.getInstance().getUid())) {
+
+            FirebaseDatabase.getInstance().getReference()
+                    .child("Notify").child(idUser)
+                    .child("isRead").push()
+                    .setValue(idUser);
+
+            FirebaseDatabase.getInstance().getReference()
+                    .child("Notify").child(idUser)
+                    .push().setValue(notification);
+        }
+    }
+
     private void setUp(){
         send.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,6 +126,8 @@ public class CommentActivity extends AppCompatActivity {
                 if(comment.getText().toString().isEmpty()){
                     return;
                 }
+
+
                 DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss-ssss");
                 Date date = new Date();
                 String datetime = dateFormat.format(date);
@@ -108,6 +145,9 @@ public class CommentActivity extends AppCompatActivity {
                                         userAdapter.idPost = "";
                                         linearLayoutManager.smoothScrollToPosition(recyclerView, null, adapter.getItemCount());
                                         Toast.makeText(CommentActivity.this, "Added comment", Toast.LENGTH_SHORT).show();
+
+                                        notifyApp("RepComment");
+
                                     }else{
                                         Toast.makeText(CommentActivity.this, "Error", Toast.LENGTH_SHORT).show();
                                     }
@@ -124,6 +164,8 @@ public class CommentActivity extends AppCompatActivity {
                                         userAdapter.idPost = "";
                                         linearLayoutManager.smoothScrollToPosition(recyclerView, null, adapter.getItemCount());
                                         Toast.makeText(CommentActivity.this, "Added comment", Toast.LENGTH_SHORT).show();
+
+                                        notifyApp("comment");
                                     } else {
                                         Toast.makeText(CommentActivity.this, "Error", Toast.LENGTH_SHORT).show();
                                     }

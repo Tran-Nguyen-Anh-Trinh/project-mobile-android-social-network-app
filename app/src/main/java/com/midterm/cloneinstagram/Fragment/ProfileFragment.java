@@ -79,7 +79,7 @@ public class ProfileFragment extends Fragment {
             }
         });
         list = new ArrayList<>();
-        postedAdapter = new PostedAdapter(getContext(), list);
+        postedAdapter = new PostedAdapter(getContext(), list, getActivity());
         recyclerView.setAdapter(postedAdapter);
 
         profile = view.findViewById(R.id.profile);
@@ -147,7 +147,7 @@ public class ProfileFragment extends Fragment {
                 for(DataSnapshot snapshot: dataSnapshot.getChildren()) {
                     Post post = snapshot.getValue(Post.class);
                     if(post.getUsers().getUid().equals(Users.getInstance().getUid())){
-                        list.add(post);
+                        list.add(0, post);
                     }
                 }
                 tv_posts.setText(list.size()+"");

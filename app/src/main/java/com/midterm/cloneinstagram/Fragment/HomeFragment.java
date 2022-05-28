@@ -103,13 +103,13 @@ public class HomeFragment extends Fragment {
                 postLists.clear();
                 for(DataSnapshot snapshot: dataSnapshot.getChildren()) {
                     Post post = snapshot.getValue(Post.class);
-//                    if(followingList.contains(post.getUsers().getUid())){
-//                        postLists.add(post);
-//                    }
-//                    if(post.getUsers().getUid().equals(FirebaseAuth.getInstance().getUid())){
-//                        postLists.add(post);
-//                    }
-                    postLists.add(post);
+                    if(followingList.contains(post.getUsers().getUid())){
+                        postLists.add(post);
+                    }
+                    if(post.getUsers().getUid().equals(FirebaseAuth.getInstance().getUid())){
+                        postLists.add(post);
+                    }
+//                    postLists.add(post);
                 }
                 if (postLists.isEmpty()){
                     notify.setVisibility(View.VISIBLE);

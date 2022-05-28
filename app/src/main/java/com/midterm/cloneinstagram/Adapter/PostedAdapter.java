@@ -1,32 +1,32 @@
 package com.midterm.cloneinstagram.Adapter;
 
 import android.content.Context;
-import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.midterm.cloneinstagram.DetailPost;
+import com.midterm.cloneinstagram.Fragment.DetailPostFragment;
 import com.midterm.cloneinstagram.Model.Post;
 import com.midterm.cloneinstagram.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import de.hdodenhof.circleimageview.CircleImageView;
-
 public class PostedAdapter  extends RecyclerView.Adapter<PostedAdapter.ViewHolder> {
     private Context mContext;
     private List<Post> listImage;
+    public FragmentActivity fragmentActivity;
 
-    public PostedAdapter(Context mContext, List<Post> listImage) {
+    public PostedAdapter(Context mContext, List<Post> listImage, FragmentActivity fragmentActivity) {
         this.mContext = mContext;
         this.listImage = listImage;
+        this.fragmentActivity = fragmentActivity;
     }
 
     @NonNull
@@ -43,9 +43,18 @@ public class PostedAdapter  extends RecyclerView.Adapter<PostedAdapter.ViewHolde
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(mContext, DetailPost.class);
-                intent.putExtra("id", post.getPostid());
-                mContext.startActivity(intent);
+                DetailPostFragment nextFrag= new DetailPostFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString("id",  post.getPostid());
+                nextFrag.setArguments(bundle);
+
+                fragmentActivity.getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, nextFrag, "findThisFragment")
+                        .addToBackStack(null)
+                        .commit();
+//                Intent intent = new Intent(mContext, DetailPost.class);
+//                intent.putExtra("id", post.getPostid());
+//                mContext.startActivity(intent);
             }
         });
     }

@@ -59,7 +59,7 @@ public class SearchFragment extends Fragment {
         delete = view.findViewById(R.id.btn_delete);
         searchbar = view.findViewById(R.id.search_bar);
         mUsers = new ArrayList<>();
-        userAdapter = new UserAdapter(getContext(), mUsers);
+        userAdapter = new UserAdapter(getContext(), mUsers, getActivity());
         recycleViewSearch = view.findViewById(R.id.recycle_view_search);
         recycleViewSearch.setAdapter(userAdapter);
         recycleViewSearch.setHasFixedSize(true);
@@ -172,7 +172,7 @@ public class SearchFragment extends Fragment {
             }
         });
         list = new ArrayList<>();
-        searchAdapter = new SearchAdapter(getContext(), list);
+        searchAdapter = new SearchAdapter(getContext(), list, getActivity());
         recyclerView.setAdapter(searchAdapter);
         readPost();
     }

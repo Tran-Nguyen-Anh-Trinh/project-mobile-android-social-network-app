@@ -99,7 +99,7 @@ public class ProfileUserActivity extends AppCompatActivity {
             }
         });
         list = new ArrayList<>();
-        postedAdapter = new PostedAdapter(ProfileUserActivity.this, list);
+        postedAdapter = new PostedAdapter(ProfileUserActivity.this, list, ProfileUserActivity.this);
         recyclerView.setAdapter(postedAdapter);
 
         profile = findViewById(R.id.profile);
@@ -120,7 +120,7 @@ public class ProfileUserActivity extends AppCompatActivity {
                 for(DataSnapshot snapshot: dataSnapshot.getChildren()) {
                     Post post = snapshot.getValue(Post.class);
                     if(post.getUsers().getUid().equals(idUser)){
-                        list.add(post);
+                        list.add(0, post);
                     }
                 }
                 tv_posts.setText(list.size()+"");

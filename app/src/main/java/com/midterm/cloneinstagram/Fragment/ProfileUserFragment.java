@@ -2,6 +2,7 @@ package com.midterm.cloneinstagram.Fragment;
 
 import android.annotation.SuppressLint;
 import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
 
@@ -11,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -138,7 +140,7 @@ public class ProfileUserFragment extends Fragment {
             }
         });
         list = new ArrayList<>();
-        postedAdapter = new PostedAdapter(getContext(), list);
+        postedAdapter = new PostedAdapter(getContext(), list, getActivity());
         recyclerView.setAdapter(postedAdapter);
         readPost();
         getData();
@@ -153,7 +155,7 @@ public class ProfileUserFragment extends Fragment {
                 for(DataSnapshot snapshot: dataSnapshot.getChildren()) {
                     Post post = snapshot.getValue(Post.class);
                     if(post.getUsers().getUid().equals(idUser)){
-                        list.add(post);
+                        list.add(0, post);
                     }
                 }
                 tv_posts.setText(list.size()+"");
@@ -167,25 +169,7 @@ public class ProfileUserFragment extends Fragment {
         });
     }
     private void getData(){
-        FirebaseDatabase.getInstance().getReference().child("User").child(idUser).addValueEventListener(new ValueEventListener() {
-            @SuppressLint({"ResourceAsColor", "ResourceType"})
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Users users = snapshot.getValue(Users.class);
-                Picasso.get().load(users.getImageUri()).into(profile);
-                name.setText(users.getName());
-                if (idUser.equals(FirebaseAuth.getInstance().getUid())){
-                    tvFollow.setEnabled(false);
-                    tvFollow.setBackgroundTintList(ColorStateList.valueOf(getContext().getResources().getColor(R.color.silver)));
-                    tvFollow.setTextColor(R.color.gray);
-                }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
 
         FirebaseDatabase.getInstance().getReference().child("User").child(idUser).child("follower").addValueEventListener(new ValueEventListener() {
             @Override
@@ -216,8 +200,29 @@ public class ProfileUserFragment extends Fragment {
                 if (snapshot.exists()){
                     tvFollow.setText("Following");
                 }else{
-                    tvFollow.setText("Follow");
+                    if (idUser.equals(FirebaseAuth.getInstance().getUid())){
+                        tvFollow.setEnabled(false);
+                        tvFollow.setText("You");
+                    } else {
+                        tvFollow.setText("Follow");
+                    }
+
                 }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        FirebaseDatabase.getInstance().getReference().child("User").child(idUser).addValueEventListener(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Users users = snapshot.getValue(Users.class);
+                Picasso.get().load(users.getImageUri()).into(profile);
+                name.setText(users.getName());
+
             }
 
             @Override

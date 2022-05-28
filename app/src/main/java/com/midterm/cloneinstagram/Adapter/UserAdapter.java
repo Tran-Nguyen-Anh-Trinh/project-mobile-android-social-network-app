@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,12 +23,18 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.midterm.cloneinstagram.Fragment.DetailPostFragment;
 import com.midterm.cloneinstagram.Fragment.ProfileFragment;
+import com.midterm.cloneinstagram.Fragment.ProfileUserFragment;
+import com.midterm.cloneinstagram.Model.Notification;
+import com.midterm.cloneinstagram.Model.Post;
 import com.midterm.cloneinstagram.Model.Users;
 import com.midterm.cloneinstagram.R;
 import com.squareup.picasso.Picasso;
 
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -37,10 +44,12 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 
     private Context mContext;
     private List<Users> mUsers;
+    public FragmentActivity fragmentActivity;
 
-    public UserAdapter(Context mContext, List<Users> mUsers) {
+    public UserAdapter(Context mContext, List<Users> mUsers, FragmentActivity fragmentActivity) {
         this.mContext = mContext;
         this.mUsers = mUsers;
+        this.fragmentActivity = fragmentActivity;
     }
 
     @NonNull
@@ -57,6 +66,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         holder.fullName.setText(users.getEmail());
         Picasso.get().load(users.getImageUri()).into(holder.imageView);
 
+
         holder.button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -69,6 +79,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
                             .child("User").child(FirebaseAuth.getInstance().getUid())
                             .child("following").child(users.getUid()).setValue(users.getUid());
                     holder.button.setText("Following");
+                    notifyApp(users.getUid());
                 } else {
                     FirebaseDatabase.getInstance().getReference()
                             .child("User").child(users.getUid()).child("follower")
@@ -77,6 +88,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
                             .child("User").child(FirebaseAuth.getInstance().getUid())
                             .child("following").child(users.getUid()).removeValue();
                     holder.button.setText("Follow");
+                    notifyApp2(users.getUid());
                 }
             }
         });
@@ -87,13 +99,33 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
                     if(snapshot.exists()){
                         holder.button.setText("Following");
                     } else {
-                        holder.button.setText("Follow");
+                        if(users.getUid().equals(FirebaseAuth.getInstance().getUid())){
+                            holder.button.setText("You");
+                            holder.button.setEnabled(false);
+                        } else {
+                            holder.button.setText("Follow");
+                        }
                     }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
+            }
+        });
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Bundle bundle = new Bundle();
+                bundle.putString("idUser", users.getUid());
+                ProfileUserFragment nextFrag= new ProfileUserFragment();
+                nextFrag.setArguments(bundle);
+
+                fragmentActivity.getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, nextFrag, "findThisFragment")
+                        .addToBackStack(null)
+                        .commit();
             }
         });
 
@@ -118,5 +150,48 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
             imageView = itemView.findViewById(R.id.image_profile);
 
         }
+    }
+
+    private void notifyApp(String idUser){
+        String idNotify = new SimpleDateFormat("yyyyMMdd_HHmmssss").format(Calendar.getInstance().getTime());
+        idNotify += System.currentTimeMillis();
+        String timeStamp = new SimpleDateFormat("dd/MM/yyyy").format(Calendar.getInstance().getTime());
+
+        Notification notification = new Notification();
+        notification.setIdNotify(idNotify);
+        notification.setIdUser(FirebaseAuth.getInstance().getUid());
+        notification.setType("follow");
+        notification.setDate(timeStamp);
+        notification.setContent("followed you");
+        notification.setIdUser(FirebaseAuth.getInstance().getUid());
+        FirebaseDatabase.getInstance().getReference()
+                .child("Notify").child(idUser)
+                .child("isRead").push()
+                .setValue(idUser);
+
+        FirebaseDatabase.getInstance().getReference()
+                .child("Notify").child(idUser)
+                .push().setValue(notification);
+    }
+    private void notifyApp2(String idUser){
+        String idNotify = new SimpleDateFormat("yyyyMMdd_HHmmssss").format(Calendar.getInstance().getTime());
+        idNotify += System.currentTimeMillis();
+        String timeStamp = new SimpleDateFormat("dd/MM/yyyy").format(Calendar.getInstance().getTime());
+
+        Notification notification = new Notification();
+        notification.setIdNotify(idNotify);
+        notification.setIdUser(FirebaseAuth.getInstance().getUid());
+        notification.setType("follow");
+        notification.setDate(timeStamp);
+        notification.setContent("unfollowed you");
+        notification.setIdUser(FirebaseAuth.getInstance().getUid());
+        FirebaseDatabase.getInstance().getReference()
+                .child("Notify").child(idUser)
+                .child("isRead").push()
+                .setValue(idUser);
+
+        FirebaseDatabase.getInstance().getReference()
+                .child("Notify").child(idUser)
+                .push().setValue(notification);
     }
 }

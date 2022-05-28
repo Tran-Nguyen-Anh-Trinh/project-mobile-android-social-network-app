@@ -29,7 +29,8 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_search" />
+                    android:background="@drawable/ic_search"
+                    android:backgroundTint="@color/black"/>
 
                 <EditText
                     android:id="@+id/search_bar"
@@ -47,7 +48,8 @@
                     android:layout_width="25dp"
                     android:layout_height="25dp"
                     android:layout_marginRight="10dp"
-                    android:src="@drawable/ic_baseline_close_24" />
+                    android:backgroundTint="@color/black"
+                    android:background="@drawable/ic_baseline_close_24" />
 
             </LinearLayout>
         </androidx.appcompat.widget.Toolbar>

@@ -21,6 +21,7 @@ import com.midterm.cloneinstagram.Fragment.HomeFragment;
 import com.midterm.cloneinstagram.Fragment.NotificationFragment;
 import com.midterm.cloneinstagram.Fragment.ProfileFragment;
 import com.midterm.cloneinstagram.Fragment.SearchFragment;
+import com.midterm.cloneinstagram.Model.Notification;
 import com.midterm.cloneinstagram.Model.Users;
 
 public class MainActivity extends AppCompatActivity {
@@ -61,8 +62,28 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        FirebaseDatabase.getInstance().getReference()
+                .child("Notify").child(FirebaseAuth.getInstance().getUid())
+                .child("isRead")
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if (snapshot.exists()) {
+                            bottomNavigationView.getOrCreateBadge(R.id.nav_heart).setBackgroundColor(getResources().getColor(R.color.red));
+                        } else {
+                            bottomNavigationView.getOrCreateBadge(R.id.nav_heart).setBackgroundColor(getResources().getColor(R.color.white));
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
 
         bottomNavigationView = findViewById(R.id.bottom_navigation);
+
         bottomNavigationView.setOnNavigationItemSelectedListener(navigationItemSelectedListener);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
     }
@@ -83,6 +104,9 @@ public class MainActivity extends AppCompatActivity {
                             break;
                         case R.id.nav_heart:
 //                            selectedFragment = new NotificationFragment();
+                            FirebaseDatabase.getInstance().getReference()
+                                    .child("Notify").child(FirebaseAuth.getInstance().getUid())
+                                    .child("isRead").removeValue();
                             selectedFragment = new ActivityFragment();
                             break;
                         case R.id.nav_profile:
