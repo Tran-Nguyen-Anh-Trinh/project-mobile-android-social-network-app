@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -25,7 +26,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.midterm.cloneinstagram.Adapter.PostedAdapter;
+import com.midterm.cloneinstagram.Adapter.StroriedAdapter;
 import com.midterm.cloneinstagram.Model.Post;
+import com.midterm.cloneinstagram.Model.Storys;
 import com.midterm.cloneinstagram.Model.Users;
 import com.midterm.cloneinstagram.R;
 import com.squareup.picasso.Picasso;
@@ -47,6 +50,10 @@ public class ProfileUserFragment extends Fragment {
     private TextView tv_followers;
     private TextView tv_following;
     private TextView tv_close;
+    private StroriedAdapter storyAdapter;
+    private List<Storys> storysList;
+    private LinearLayout imageView, imageView1;
+    private LinearLayout select, select1;
 
 
     public ProfileUserFragment() {
@@ -79,6 +86,11 @@ public class ProfileUserFragment extends Fragment {
         tv_posts = view.findViewById(R.id.tv_posts);
         tv_followers = view.findViewById(R.id.tv_followers);
         tv_following = view.findViewById(R.id.tv_following);
+        imageView = view.findViewById(R.id.imageView);
+        imageView1 = view.findViewById(R.id.imageView1);
+
+        select = view.findViewById(R.id.select);
+        select1 = view.findViewById(R.id.select1);
         tv_close = view.findViewById(R.id.tv_close);
         tv_close.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -142,23 +154,69 @@ public class ProfileUserFragment extends Fragment {
         list = new ArrayList<>();
         postedAdapter = new PostedAdapter(getContext(), list, getActivity());
         recyclerView.setAdapter(postedAdapter);
+        storysList = new ArrayList<>();
+        storyAdapter = new StroriedAdapter(getContext(), storysList, getActivity());
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                select.setVisibility(View.VISIBLE);
+                select1.setVisibility(View.INVISIBLE);
+                readPost();
+            }
+        });
+        imageView1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                select.setVisibility(View.INVISIBLE);
+                select1.setVisibility(View.VISIBLE);
+                readStory();
+            }
+        });
+
         readPost();
         getData();
     }
+
+    private void readStory() {
+        recyclerView.setAdapter(storyAdapter);
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Story");
+
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                storysList.clear();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Storys storys = snapshot.getValue(Storys.class);
+                    if (storys.getUsers().getUid().equals(idUser)) {
+                        storysList.add(0, storys);
+                    }
+                }
+                storyAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
     private void readPost() {
+
+        recyclerView.setAdapter(postedAdapter);
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Post");
 
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 list.clear();
-                for(DataSnapshot snapshot: dataSnapshot.getChildren()) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Post post = snapshot.getValue(Post.class);
-                    if(post.getUsers().getUid().equals(idUser)){
+                    if (post.getUsers().getUid().equals(idUser)) {
                         list.add(0, post);
                     }
                 }
-                tv_posts.setText(list.size()+"");
+                tv_posts.setText(list.size() + "");
                 postedAdapter.notifyDataSetChanged();
             }
 
@@ -168,13 +226,14 @@ public class ProfileUserFragment extends Fragment {
             }
         });
     }
-    private void getData(){
+
+    private void getData() {
 
 
         FirebaseDatabase.getInstance().getReference().child("User").child(idUser).child("follower").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                tv_followers.setText(snapshot.getChildrenCount()+"");
+                tv_followers.setText(snapshot.getChildrenCount() + "");
             }
 
             @Override
@@ -185,7 +244,7 @@ public class ProfileUserFragment extends Fragment {
         FirebaseDatabase.getInstance().getReference().child("User").child(idUser).child("following").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                tv_following.setText(snapshot.getChildrenCount()+"");
+                tv_following.setText(snapshot.getChildrenCount() + "");
             }
 
             @Override
@@ -197,10 +256,10 @@ public class ProfileUserFragment extends Fragment {
         FirebaseDatabase.getInstance().getReference().child("User").child(idUser).child("follower").child(FirebaseAuth.getInstance().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()){
+                if (snapshot.exists()) {
                     tvFollow.setText("Following");
-                }else{
-                    if (idUser.equals(FirebaseAuth.getInstance().getUid())){
+                } else {
+                    if (idUser.equals(FirebaseAuth.getInstance().getUid())) {
                         tvFollow.setEnabled(false);
                         tvFollow.setText("You");
                     } else {

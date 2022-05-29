@@ -7,7 +7,7 @@
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:id="@+id/bar"
         android:background="?android:attr/windowBackground">
         <androidx.appcompat.widget.Toolbar
@@ -18,27 +18,26 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
-                >
+                android:layout_height="40dp"
+                android:gravity="center">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginTop="20dp"
                     android:fontFamily="cursive"
                     android:gravity="center"
                     android:text="NaoneTeam"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/_25sdp" />
+                    android:textSize="@dimen/_22sdp" />
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
                     android:layout_marginRight="10dp"
-                    android:src="@drawable/ic_inbox"
-                    android:layout_centerVertical="true"></ImageView>
+                    android:src="@drawable/ic_inbox"></ImageView>
             </RelativeLayout>
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
@@ -57,7 +56,7 @@
                 android:id="@+id/recycler_view_story"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp">
+                android:layout_marginTop="5dp">
 
             </androidx.recyclerview.widget.RecyclerView>
 

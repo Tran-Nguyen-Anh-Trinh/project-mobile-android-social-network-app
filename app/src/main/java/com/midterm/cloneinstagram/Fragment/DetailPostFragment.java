@@ -22,11 +22,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.midterm.cloneinstagram.CommentActivity;
 import com.midterm.cloneinstagram.Model.Post;
+import com.midterm.cloneinstagram.PostActivity;
 import com.midterm.cloneinstagram.R;
 import com.squareup.picasso.Picasso;
 
 public class DetailPostFragment extends Fragment {
-    public TextView username, likes, publisher, description, comments, delete, back , date;
+    public TextView username, likes, publisher, description, comments, delete, back , date, btn_edit_post;
     String idPost;
     Post post;
     public ImageView image_profile, post_image, like, likeed,  comment, save;
@@ -70,6 +71,8 @@ public class DetailPostFragment extends Fragment {
         date = view.findViewById(R.id.date);
         back.setVisibility(View.VISIBLE);
         likeed  = view.findViewById(R.id.likeed);
+        btn_edit_post  = view.findViewById(R.id.btn_edit_post);
+
         setData();
         addEvent();
     }
@@ -82,6 +85,7 @@ public class DetailPostFragment extends Fragment {
                 post = snapshot.getValue(Post.class);
                 if(post.getUsers().getUid().equals(FirebaseAuth.getInstance().getUid())){
                     delete.setVisibility(View.VISIBLE);
+                    btn_edit_post.setVisibility(View.VISIBLE);
                 }
                 getData();
             }
@@ -275,6 +279,15 @@ public class DetailPostFragment extends Fragment {
                         .replace(R.id.fragment_container, nextFrag, "findThisFragment")
                         .addToBackStack(null)
                         .commit();
+            }
+        });
+
+        btn_edit_post.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), PostActivity.class);
+                intent.putExtra("idPost", idPost);
+                getContext().startActivity(intent);
             }
         });
 

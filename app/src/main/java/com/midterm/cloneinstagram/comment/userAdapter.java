@@ -88,22 +88,22 @@ public class userAdapter extends RecyclerView.Adapter<userAdapter.Viewholder> {
                         .child("Post").child(CommentActivity.idPost).child("comment")
                         .child(u.getId())
                         .child("RepComment").addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        System.out.println("gajvsjdhascs");
-                        list.clear();
-                        for (DataSnapshot dataSnapshot: snapshot.getChildren()){
-                            Comment comment = dataSnapshot.getValue(Comment.class);
-                            list.add(comment);
-                        }
-                        adapterFeedback.notifyDataSetChanged();
-                    }
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                System.out.println("gajvsjdhascs");
+                                list.clear();
+                                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                                    Comment comment = dataSnapshot.getValue(Comment.class);
+                                    list.add(comment);
+                                }
+                                adapterFeedback.notifyDataSetChanged();
+                            }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
 
-                    }
-                });
+                            }
+                        });
 
             }
         });
@@ -112,20 +112,20 @@ public class userAdapter extends RecyclerView.Adapter<userAdapter.Viewholder> {
                 .child("Post").child(CommentActivity.idPost).child("comment")
                 .child(u.getId())
                 .addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.hasChild("RepComment")) {
-                    if (holder.linearLayoutHide.getVisibility() == View.GONE){
-                        holder.linearLayout.setVisibility(View.VISIBLE);
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if (snapshot.hasChild("RepComment")) {
+                            if (holder.linearLayoutHide.getVisibility() == View.GONE) {
+                                holder.linearLayout.setVisibility(View.VISIBLE);
+                            }
+                        }
                     }
-                }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
 
-            }
-        });
+                    }
+                });
 
         holder.linearLayoutHide.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -138,27 +138,24 @@ public class userAdapter extends RecyclerView.Adapter<userAdapter.Viewholder> {
 
 
         holder.feedback.setOnClickListener(new View.OnClickListener() {
-                                               @Override
-                                               public void onClick(View view) {
-                                                   idPost = u.getId();
-                                                   sendComment.setText("@" + u.getUsers().getName() + " ");
-                                                   rep.setVisibility(View.VISIBLE);
-                                                   duocRep.setText(u.getUsers().getName());
-                                                   System.out.println("id ne0" + idPost);
+            @Override
+            public void onClick(View view) {
+                idPost = u.getId();
+                sendComment.setText("@" + u.getUsers().getName() + " ");
+                rep.setVisibility(View.VISIBLE);
+                duocRep.setText(u.getUsers().getName());
+                System.out.println("id ne0" + idPost);
 
-                                               }
-                                           });
-
-
-
-
+            }
+        });
     }
+
     @Override
     public int getItemCount() {
         return listCmt.size();
     }
 
-    class Viewholder extends RecyclerView.ViewHolder{
+    class Viewholder extends RecyclerView.ViewHolder {
         CircleImageView imgUser, img_user_rep;
         TextView name, name_rep;
         TextView content, content_rep;
@@ -180,6 +177,6 @@ public class userAdapter extends RecyclerView.Adapter<userAdapter.Viewholder> {
             linearLayoutHide = itemView.findViewById(R.id.liner_hide);
 
         }
-}
+    }
 
 }

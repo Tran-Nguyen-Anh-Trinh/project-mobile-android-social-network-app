@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/black"
     tools:context=".StoryActivity">
 
     <RelativeLayout
@@ -16,25 +17,32 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/image"
-        android:src="@drawable/logo_app_green"
-        android:scaleType="centerCrop">
+        android:src="@drawable/camera">
     </ImageView>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:weightSum="10">
+
+
 
         <View
-            android:id="@+id/skip"
-            android:layout_width="wrap_content"
-            android:layout_height="671dp"
-            android:layout_weight="1"></View>
-        <View
-            android:layout_width="0dp"
+            android:id="@+id/reserve"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:id="@+id/reverse"></View>
+            android:layout_weight="4"></View>
+        <View
+            android:id="@+id/hold"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="2"></View>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="4"
+            android:id="@+id/skip"></View>
     </LinearLayout>
 
 
@@ -42,11 +50,9 @@
         android:layout_width="match_parent"
         android:layout_height="3dp"
         android:id="@+id/stories"
-        android:paddingLeft="8dp"
-        android:paddingRight="8dp"
-        android:layout_marginTop="8dp"></jp.shts.android.storiesprogressview.StoriesProgressView>
+        android:layout_marginTop="10dp"></jp.shts.android.storiesprogressview.StoriesProgressView>
     <RelativeLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/stories"
         android:layout_margin="10dp">
@@ -55,8 +61,8 @@
             android:id="@+id/story_photo"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:src="@color/black"
-            android:layout_centerVertical="true"></de.hdodenhof.circleimageview.CircleImageView>
+            android:layout_centerVertical="true"
+            android:src="@color/black"></de.hdodenhof.circleimageview.CircleImageView>
 
         <TextView
             android:id="@+id/story_username"
@@ -72,6 +78,15 @@
             android:textColor="#fff"
             android:textSize="15sp"
             android:textStyle="bold"></TextView>
+        <ImageView
+            android:id="@+id/delete"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:background="@drawable/delete_48px"
+            android:backgroundTint="@color/white"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="5dp"
+            android:visibility="gone"/>
     </RelativeLayout>
 
     </RelativeLayout>
@@ -101,16 +116,7 @@
             android:paddingLeft="15dp"
             android:textSize="14sp"></EditText>
 
-            <ImageView
-                android:id="@+id/like"
-                android:src="@drawable/heart_100px"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginLeft="5dp">
-
-            </ImageView>
-
-            <ImageView
+        <ImageView
                 android:id="@+id/send"
                 android:layout_width="30dp"
                 android:layout_height="30dp"

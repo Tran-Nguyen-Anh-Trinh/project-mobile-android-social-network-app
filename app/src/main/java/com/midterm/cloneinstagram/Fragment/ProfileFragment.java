@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -22,7 +24,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.midterm.cloneinstagram.Adapter.PostAdapter;
 import com.midterm.cloneinstagram.Adapter.PostedAdapter;
+import com.midterm.cloneinstagram.Adapter.StoryAdapter;
+import com.midterm.cloneinstagram.Adapter.StroriedAdapter;
 import com.midterm.cloneinstagram.Model.Post;
+import com.midterm.cloneinstagram.Model.Storys;
 import com.midterm.cloneinstagram.Model.Users;
 import com.midterm.cloneinstagram.R;
 import com.midterm.cloneinstagram.UpdateInformationActivity;
@@ -39,16 +44,27 @@ public class ProfileFragment extends Fragment {
     private TextView tvEditProfile;
     private PostedAdapter postedAdapter;
     private List<Post> list;
+    private StroriedAdapter storyAdapter;
+    private List<Storys> storysList;
+    private LinearLayout imageView, imageView1;
+    private LinearLayout select, select1;
     private CircleImageView profile;
     private TextView name;
     private TextView tv_posts;
     private TextView tv_followers;
     private TextView tv_following;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         tvEditProfile = view.findViewById(R.id.tv_edit_profile);
+
+        imageView = view.findViewById(R.id.imageView);
+        imageView1 = view.findViewById(R.id.imageView1);
+
+        select = view.findViewById(R.id.select);
+        select1 = view.findViewById(R.id.select1);
 
         recyclerView = view.findViewById(R.id.rv_posted);
         recyclerView.setHasFixedSize(true);
@@ -79,7 +95,9 @@ public class ProfileFragment extends Fragment {
             }
         });
         list = new ArrayList<>();
+        storysList = new ArrayList<>();
         postedAdapter = new PostedAdapter(getContext(), list, getActivity());
+        storyAdapter = new StroriedAdapter(getContext(), storysList, getActivity());
         recyclerView.setAdapter(postedAdapter);
 
         profile = view.findViewById(R.id.profile);
@@ -100,6 +118,22 @@ public class ProfileFragment extends Fragment {
     }
 
     private void addEvent() {
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                select.setVisibility(View.VISIBLE);
+                select1.setVisibility(View.INVISIBLE);
+                readPost();
+            }
+        });
+        imageView1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                select.setVisibility(View.INVISIBLE);
+                select1.setVisibility(View.VISIBLE);
+                readStory();
+            }
+        });
         tvEditProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -109,7 +143,7 @@ public class ProfileFragment extends Fragment {
         tv_followers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ShowFollowFragment nextFrag= new ShowFollowFragment();
+                ShowFollowFragment nextFrag = new ShowFollowFragment();
                 Bundle bundle = new Bundle();
                 bundle.putString("follow", "followers");
                 nextFrag.setArguments(bundle);
@@ -123,7 +157,7 @@ public class ProfileFragment extends Fragment {
         tv_following.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ShowFollowFragment nextFrag= new ShowFollowFragment();
+                ShowFollowFragment nextFrag = new ShowFollowFragment();
                 Bundle bundle = new Bundle();
                 bundle.putString("follow", "following");
                 nextFrag.setArguments(bundle);
@@ -138,19 +172,22 @@ public class ProfileFragment extends Fragment {
 
 
     private void readPost() {
+        recyclerView.setAdapter(postedAdapter);
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Post");
 
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 list.clear();
-                for(DataSnapshot snapshot: dataSnapshot.getChildren()) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Post post = snapshot.getValue(Post.class);
-                    if(post.getUsers().getUid().equals(Users.getInstance().getUid())){
+                    if (post.getUsers().getUid().equals(Users.getInstance().getUid())) {
                         list.add(0, post);
                     }
                 }
-                tv_posts.setText(list.size()+"");
+                if (tv_posts.getText().toString().isEmpty()) {
+                    tv_posts.setText(list.size() + "");
+                }
                 postedAdapter.notifyDataSetChanged();
             }
 
@@ -161,7 +198,31 @@ public class ProfileFragment extends Fragment {
         });
     }
 
-    private void updateDataUser(){
+    private void readStory() {
+        recyclerView.setAdapter(storyAdapter);
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Story");
+
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                storysList.clear();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Storys storys = snapshot.getValue(Storys.class);
+                    if (storys.getUsers().getUid().equals(Users.getInstance().getUid())) {
+                        storysList.add(0, storys);
+                    }
+                }
+                storyAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    private void updateDataUser() {
         FirebaseDatabase.getInstance().getReference().child("User").child(FirebaseAuth.getInstance().getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -179,9 +240,9 @@ public class ProfileFragment extends Fragment {
                 reference.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        for(DataSnapshot snapshot: dataSnapshot.getChildren()) {
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                             Post post = snapshot.getValue(Post.class);
-                            if (post.getUsers().getUid().equals(Users.getInstance().getUid())){
+                            if (post.getUsers().getUid().equals(Users.getInstance().getUid())) {
                                 FirebaseDatabase.getInstance().getReference("Post").child(snapshot.getKey()).child("users").setValue(Users.getInstance());
                                 System.out.println(snapshot.getKey().toString());
                             }
@@ -204,7 +265,7 @@ public class ProfileFragment extends Fragment {
         FirebaseDatabase.getInstance().getReference().child("User").child(FirebaseAuth.getInstance().getUid()).child("follower").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                tv_followers.setText(snapshot.getChildrenCount()+"");
+                tv_followers.setText(snapshot.getChildrenCount() + "");
             }
 
             @Override
@@ -215,7 +276,7 @@ public class ProfileFragment extends Fragment {
         FirebaseDatabase.getInstance().getReference().child("User").child(FirebaseAuth.getInstance().getUid()).child("following").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                tv_following.setText(snapshot.getChildrenCount()+"");
+                tv_following.setText(snapshot.getChildrenCount() + "");
             }
 
             @Override

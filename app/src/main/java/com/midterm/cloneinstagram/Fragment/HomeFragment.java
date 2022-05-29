@@ -22,6 +22,7 @@ import com.midterm.cloneinstagram.Adapter.PostAdapter;
 import com.midterm.cloneinstagram.Adapter.StoryAdapter;
 import com.midterm.cloneinstagram.Model.Post;
 import com.midterm.cloneinstagram.Model.Story;
+import com.midterm.cloneinstagram.Model.Storys;
 import com.midterm.cloneinstagram.R;
 
 import java.util.ArrayList;
@@ -36,7 +37,7 @@ public class HomeFragment extends Fragment {
 
     private RecyclerView recyclerView_story;
     private StoryAdapter storyAdapter;
-    private List<Story> storyLists;
+    private List<Storys> storyLists;
     private TextView notify;
 
     private List<String> followingList;
@@ -47,6 +48,9 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
+
+        notify = view.findViewById(R.id.notify);
+
         recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
@@ -57,6 +61,7 @@ public class HomeFragment extends Fragment {
         postAdapter = new PostAdapter(getContext(), postLists, getActivity());
         recyclerView.setAdapter(postAdapter);
 
+
         recyclerView_story = view.findViewById(R.id.recycler_view_story);
         recyclerView_story.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager1 = new LinearLayoutManager(getContext(),
@@ -65,7 +70,7 @@ public class HomeFragment extends Fragment {
         storyLists = new ArrayList<>();
         storyAdapter = new StoryAdapter(getContext(), storyLists);
         recyclerView_story.setAdapter(storyAdapter);
-        notify = view.findViewById(R.id.notify);
+
         checkFollowing();
         return view;
     }
@@ -84,6 +89,7 @@ public class HomeFragment extends Fragment {
                     followingList.add(snapshot.getKey());
                 }
                 readPost();
+                readStory();
             }
 
             @Override
@@ -97,7 +103,7 @@ public class HomeFragment extends Fragment {
     private void readPost() {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Post");
 
-        reference.addListenerForSingleValueEvent(new ValueEventListener() {
+        reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 postLists.clear();
@@ -128,7 +134,27 @@ public class HomeFragment extends Fragment {
     }
 
     private void readStory() {
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Story");
 
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                storyLists.clear();
+                for(DataSnapshot snapshot: dataSnapshot.getChildren()) {
+                    Storys storys = snapshot.getValue(Storys.class);
+                    System.out.println("ppppp"+ storys.getPostimage());
+                    if(followingList.contains(storys.getUsers().getUid())){
+                        storyLists.add(0, storys);
+                    }
+                }
+                storyAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     @Override

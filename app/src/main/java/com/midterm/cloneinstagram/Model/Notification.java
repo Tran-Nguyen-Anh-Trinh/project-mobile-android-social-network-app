@@ -7,6 +7,7 @@ public class Notification {
     String content;
     String idNotify;
     String idPost;
+    String idPostLike;
 
     public Notification(String idUser, String type, String date, String content, String idNotify) {
         this.idUser = idUser;
@@ -23,6 +24,14 @@ public class Notification {
         this.content = content;
         this.idNotify = idNotify;
         this.idPost = idPost;
+    }
+
+    public String getIdPostLike() {
+        return idPostLike;
+    }
+
+    public void setIdPostLike(String idPostLike) {
+        this.idPostLike = idPostLike;
     }
 
     public Notification() {

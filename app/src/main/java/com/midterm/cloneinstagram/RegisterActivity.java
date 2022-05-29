@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -66,9 +67,9 @@ public class RegisterActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Dialog dialog = new Dialog(RegisterActivity.this, R.style.Dialogs);
                 dialog.setContentView(R.layout.layout_option_image);
-                TextView takePhoto;
-                TextView chooseFromGallery;
-                TextView cancel;
+                LinearLayout takePhoto;
+                LinearLayout chooseFromGallery;
+                LinearLayout cancel;
                 takePhoto = dialog.findViewById(R.id.takePhoto);
                 chooseFromGallery = dialog.findViewById(R.id.chooseFromGallery);
                 cancel = dialog.findViewById(R.id.cancel_option);

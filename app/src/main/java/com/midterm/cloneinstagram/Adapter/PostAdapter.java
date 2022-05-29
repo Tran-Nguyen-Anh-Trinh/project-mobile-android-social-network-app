@@ -182,7 +182,20 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                                     }
                                 });
 
-                        reference.removeValue();
+                        FirebaseDatabase.getInstance().getReference()
+                                .child("Notify").child(post.getUsers().getUid()).orderByChild("idPostLike").equalTo(post.getPostid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        for(DataSnapshot dataSnapshot: snapshot.getChildren()){
+                                            dataSnapshot.getRef().removeValue();
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                    }
+                                });
 
                         FirebaseDatabase.getInstance().getReference()
                                 .child("Post").child(post.getPostid()).child("like").child(FirebaseAuth.getInstance().getUid()).removeValue();
@@ -190,7 +203,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                 }
                 else
                 {
-                    LAST_CLICK_TIME = System.currentTimeMillis();
                 }
             }
         });
@@ -254,13 +266,16 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                     notification.setDate(timeStamp);
                     notification.setContent("liked your photo");
                     notification.setIdPost(post.getPostid());
+                    notification.setIdPostLike(post.getPostid());
 
                     if(!post.getUsers().getUid().equals(FirebaseAuth.getInstance().getUid())){
                         FirebaseDatabase.getInstance().getReference()
                                 .child("Notify").child(post.getUsers().getUid())
                                 .child("isRead").push()
                                 .setValue(post.getUsers().getUid());
-                        reference.setValue(notification);
+                        FirebaseDatabase.getInstance().getReference()
+                                .child("Notify").child(post.getUsers().getUid())
+                                .push().setValue(notification);
                     }
 
                 } else {
@@ -282,7 +297,20 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                                 }
                             });
 
-                    reference.removeValue();
+                    FirebaseDatabase.getInstance().getReference()
+                            .child("Notify").child(post.getUsers().getUid()).orderByChild("idPostLike").equalTo(post.getPostid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    for(DataSnapshot dataSnapshot: snapshot.getChildren()){
+                                        dataSnapshot.getRef().removeValue();
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
 
                     FirebaseDatabase.getInstance().getReference()
                             .child("Post").child(post.getPostid()).child("like").child(FirebaseAuth.getInstance().getUid()).removeValue();
@@ -304,6 +332,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             public void onClick(View view) {
                 Intent intent = new Intent(mContext, CommentActivity.class);
                 intent.putExtra("id", post.getPostid());
+                intent.putExtra("idUser", post.getUsers().getUid());
                 mContext.startActivity(intent);
             }
         });

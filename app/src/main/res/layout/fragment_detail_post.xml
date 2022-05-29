@@ -45,6 +45,15 @@
                 android:layout_weight="1"></TextView>
 
             <TextView
+                android:id="@+id/btn_edit_post"
+                android:layout_width="23dp"
+                android:layout_height="23dp"
+                android:layout_marginRight="20dp"
+                android:layout_gravity="center"
+                android:visibility="gone"
+                android:backgroundTint="@color/black"
+                android:background="@drawable/edit_48px"></TextView>
+            <TextView
                 android:id="@+id/btn_delete_post"
                 android:layout_width="23dp"
                 android:layout_height="23dp"

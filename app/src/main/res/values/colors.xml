@@ -16,4 +16,6 @@
     <color name="silver">#D6D6D6</color>
     <color name="gray">#ACACAC</color>
     <color name="red">#CC0000</color>
+    <color name="transper">#A8000000</color>
+
 </resources>
