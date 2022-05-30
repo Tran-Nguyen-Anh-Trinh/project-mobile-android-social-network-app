@@ -52,6 +52,7 @@ public class StroriedAdapter  extends RecyclerView.Adapter<StroriedAdapter.ViewH
                 intent.putExtra("image", storys.getUsers().getImageUri());
                 intent.putExtra("imageStory", storys.getPostimage());
                 mContext.startActivity(intent);
+                fragmentActivity.overridePendingTransition(R.anim.slide_out_down, R.anim.slide_up_dialog);
             }
         });
     }

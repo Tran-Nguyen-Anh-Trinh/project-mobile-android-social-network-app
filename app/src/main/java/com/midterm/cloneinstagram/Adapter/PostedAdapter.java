@@ -9,8 +9,10 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.midterm.cloneinstagram.Fragment.DetailPostFragment;
 import com.midterm.cloneinstagram.Model.Post;
 import com.midterm.cloneinstagram.R;
@@ -21,12 +23,14 @@ import java.util.List;
 public class PostedAdapter  extends RecyclerView.Adapter<PostedAdapter.ViewHolder> {
     private Context mContext;
     private List<Post> listImage;
-    public FragmentActivity fragmentActivity;
+    private FragmentActivity fragmentActivity;
+    private String type;
 
-    public PostedAdapter(Context mContext, List<Post> listImage, FragmentActivity fragmentActivity) {
+    public PostedAdapter(Context mContext, List<Post> listImage, FragmentActivity fragmentActivity, String type) {
         this.mContext = mContext;
         this.listImage = listImage;
         this.fragmentActivity = fragmentActivity;
+        this.type = type;
     }
 
     @NonNull
@@ -46,10 +50,13 @@ public class PostedAdapter  extends RecyclerView.Adapter<PostedAdapter.ViewHolde
                 DetailPostFragment nextFrag= new DetailPostFragment();
                 Bundle bundle = new Bundle();
                 bundle.putString("id",  post.getPostid());
+                bundle.putString("idUser", post.getUsers().getUid());
+                bundle.putString("type",  type);
                 nextFrag.setArguments(bundle);
 
-                fragmentActivity.getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, nextFrag, "findThisFragment")
+                FragmentTransaction fragmentTransaction = fragmentActivity.getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.setCustomAnimations(R.anim.slide_out_down, R.anim.slide_up_dialog);
+                fragmentTransaction.replace(R.id.fragment_container, nextFrag, "findThisFragment")
                         .addToBackStack(null)
                         .commit();
             }

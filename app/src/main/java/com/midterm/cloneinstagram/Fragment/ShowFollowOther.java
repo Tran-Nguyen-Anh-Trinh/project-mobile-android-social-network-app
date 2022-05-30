@@ -6,7 +6,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -27,7 +26,8 @@ import com.midterm.cloneinstagram.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ShowFollowFragment extends Fragment {
+public class ShowFollowOther extends Fragment {
+
     private RecyclerView rv_user_follow;
     private UserAdapter adapter;
     private List<Users> usersList;
@@ -35,8 +35,9 @@ public class ShowFollowFragment extends Fragment {
     private TextView title;
     private TextView btn_close;
     private String idPost;
+    private String idUser;
 
-    public ShowFollowFragment() {
+    public ShowFollowOther() {
         // Required empty public constructor
     }
 
@@ -45,6 +46,7 @@ public class ShowFollowFragment extends Fragment {
         if (getArguments() != null) {
             checkFollow = getArguments().getString("follow");
             idPost = getArguments().getString("idPost");
+            idUser = getArguments().getString("idUser");
         }
         super.onCreate(savedInstanceState);
     }
@@ -67,7 +69,7 @@ public class ShowFollowFragment extends Fragment {
         rv_user_follow.setLayoutManager(new LinearLayoutManager(getContext()));
         title = view.findViewById(R.id.title);
         if ("followers".equals(checkFollow)) {
-            FirebaseDatabase.getInstance().getReference().child("User").child(FirebaseAuth.getInstance().getUid())
+            FirebaseDatabase.getInstance().getReference().child("User").child(idUser)
                     .child("follower").addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -99,7 +101,7 @@ public class ShowFollowFragment extends Fragment {
         }
         if ("following".equals(checkFollow)){
             title.setText("List following");
-            FirebaseDatabase.getInstance().getReference().child("User").child(FirebaseAuth.getInstance().getUid())
+            FirebaseDatabase.getInstance().getReference().child("User").child(idUser)
                     .child("following").addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -164,57 +166,15 @@ public class ShowFollowFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-                String type = getArguments().getString("type");
-                if(type!=null) {
-                    if (type.equals("home")) {
-                        String typeTemp = getArguments().getString("typeTemp");
-                        if (typeTemp != null) {
-                            DetailPostFragment nextFrag = new DetailPostFragment();
-
-                            Bundle bundle = new Bundle();
-                            bundle.putString("id", idPost);
-                            bundle.putString("type", type);
-                            String idUser = getArguments().getString("idUser");
-                            bundle.putString("idUser", idUser);
-                            nextFrag.setArguments(bundle);
-                            FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
-                            fragmentTransaction.setCustomAnimations(R.anim.slide_out_down, R.anim.slide_up_dialog);
-                            fragmentTransaction.replace(R.id.fragment_container, nextFrag, "findThisFragment")
-                                    .addToBackStack(null)
-                                    .commit();
-                        } else {
-                            HomeFragment nextFrag = new HomeFragment();
-                            FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
-                            fragmentTransaction.setCustomAnimations(R.anim.slide_out_down, R.anim.slide_up_dialog);
-                            fragmentTransaction.replace(R.id.fragment_container, nextFrag, "findThisFragment")
-                                    .addToBackStack(null)
-                                    .commit();
-
-                        }
-                    } else {
-                        DetailPostFragment nextFrag = new DetailPostFragment();
-
-                        Bundle bundle = new Bundle();
-                        bundle.putString("id", idPost);
-                        bundle.putString("type", type);
-                        String idUser = getArguments().getString("idUser");
-                        bundle.putString("idUser", idUser);
-                        nextFrag.setArguments(bundle);
-                        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
-                        fragmentTransaction.setCustomAnimations(R.anim.slide_out_down, R.anim.slide_up_dialog);
-                        fragmentTransaction.replace(R.id.fragment_container, nextFrag, "findThisFragment")
-                                .addToBackStack(null)
-                                .commit();
-                    }
-                }
-                else{
-                    ProfileFragment nextFrag = new ProfileFragment();
-                    FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
-                    fragmentTransaction.setCustomAnimations(R.anim.slide_out_down, R.anim.slide_up_dialog);
-                    fragmentTransaction.replace(R.id.fragment_container, nextFrag, "findThisFragment")
-                            .addToBackStack(null)
-                            .commit();
-                }
+                ProfileUserFragment nextFrag = new ProfileUserFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString("idUser", idUser);
+                nextFrag.setArguments(bundle);
+                FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.setCustomAnimations(R.anim.slide_out_down, R.anim.slide_up_dialog);
+                fragmentTransaction.replace(R.id.fragment_container, nextFrag, "findThisFragment")
+                        .addToBackStack(null)
+                        .commit();
 
 //                getActivity().getSupportFragmentManager().popBackStackImmediate();
             }

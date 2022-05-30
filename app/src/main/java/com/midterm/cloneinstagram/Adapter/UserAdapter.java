@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 
@@ -122,8 +123,9 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
                 ProfileUserFragment nextFrag= new ProfileUserFragment();
                 nextFrag.setArguments(bundle);
 
-                fragmentActivity.getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, nextFrag, "findThisFragment")
+                FragmentTransaction fragmentTransaction = fragmentActivity.getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
+                fragmentTransaction.replace(R.id.fragment_container, nextFrag, "findThisFragment")
                         .addToBackStack(null)
                         .commit();
             }

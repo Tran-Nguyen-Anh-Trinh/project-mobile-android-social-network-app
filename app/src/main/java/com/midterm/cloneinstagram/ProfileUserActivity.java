@@ -99,7 +99,7 @@ public class ProfileUserActivity extends AppCompatActivity {
             }
         });
         list = new ArrayList<>();
-        postedAdapter = new PostedAdapter(ProfileUserActivity.this, list, ProfileUserActivity.this);
+        postedAdapter = new PostedAdapter(ProfileUserActivity.this, list, ProfileUserActivity.this, "profileUser");
         recyclerView.setAdapter(postedAdapter);
 
         profile = findViewById(R.id.profile);

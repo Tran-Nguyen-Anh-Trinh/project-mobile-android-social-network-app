@@ -13,6 +13,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -96,7 +97,7 @@ public class ProfileFragment extends Fragment {
         });
         list = new ArrayList<>();
         storysList = new ArrayList<>();
-        postedAdapter = new PostedAdapter(getContext(), list, getActivity());
+        postedAdapter = new PostedAdapter(getContext(), list, getActivity(), "profile");
         storyAdapter = new StroriedAdapter(getContext(), storysList, getActivity());
         recyclerView.setAdapter(postedAdapter);
 
@@ -138,6 +139,8 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 getContext().startActivity(new Intent(getContext(), UpdateInformationActivity.class));
+                getActivity().overridePendingTransition(R.anim.slide_out_down, R.anim.slide_up_dialog);
+
             }
         });
         tv_followers.setOnClickListener(new View.OnClickListener() {
@@ -148,8 +151,9 @@ public class ProfileFragment extends Fragment {
                 bundle.putString("follow", "followers");
                 nextFrag.setArguments(bundle);
 
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, nextFrag, "findThisFragment")
+                FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.setCustomAnimations(R.anim.slide_out_down, R.anim.slide_up_dialog);
+                fragmentTransaction.replace(R.id.fragment_container, nextFrag, "findThisFragment")
                         .addToBackStack(null)
                         .commit();
             }
@@ -162,8 +166,9 @@ public class ProfileFragment extends Fragment {
                 bundle.putString("follow", "following");
                 nextFrag.setArguments(bundle);
 
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, nextFrag, "findThisFragment")
+                FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.setCustomAnimations(R.anim.slide_out_down, R.anim.slide_up_dialog);
+                fragmentTransaction.replace(R.id.fragment_container, nextFrag, "findThisFragment")
                         .addToBackStack(null)
                         .commit();
             }

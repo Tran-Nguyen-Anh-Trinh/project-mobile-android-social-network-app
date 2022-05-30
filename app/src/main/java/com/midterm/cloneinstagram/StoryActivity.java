@@ -3,6 +3,7 @@ package com.midterm.cloneinstagram;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Dialog;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.media.Image;
@@ -100,7 +101,9 @@ public class StoryActivity extends AppCompatActivity implements StoriesProgressV
         skip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                storiesProgressView.skip();
+//                storiesProgressView.skip();
+                finishAndRemoveTask();
+                overridePendingTransition(R.anim.slide_out_down, R.anim.slide_up_dialog);
             }
         });
         skip.setOnTouchListener(new OnSwipeTouchListener(this){
@@ -169,10 +172,31 @@ public class StoryActivity extends AppCompatActivity implements StoriesProgressV
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Story").child(userid);
-                reference.removeValue();
-                storiesProgressView.skip();
-                Toast.makeText(StoryActivity.this, "Deleted", Toast.LENGTH_SHORT).show();
+                storiesProgressView.pause();
+                Dialog dialog = new Dialog(StoryActivity.this, R.style.Dialogs);
+                dialog.setContentView(R.layout.dialog_delete);
+                TextView btnYes;
+                TextView btnNo;
+                btnYes = dialog.findViewById(R.id.button_Yes);
+                btnNo = dialog.findViewById(R.id.button_No);
+                btnYes.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Story").child(userid);
+                        reference.removeValue();
+                        storiesProgressView.skip();
+                        Toast.makeText(StoryActivity.this, "Deleted", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                btnNo.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        storiesProgressView.resume();
+                        dialog.dismiss();
+                    }
+                });
+                dialog.show();
 
             }
         });
@@ -209,5 +233,12 @@ public class StoryActivity extends AppCompatActivity implements StoriesProgressV
     protected void onResume() {
         storiesProgressView.resume();
         super.onResume();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.slide_out_down, R.anim.slide_up_dialog);
+
     }
 }

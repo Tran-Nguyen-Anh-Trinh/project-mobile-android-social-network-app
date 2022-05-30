@@ -74,7 +74,7 @@ public class UpdateInformationActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 finishAndRemoveTask();
-            }
+                overridePendingTransition(R.anim.slide_out_down, R.anim.slide_up_dialog);            }
         });
         btnSingOut = findViewById(R.id.btnSignOut);
         btnSingOut.setOnClickListener(new View.OnClickListener() {
@@ -95,6 +95,7 @@ public class UpdateInformationActivity extends AppCompatActivity {
                         Intent intent = new Intent(UpdateInformationActivity.this, LoginActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
+                        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                     }
                 });
                 btnNo.setOnClickListener(new View.OnClickListener() {
@@ -147,6 +148,7 @@ public class UpdateInformationActivity extends AppCompatActivity {
                                                                 progressDialog.dismiss();
                                                                 Toast.makeText(getBaseContext(), "Saved successfully", Toast.LENGTH_SHORT).show();
                                                                 finishAndRemoveTask();
+                                                                overridePendingTransition(R.anim.slide_out_down, R.anim.slide_up_dialog);
                                                             } else {
                                                                 progressDialog.dismiss();
                                                                 Toast.makeText(UpdateInformationActivity.this, "Wrong something", Toast.LENGTH_SHORT).show();
@@ -188,6 +190,7 @@ public class UpdateInformationActivity extends AppCompatActivity {
                                                                 progressDialog.dismiss();
                                                                 Toast.makeText(getBaseContext(), "Saved successfully", Toast.LENGTH_SHORT).show();
                                                                 finishAndRemoveTask();
+                                                                overridePendingTransition(R.anim.slide_out_down, R.anim.slide_up_dialog);
                                                             } else {
                                                                 progressDialog.dismiss();
                                                                 Toast.makeText(UpdateInformationActivity.this, "Wrong something", Toast.LENGTH_SHORT).show();
@@ -217,6 +220,7 @@ public class UpdateInformationActivity extends AppCompatActivity {
                                 progressDialog.dismiss();
                                 Toast.makeText(getBaseContext(), "Saved successfully", Toast.LENGTH_SHORT).show();
                                 finishAndRemoveTask();
+                                overridePendingTransition(R.anim.slide_out_down, R.anim.slide_up_dialog);
                             } else {
                                 progressDialog.dismiss();
                                 Toast.makeText(UpdateInformationActivity.this, "Wrong something", Toast.LENGTH_SHORT).show();

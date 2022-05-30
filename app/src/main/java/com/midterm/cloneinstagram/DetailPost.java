@@ -60,11 +60,16 @@ public class DetailPost extends AppCompatActivity {
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                post = snapshot.getValue(Post.class);
-                if(post.getUsers().getUid().equals(FirebaseAuth.getInstance().getUid())){
-                    delete.setVisibility(View.VISIBLE);
+                if(snapshot.exists()){
+                    post = snapshot.getValue(Post.class);
+                    if(post.getUsers().getUid().equals(FirebaseAuth.getInstance().getUid())){
+                        delete.setVisibility(View.VISIBLE);
+                    }
+                    getData();
+                }else{
+                    Toast.makeText(DetailPost.this, "Post does not exist", Toast.LENGTH_SHORT).show();
+                    finishAndRemoveTask();
                 }
-                getData();
             }
 
             @Override

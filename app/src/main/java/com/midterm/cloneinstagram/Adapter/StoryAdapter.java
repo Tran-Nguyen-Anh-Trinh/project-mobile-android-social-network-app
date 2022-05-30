@@ -1,5 +1,6 @@
 package com.midterm.cloneinstagram.Adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.media.Image;
@@ -35,10 +36,12 @@ import java.util.List;
 public class StoryAdapter extends RecyclerView.Adapter<StoryAdapter.ViewHolder>{
     private Context mContext;
     private List<Storys> mStory;
+    private Activity activity;
 
-    public StoryAdapter(Context mContext, List<Storys> mStory) {
+    public StoryAdapter(Context mContext, List<Storys> mStory, Activity activity) {
         this.mContext = mContext;
         this.mStory = mStory;
+        this.activity = activity;
     }
 
 
@@ -93,6 +96,7 @@ public class StoryAdapter extends RecyclerView.Adapter<StoryAdapter.ViewHolder>{
                 @Override
                 public void onClick(View view) {
                     mContext.startActivity(new Intent(mContext, NewStory.class));
+                    activity.overridePendingTransition(R.anim.slide_out_down, R.anim.slide_up_dialog);
                 }
             });
         }else {
@@ -108,6 +112,7 @@ public class StoryAdapter extends RecyclerView.Adapter<StoryAdapter.ViewHolder>{
                     intent.putExtra("image", storys.getUsers().getImageUri());
                     intent.putExtra("imageStory", storys.getPostimage());
                     mContext.startActivity(intent);
+                    activity.overridePendingTransition(R.anim.slide_out_down, R.anim.slide_up_dialog);
                 }
             });
             holder.story_username.setText(storys.getUsers().getName());

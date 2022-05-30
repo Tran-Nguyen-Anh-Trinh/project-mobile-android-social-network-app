@@ -111,9 +111,14 @@ public class PostActivity extends AppCompatActivity {
         btnClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(PostActivity.this, MainActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
+                if (idPost == null){
+                    Intent intent = new Intent(PostActivity.this, MainActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                }else{
+                    finishAndRemoveTask();
+                }
+                overridePendingTransition(R.anim.slide_out_down, R.anim.slide_up_dialog);
             }
         });
         imageChoose.setOnClickListener(new View.OnClickListener() {
@@ -200,7 +205,7 @@ public class PostActivity extends AppCompatActivity {
                                                                 Intent intent = new Intent(PostActivity.this, MainActivity.class);
                                                                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                                                                 startActivity(intent);
-                                                            } else {
+                                                                overridePendingTransition(R.anim.slide_out_down, R.anim.slide_up_dialog);                                                            } else {
                                                                 progressDialog.dismiss();
                                                                 Toast.makeText(PostActivity.this, "Error", Toast.LENGTH_SHORT).show();
                                                             }
@@ -254,7 +259,7 @@ public class PostActivity extends AppCompatActivity {
                                                                 Intent intent = new Intent(PostActivity.this, MainActivity.class);
                                                                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                                                                 startActivity(intent);
-                                                            } else {
+                                                                overridePendingTransition(R.anim.slide_out_down, R.anim.slide_up_dialog);                                                            } else {
                                                                 progressDialog.dismiss();
                                                                 Toast.makeText(PostActivity.this, "Error", Toast.LENGTH_SHORT).show();
                                                             }
@@ -299,6 +304,7 @@ public class PostActivity extends AppCompatActivity {
                                                         Intent intent = new Intent(PostActivity.this, MainActivity.class);
                                                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                                                         startActivity(intent);
+                                                        overridePendingTransition(R.anim.slide_out_down, R.anim.slide_up_dialog);
                                                     } else {
                                                         progressDialog.dismiss();
                                                         Toast.makeText(PostActivity.this, "Error", Toast.LENGTH_SHORT).show();
@@ -337,6 +343,7 @@ public class PostActivity extends AppCompatActivity {
                                                         Intent intent = new Intent(PostActivity.this, MainActivity.class);
                                                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                                                         startActivity(intent);
+                                                        overridePendingTransition(R.anim.slide_out_down, R.anim.slide_up_dialog);
                                                     } else {
                                                         progressDialog.dismiss();
                                                         Toast.makeText(PostActivity.this, "Error", Toast.LENGTH_SHORT).show();
@@ -364,6 +371,7 @@ public class PostActivity extends AppCompatActivity {
                                     Intent intent = new Intent(PostActivity.this, MainActivity.class);
                                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                                     startActivity(intent);
+                                    overridePendingTransition(R.anim.slide_out_down, R.anim.slide_up_dialog);
                                 } else {
                                     progressDialog.dismiss();
                                     Toast.makeText(PostActivity.this, "Error", Toast.LENGTH_SHORT).show();
@@ -402,8 +410,13 @@ public class PostActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent(PostActivity.this, MainActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
+        if (idPost == null){
+            Intent intent = new Intent(PostActivity.this, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        }else{
+           finishAndRemoveTask();
+        }
+        overridePendingTransition(R.anim.slide_out_down, R.anim.slide_up_dialog);
     }
 }

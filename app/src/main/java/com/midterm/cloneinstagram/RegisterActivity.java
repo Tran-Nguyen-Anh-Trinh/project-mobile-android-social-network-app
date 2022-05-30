@@ -113,9 +113,9 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
             }
         });
-
     }
 
     @Override
@@ -196,6 +196,8 @@ public class RegisterActivity extends AppCompatActivity {
                                                         progressDialog.dismiss();
                                                         Toast.makeText(RegisterActivity.this, "Created successfully!", Toast.LENGTH_SHORT).show();
                                                         startActivity(new Intent(RegisterActivity.this, MainActivity.class));
+                                                        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+
                                                     }else{
                                                         progressDialog.dismiss();
                                                         Toast.makeText(RegisterActivity.this, "An error occurred while sing up!", Toast.LENGTH_SHORT).show();
@@ -228,6 +230,8 @@ public class RegisterActivity extends AppCompatActivity {
                                                         progressDialog.dismiss();
                                                         Toast.makeText(RegisterActivity.this, "Created successfully!", Toast.LENGTH_SHORT).show();
                                                         startActivity(new Intent(RegisterActivity.this, MainActivity.class));
+                                                        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+
                                                     }else{
                                                         progressDialog.dismiss();
                                                         Toast.makeText(RegisterActivity.this, "An error occurred while sing up!", Toast.LENGTH_SHORT).show();
@@ -250,6 +254,8 @@ public class RegisterActivity extends AppCompatActivity {
                                     progressDialog.dismiss();
                                     Toast.makeText(RegisterActivity.this, "Created successfully!", Toast.LENGTH_SHORT).show();
                                     startActivity(new Intent(RegisterActivity.this, MainActivity.class));
+                                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+
                                 }else{
                                     progressDialog.dismiss();
                                     Toast.makeText(RegisterActivity.this, "An error occurred while sing up!", Toast.LENGTH_SHORT).show();

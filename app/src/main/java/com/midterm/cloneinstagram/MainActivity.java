@@ -3,6 +3,7 @@ package com.midterm.cloneinstagram;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -101,6 +102,7 @@ public class MainActivity extends AppCompatActivity {
                         case R.id.nav_add:
                             selectedFragment = null;
                             startActivity(new Intent(MainActivity.this, PostActivity.class));
+                            overridePendingTransition(R.anim.slide_out_down, R.anim.slide_up_dialog);
                             break;
                         case R.id.nav_heart:
 //                            selectedFragment = new NotificationFragment();
@@ -117,7 +119,9 @@ public class MainActivity extends AppCompatActivity {
                             break;
                     }
                     if(selectedFragment!=null){
-                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment).commit();
+                        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                        fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_right);
+                        fragmentTransaction.replace(R.id.fragment_container, selectedFragment).commit();
                     }
                     return true;
                 }

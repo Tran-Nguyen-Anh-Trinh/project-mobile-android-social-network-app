@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -39,6 +40,7 @@ public class HomeFragment extends Fragment {
     private StoryAdapter storyAdapter;
     private List<Storys> storyLists;
     private TextView notify;
+    private ImageView imageView2;
 
     private List<String> followingList;
 
@@ -51,6 +53,7 @@ public class HomeFragment extends Fragment {
 
         notify = view.findViewById(R.id.notify);
 
+        imageView2 = view.findViewById(R.id.imageView2);
         recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
@@ -58,7 +61,7 @@ public class HomeFragment extends Fragment {
         linearLayoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(linearLayoutManager);
         postLists = new ArrayList<>();
-        postAdapter = new PostAdapter(getContext(), postLists, getActivity());
+        postAdapter = new PostAdapter(getContext(), postLists, getActivity(), imageView2, getActivity());
         recyclerView.setAdapter(postAdapter);
 
 
@@ -68,7 +71,7 @@ public class HomeFragment extends Fragment {
                 LinearLayoutManager.HORIZONTAL, false);
         recyclerView_story.setLayoutManager(linearLayoutManager1);
         storyLists = new ArrayList<>();
-        storyAdapter = new StoryAdapter(getContext(), storyLists);
+        storyAdapter = new StoryAdapter(getContext(), storyLists, getActivity());
         recyclerView_story.setAdapter(storyAdapter);
 
         checkFollowing();

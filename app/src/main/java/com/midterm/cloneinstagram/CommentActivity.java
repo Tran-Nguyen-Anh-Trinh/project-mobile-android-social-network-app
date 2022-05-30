@@ -50,8 +50,6 @@ public class CommentActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
         setContentView(R.layout.activity_comment);
         idPost = getIntent().getStringExtra("id");
         idUser = getIntent().getStringExtra("idUser");
@@ -178,6 +176,7 @@ public class CommentActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 finishAndRemoveTask();
+                overridePendingTransition(R.anim.slide_out_down, R.anim.slide_up_dialog);
             }
         });
         huyRep.setOnClickListener(new View.OnClickListener() {

@@ -9,6 +9,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -152,7 +153,7 @@ public class ProfileUserFragment extends Fragment {
             }
         });
         list = new ArrayList<>();
-        postedAdapter = new PostedAdapter(getContext(), list, getActivity());
+        postedAdapter = new PostedAdapter(getContext(), list, getActivity(), "profileUser");
         recyclerView.setAdapter(postedAdapter);
         storysList = new ArrayList<>();
         storyAdapter = new StroriedAdapter(getContext(), storysList, getActivity());
@@ -170,6 +171,39 @@ public class ProfileUserFragment extends Fragment {
                 select.setVisibility(View.INVISIBLE);
                 select1.setVisibility(View.VISIBLE);
                 readStory();
+            }
+        });
+
+        tv_followers.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ShowFollowOther nextFrag = new ShowFollowOther();
+                Bundle bundle = new Bundle();
+                bundle.putString("follow", "followers");
+                bundle.putString("idUser", idUser);
+                nextFrag.setArguments(bundle);
+
+                FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.setCustomAnimations(R.anim.slide_out_down, R.anim.slide_up_dialog);
+                fragmentTransaction.replace(R.id.fragment_container, nextFrag, "findThisFragment")
+                        .addToBackStack(null)
+                        .commit();
+            }
+        });
+        tv_following.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ShowFollowOther nextFrag = new ShowFollowOther();
+                Bundle bundle = new Bundle();
+                bundle.putString("follow", "following");
+                bundle.putString("idUser", idUser);
+                nextFrag.setArguments(bundle);
+
+                FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.setCustomAnimations(R.anim.slide_out_down, R.anim.slide_up_dialog);
+                fragmentTransaction.replace(R.id.fragment_container, nextFrag, "findThisFragment")
+                        .addToBackStack(null)
+                        .commit();
             }
         });
 
