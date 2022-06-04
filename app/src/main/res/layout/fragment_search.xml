@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/white"
     tools:context=".Fragment.SearchFragment">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -27,8 +28,8 @@
                 android:gravity="center">
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
                     android:background="@drawable/ic_search"
                     android:backgroundTint="@color/black"/>
 
@@ -40,13 +41,15 @@
                     android:background="@android:color/transparent"
                     android:hint="Search..."
                     android:maxLines="1"
+                    android:textColor="@color/black"
+                    android:textCursorDrawable="@color/green"
                     android:paddingLeft="10dp"
-                    android:textSize="14dp" />
+                    android:textSize="16dp" />
 
                 <ImageView
                     android:id="@+id/btn_delete"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
                     android:layout_marginRight="10dp"
                     android:backgroundTint="@color/black"
                     android:background="@drawable/ic_baseline_close_24" />

@@ -11,12 +11,15 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.midterm.cloneinstagram.Fragment.ActivityFragment;
 import com.midterm.cloneinstagram.Fragment.HomeFragment;
 import com.midterm.cloneinstagram.Fragment.NotificationFragment;
@@ -32,18 +35,36 @@ public class MainActivity extends AppCompatActivity {
     FirebaseDatabase database;
     BottomNavigationView bottomNavigationView;
     Fragment selectedFragment = null;
+    String token;
+    String checkFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         mAuth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
 
         if(mAuth.getCurrentUser() == null){
-            startActivity(new Intent(MainActivity.this, LoginActivity.class));
-            finish();
+            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             return;
         }
+
+
+
+        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
+            @Override
+            public void onComplete(@NonNull Task<String> task) {
+                if(!task.isSuccessful()){
+                    return;
+                }
+                token = task.getResult();
+                FirebaseDatabase.getInstance().getReference("User/"+mAuth.getUid()+"/token").setValue(token);
+            }
+        });
 
         FirebaseDatabase.getInstance().getReference().child("User").child(mAuth.getUid()).addValueEventListener(new ValueEventListener() {
             @Override
@@ -86,7 +107,16 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView = findViewById(R.id.bottom_navigation);
 
         bottomNavigationView.setOnNavigationItemSelectedListener(navigationItemSelectedListener);
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
+
+        checkFragment = getIntent().getStringExtra("activity");
+        if("true".equals(checkFragment)){
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_right);
+            fragmentTransaction.addToBackStack(null).replace(R.id.fragment_container, new ActivityFragment()).commit();
+            bottomNavigationView.setSelectedItemId(R.id.nav_heart);
+        } else {
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
+        }
     }
     private BottomNavigationView.OnNavigationItemSelectedListener navigationItemSelectedListener =
             new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -98,11 +128,6 @@ public class MainActivity extends AppCompatActivity {
                             break;
                         case R.id.nav_search:
                             selectedFragment = new SearchFragment();
-                            break;
-                        case R.id.nav_add:
-                            selectedFragment = null;
-                            startActivity(new Intent(MainActivity.this, PostActivity.class));
-                            overridePendingTransition(R.anim.slide_out_down, R.anim.slide_up_dialog);
                             break;
                         case R.id.nav_heart:
 //                            selectedFragment = new NotificationFragment();
@@ -121,7 +146,7 @@ public class MainActivity extends AppCompatActivity {
                     if(selectedFragment!=null){
                         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
                         fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_right);
-                        fragmentTransaction.replace(R.id.fragment_container, selectedFragment).commit();
+                        fragmentTransaction.addToBackStack(null).replace(R.id.fragment_container, selectedFragment).commit();
                     }
                     return true;
                 }

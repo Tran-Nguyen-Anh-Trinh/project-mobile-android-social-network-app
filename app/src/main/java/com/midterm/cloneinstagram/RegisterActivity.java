@@ -143,9 +143,9 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     void functionSignUp(){
-        String emailText = email.getText().toString();
+        String emailText = email.getText().toString().trim();
         String passwordText = password.getText().toString();
-        String usernameText = username.getText().toString();
+        String usernameText = username.getText().toString().trim();
         String confirmPasswordText = confirm_password.getText().toString();
 
         if(emailText.isEmpty()||passwordText.isEmpty()
@@ -155,6 +155,7 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
         if(!emailText.matches(emailPattern)){
+            email.setError("Invalid Email");
             Toast.makeText(RegisterActivity.this, "Incorrect email format!", Toast.LENGTH_SHORT).show();
             progressDialog.dismiss();
             return;
@@ -194,7 +195,7 @@ public class RegisterActivity extends AppCompatActivity {
                                                 public void onComplete(@NonNull Task<Void> task) {
                                                     if(task.isSuccessful()){
                                                         progressDialog.dismiss();
-                                                        Toast.makeText(RegisterActivity.this, "Created successfully!", Toast.LENGTH_SHORT).show();
+                                                        Toast.makeText(RegisterActivity.this, "Created account successfully!", Toast.LENGTH_SHORT).show();
                                                         startActivity(new Intent(RegisterActivity.this, MainActivity.class));
                                                         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 
@@ -228,7 +229,7 @@ public class RegisterActivity extends AppCompatActivity {
                                                 public void onComplete(@NonNull Task<Void> task) {
                                                     if(task.isSuccessful()){
                                                         progressDialog.dismiss();
-                                                        Toast.makeText(RegisterActivity.this, "Created successfully!", Toast.LENGTH_SHORT).show();
+                                                        Toast.makeText(RegisterActivity.this, "Created account successfully!", Toast.LENGTH_SHORT).show();
                                                         startActivity(new Intent(RegisterActivity.this, MainActivity.class));
                                                         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 
@@ -245,14 +246,14 @@ public class RegisterActivity extends AppCompatActivity {
                             }
                         });
                     }else{
-                        String linkImgProfile = "https://firebasestorage.googleapis.com/v0/b/tinstagram-82874.appspot.com/o/Profile-ICon.png?alt=media&token=f42430a4-3a26-477e-b9ee-a56765db1f26";
+                        String linkImgProfile = "https://firebasestorage.googleapis.com/v0/b/tinstagram-82874.appspot.com/o/profile_icon.png?alt=media&token=2effc8ce-8378-4e16-9eef-a807951a8fcd";
                         Users users = new Users(auth.getUid(), usernameText,emailText, linkImgProfile, "");
                         databaseReference.setValue(users).addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if(task.isSuccessful()){
                                     progressDialog.dismiss();
-                                    Toast.makeText(RegisterActivity.this, "Created successfully!", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(RegisterActivity.this, "Created account successfully!", Toast.LENGTH_SHORT).show();
                                     startActivity(new Intent(RegisterActivity.this, MainActivity.class));
                                     overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 

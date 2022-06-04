@@ -1,6 +1,7 @@
 package com.midterm.cloneinstagram.Fragment;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.Rect;
@@ -28,13 +29,18 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.midterm.cloneinstagram.Adapter.PostedAdapter;
 import com.midterm.cloneinstagram.Adapter.StroriedAdapter;
+import com.midterm.cloneinstagram.ChatActivity;
+import com.midterm.cloneinstagram.Model.Notification;
 import com.midterm.cloneinstagram.Model.Post;
 import com.midterm.cloneinstagram.Model.Storys;
 import com.midterm.cloneinstagram.Model.Users;
+import com.midterm.cloneinstagram.PushNotify.FCMSend;
 import com.midterm.cloneinstagram.R;
 import com.squareup.picasso.Picasso;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -55,6 +61,7 @@ public class ProfileUserFragment extends Fragment {
     private List<Storys> storysList;
     private LinearLayout imageView, imageView1;
     private LinearLayout select, select1;
+    private TextView messages;
 
 
     public ProfileUserFragment() {
@@ -89,14 +96,14 @@ public class ProfileUserFragment extends Fragment {
         tv_following = view.findViewById(R.id.tv_following);
         imageView = view.findViewById(R.id.imageView);
         imageView1 = view.findViewById(R.id.imageView1);
-
+        messages = view.findViewById(R.id.tv_message);
         select = view.findViewById(R.id.select);
         select1 = view.findViewById(R.id.select1);
         tv_close = view.findViewById(R.id.tv_close);
         tv_close.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getActivity().getSupportFragmentManager().popBackStackImmediate();
+                getActivity().getSupportFragmentManager().popBackStack();
             }
         });
 
@@ -112,6 +119,7 @@ public class ProfileUserFragment extends Fragment {
                             .child("User").child(FirebaseAuth.getInstance().getUid())
                             .child("following").child(idUser).setValue(idUser);
                     tvFollow.setText("Following");
+                    notifyApp(idUser);
                 } else {
                     FirebaseDatabase.getInstance().getReference()
                             .child("User").child(idUser).child("follower")
@@ -120,7 +128,50 @@ public class ProfileUserFragment extends Fragment {
                             .child("User").child(FirebaseAuth.getInstance().getUid())
                             .child("following").child(idUser).removeValue();
                     tvFollow.setText("Follow");
+                    notifyApp2(idUser);
                 }
+            }
+        });
+
+        messages.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FirebaseDatabase.getInstance().getReference().child("User")
+                        .child(FirebaseAuth.getInstance().getUid())
+                        .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        Users users = snapshot.getValue(Users.class);
+                        FirebaseDatabase.getInstance().getReference().child("User")
+                                .child(idUser)
+                                .addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                Users users1 = snapshot.getValue(Users.class);
+                                Intent intent = new Intent(getContext(), ChatActivity.class);
+                                intent.putExtra("Uid", users1.getUid());
+                                intent.putExtra("Name", users1.getName());
+                                intent.putExtra("ReceiverImg", users1.getImageUri());
+                                intent.putExtra("idSend", users.getUid());
+                                intent.putExtra("nameSend", users.getName());
+                                intent.putExtra("avaSend", users.getImageUri());
+                                getContext().startActivity(intent);
+                                getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left_1);
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
             }
         });
 
@@ -185,7 +236,7 @@ public class ProfileUserFragment extends Fragment {
 
                 FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
                 fragmentTransaction.setCustomAnimations(R.anim.slide_out_down, R.anim.slide_up_dialog);
-                fragmentTransaction.replace(R.id.fragment_container, nextFrag, "findThisFragment")
+                fragmentTransaction.add(R.id.fragment_container, nextFrag)
                         .addToBackStack(null)
                         .commit();
             }
@@ -201,7 +252,7 @@ public class ProfileUserFragment extends Fragment {
 
                 FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
                 fragmentTransaction.setCustomAnimations(R.anim.slide_out_down, R.anim.slide_up_dialog);
-                fragmentTransaction.replace(R.id.fragment_container, nextFrag, "findThisFragment")
+                fragmentTransaction.add(R.id.fragment_container, nextFrag)
                         .addToBackStack(null)
                         .commit();
             }
@@ -326,4 +377,98 @@ public class ProfileUserFragment extends Fragment {
 
     }
 
+    private void notifyApp(String idUser){
+        String idNotify = new SimpleDateFormat("yyyyMMdd_HHmmssss").format(Calendar.getInstance().getTime());
+        idNotify += System.currentTimeMillis();
+        String timeStamp = new SimpleDateFormat("dd/MM/yyyy").format(Calendar.getInstance().getTime());
+
+        Notification notification = new Notification();
+        notification.setIdNotify(idNotify);
+        notification.setIdUser(FirebaseAuth.getInstance().getUid());
+        notification.setType("follow");
+        notification.setDate(timeStamp);
+        notification.setContent("followed you");
+        notification.setIdUser(FirebaseAuth.getInstance().getUid());
+        FirebaseDatabase.getInstance().getReference()
+                .child("Notify").child(idUser)
+                .child("isRead").push()
+                .setValue(idUser);
+
+        FirebaseDatabase.getInstance().getReference()
+                .child("Notify").child(idUser)
+                .push().setValue(notification);
+
+        FirebaseDatabase.getInstance().getReference().child("User").child(FirebaseAuth.getInstance().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Users users = snapshot.getValue(Users.class);
+                String timeStamp = new SimpleDateFormat("HH:mm dd/MM/yyyy")
+                        .format(Calendar.getInstance().getTime());
+                FirebaseDatabase.getInstance().getReference().child("User").child(idUser).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        Users users1 = snapshot.getValue(Users.class);
+                        FCMSend.pushNotification(getContext(), users1.getToken(), "Follow", users.getName()+": Followed you "+ timeStamp, "", "", "", "", "", "");
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+    private void notifyApp2(String idUser){
+        String idNotify = new SimpleDateFormat("yyyyMMdd_HHmmssss").format(Calendar.getInstance().getTime());
+        idNotify += System.currentTimeMillis();
+        String timeStamp = new SimpleDateFormat("dd/MM/yyyy").format(Calendar.getInstance().getTime());
+
+        Notification notification = new Notification();
+        notification.setIdNotify(idNotify);
+        notification.setIdUser(FirebaseAuth.getInstance().getUid());
+        notification.setType("follow");
+        notification.setDate(timeStamp);
+        notification.setContent("unfollowed you");
+        notification.setIdUser(FirebaseAuth.getInstance().getUid());
+        FirebaseDatabase.getInstance().getReference()
+                .child("Notify").child(idUser)
+                .child("isRead").push()
+                .setValue(idUser);
+
+        FirebaseDatabase.getInstance().getReference()
+                .child("Notify").child(idUser)
+                .push().setValue(notification);
+
+        FirebaseDatabase.getInstance().getReference().child("User").child(FirebaseAuth.getInstance().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Users users = snapshot.getValue(Users.class);
+                String timeStamp = new SimpleDateFormat("HH:mm dd/MM/yyyy")
+                        .format(Calendar.getInstance().getTime());
+                FirebaseDatabase.getInstance().getReference().child("User").child(idUser).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        Users users1 = snapshot.getValue(Users.class);
+                        FCMSend.pushNotification(getContext(), users1.getToken(), "Follow", users.getName()+": Unfollowed you "+ timeStamp, "", "", "", "", "", "");
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
 }

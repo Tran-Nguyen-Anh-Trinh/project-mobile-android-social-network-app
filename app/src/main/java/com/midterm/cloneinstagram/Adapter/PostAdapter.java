@@ -30,12 +30,15 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.auth.User;
+import com.midterm.cloneinstagram.ChatActivity;
 import com.midterm.cloneinstagram.CommentActivity;
 import com.midterm.cloneinstagram.Fragment.DetailPostFragment;
 import com.midterm.cloneinstagram.Fragment.ShowFollowFragment;
 import com.midterm.cloneinstagram.Model.Notification;
 import com.midterm.cloneinstagram.Model.Post;
 import com.midterm.cloneinstagram.Fragment.ProfileUserFragment;
+import com.midterm.cloneinstagram.PushNotify.FCMSend;
 import com.midterm.cloneinstagram.R;
 import com.midterm.cloneinstagram.Model.Users;
 import com.squareup.picasso.Picasso;
@@ -74,8 +77,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Post post = mPost.get(position);
-
-
         holder.image_profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -87,8 +88,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
                 FragmentTransaction fragmentTransaction = fragmentActivity.getSupportFragmentManager().beginTransaction();
                 fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
-                fragmentTransaction.replace(R.id.fragment_container, nextFrag, "findThisFragment")
-                        .addToBackStack(null)
+                fragmentTransaction.add(R.id.fragment_container, nextFrag, "homeFragment")
+                        .addToBackStack("abc")
                         .commit();
             }
         });
@@ -103,7 +104,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
                 FragmentTransaction fragmentTransaction = fragmentActivity.getSupportFragmentManager().beginTransaction();
                 fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
-                fragmentTransaction.replace(R.id.fragment_container, nextFrag, "findThisFragment")
+                fragmentTransaction.add(R.id.fragment_container, nextFrag, "findThisFragment")
                         .addToBackStack(null)
                         .commit();
             }
@@ -165,6 +166,31 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                             FirebaseDatabase.getInstance().getReference()
                                     .child("Notify").child(post.getUsers().getUid())
                                     .push().setValue(notification);
+                            FirebaseDatabase.getInstance().getReference().child("User").child(FirebaseAuth.getInstance().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    Users users = snapshot.getValue(Users.class);
+                                    String timeStamp = new SimpleDateFormat("HH:mm dd/MM/yyyy")
+                                            .format(Calendar.getInstance().getTime());
+                                    FirebaseDatabase.getInstance().getReference().child("User").child(post.getUsers().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                            Users users1 = snapshot.getValue(Users.class);
+                                            FCMSend.pushNotification(mContext, users1.getToken(), "Post", users.getName()+": Liked your post on "+ timeStamp, "", "", "", "", "", "");
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError error) {
+
+                                        }
+                                    });
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
                         }
 
                     } else {
@@ -262,6 +288,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                     FirebaseDatabase.getInstance().getReference()
                             .child("Post").child(post.getPostid()).child("like").child(FirebaseAuth.getInstance().getUid())
                             .setValue(FirebaseAuth.getInstance().getUid());
+
                     Notification notification = new Notification();
                     notification.setIdNotify(idNotify);
                     notification.setIdUser(FirebaseAuth.getInstance().getUid());
@@ -279,6 +306,31 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                         FirebaseDatabase.getInstance().getReference()
                                 .child("Notify").child(post.getUsers().getUid())
                                 .push().setValue(notification);
+                        FirebaseDatabase.getInstance().getReference().child("User").child(FirebaseAuth.getInstance().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                Users users = snapshot.getValue(Users.class);
+                                String timeStamp = new SimpleDateFormat("HH:mm dd/MM/yyyy")
+                                        .format(Calendar.getInstance().getTime());
+                                FirebaseDatabase.getInstance().getReference().child("User").child(post.getUsers().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        Users users1 = snapshot.getValue(Users.class);
+                                        FCMSend.pushNotification(mContext, users1.getToken(), "Post", users.getName()+": Liked your post on "+ timeStamp, "", "", "", "", "", "");
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
                     }
 
                 } else {
@@ -321,6 +373,9 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                 }
             }
         });
+
+
+
         holder.comment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -328,7 +383,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                 intent.putExtra("id", post.getPostid());
                 intent.putExtra("idUser", post.getUsers().getUid());
                 mContext.startActivity(intent);
-                activity.overridePendingTransition(R.anim.slide_out_down, R.anim.slide_up_dialog);
+                activity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left_1);
             }
         });
 
@@ -339,15 +394,19 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                 intent.putExtra("id", post.getPostid());
                 intent.putExtra("idUser", post.getUsers().getUid());
                 mContext.startActivity(intent);
-                activity.overridePendingTransition(R.anim.slide_out_down, R.anim.slide_up_dialog);
+                activity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left_1);
             }
         });
 
-        FirebaseDatabase.getInstance().getReference().child("Post").child(post.getPostid()).child("comment").addValueEventListener(new ValueEventListener() {
+        FirebaseDatabase.getInstance().getReference().child("Post").child(post.getPostid()).child("comment").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-                    holder.comments.setVisibility(View.VISIBLE);
+                for(DataSnapshot dataSnapshot: snapshot.getChildren()){
+                    if (dataSnapshot.exists()) {
+                        holder.comments.setVisibility(View.VISIBLE);
+                        break;
+
+                    }
                 }
             }
 
@@ -367,7 +426,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
                 FragmentTransaction fragmentTransaction = fragmentActivity.getSupportFragmentManager().beginTransaction();
                 fragmentTransaction.setCustomAnimations(R.anim.slide_out_down, R.anim.slide_up_dialog);
-                fragmentTransaction.replace(R.id.fragment_container, nextFrag, "findThisFragment")
+                fragmentTransaction.add(R.id.fragment_container, nextFrag, "findThisFragment")
                         .addToBackStack(null)
                         .commit();
             }
@@ -383,7 +442,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                 nextFrag.setArguments(bundle);
                 FragmentTransaction fragmentTransaction = fragmentActivity.getSupportFragmentManager().beginTransaction();
                 fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
-                fragmentTransaction.replace(R.id.fragment_container, nextFrag, "findThisFragment")
+                fragmentTransaction.add(R.id.fragment_container, nextFrag, "findThisFragment")
                         .addToBackStack(null)
                         .commit();
             }

@@ -10,10 +10,6 @@
         android:icon="@drawable/ic_search"
         android:title=""/>
     <item
-        android:id="@+id/nav_add"
-        android:icon="@drawable/ic_add"
-        android:title=""/>
-    <item
         android:id="@+id/nav_heart"
         android:icon="@drawable/ic_heart"
         android:title=""/>

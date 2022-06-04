@@ -1,5 +1,6 @@
 package com.midterm.cloneinstagram.Fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,9 +22,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.midterm.cloneinstagram.Adapter.PostAdapter;
 import com.midterm.cloneinstagram.Adapter.StoryAdapter;
+import com.midterm.cloneinstagram.HomeChatActivity;
 import com.midterm.cloneinstagram.Model.Post;
 import com.midterm.cloneinstagram.Model.Story;
 import com.midterm.cloneinstagram.Model.Storys;
+import com.midterm.cloneinstagram.PostActivity;
 import com.midterm.cloneinstagram.R;
 
 import java.util.ArrayList;
@@ -41,7 +44,8 @@ public class HomeFragment extends Fragment {
     private List<Storys> storyLists;
     private TextView notify;
     private ImageView imageView2;
-
+    private ImageView addPost;
+    private ImageView add_chat;
     private List<String> followingList;
 
 
@@ -54,6 +58,8 @@ public class HomeFragment extends Fragment {
         notify = view.findViewById(R.id.notify);
 
         imageView2 = view.findViewById(R.id.imageView2);
+        addPost = view.findViewById(R.id.add_post);
+        add_chat = view.findViewById(R.id.add_chat);
         recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
@@ -73,7 +79,7 @@ public class HomeFragment extends Fragment {
         storyLists = new ArrayList<>();
         storyAdapter = new StoryAdapter(getContext(), storyLists, getActivity());
         recyclerView_story.setAdapter(storyAdapter);
-
+        addEvent();
         checkFollowing();
         return view;
     }
@@ -156,6 +162,24 @@ public class HomeFragment extends Fragment {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
+            }
+        });
+    }
+
+    private void addEvent(){
+        addPost.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getActivity(), PostActivity.class));
+                getActivity().overridePendingTransition(R.anim.slide_out_down, R.anim.slide_up_dialog);
+            }
+        });
+
+        add_chat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getActivity(), HomeChatActivity.class));
+                getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left_1);
             }
         });
     }

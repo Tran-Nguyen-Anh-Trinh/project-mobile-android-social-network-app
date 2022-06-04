@@ -22,8 +22,8 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="30dp"
-                app:cardCornerRadius="7dp">
+                android:layout_marginBottom="20dp"
+                app:cardCornerRadius="10dp">
 
                 <ImageView
                     android:layout_width="100dp"
@@ -36,12 +36,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="0dp"
                 android:layout_marginRight="20dp"
                 android:background="@drawable/edit_text"
                 android:hint="Email"
+                android:inputType="text"
+                android:maxLines="1"
                 android:padding="10dp"
-                android:textSize="18dp" />
+                android:textSize="14dp" />
 
             <EditText
                 android:id="@+id/password"
@@ -52,9 +54,10 @@
                 android:layout_marginRight="20dp"
                 android:background="@drawable/edit_text"
                 android:hint="Password"
+                android:maxLines="1"
                 android:inputType="textPassword"
                 android:padding="10dp"
-                android:textSize="18dp" />
+                android:textSize="14dp" />
 
             <TextView
                 android:id="@+id/signIn"
@@ -68,13 +71,14 @@
                 android:text="Sign in"
                 android:textAlignment="center"
                 android:textColor="@color/white"
-                android:textSize="18dp" />
+                android:textStyle="bold"
+                android:textSize="14dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="5dp"
                 android:gravity="center"
                 android:orientation="horizontal">
 
@@ -93,6 +97,13 @@
                     android:textColor="@color/green"
                     android:textSize="12dp" />
             </LinearLayout>
+            <TextView
+                android:id="@+id/forgot_pass"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Forgot password?"
+                android:textColor="@color/green"
+                android:textSize="12dp" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

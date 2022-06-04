@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -21,6 +22,7 @@ import com.midterm.cloneinstagram.Fragment.DetailPostFragment;
 import com.midterm.cloneinstagram.Fragment.ProfileUserFragment;
 import com.midterm.cloneinstagram.Model.Notification;
 import com.midterm.cloneinstagram.Model.Users;
+import com.midterm.cloneinstagram.PushNotify.FCMSend;
 import com.midterm.cloneinstagram.R;
 import com.squareup.picasso.Picasso;
 
@@ -77,18 +79,21 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.ViewHo
                     ProfileUserFragment nextFrag= new ProfileUserFragment();
                     nextFrag.setArguments(bundle);
 
-                    fragmentActivity.getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.fragment_container, nextFrag, "findThisFragment")
+                    FragmentTransaction fragmentTransaction = fragmentActivity.getSupportFragmentManager().beginTransaction();
+                    fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
+                    fragmentTransaction.add(R.id.fragment_container, nextFrag, "findThisFragment")
                             .addToBackStack(null)
                             .commit();
                 } else {
                     DetailPostFragment nextFrag = new DetailPostFragment();
                     Bundle bundle = new Bundle();
                     bundle.putString("id", notification.getIdPost());
+                    bundle.putString("type", "activity");
                     nextFrag.setArguments(bundle);
 
-                    fragmentActivity.getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.fragment_container, nextFrag, "findThisFragment")
+                    FragmentTransaction fragmentTransaction = fragmentActivity.getSupportFragmentManager().beginTransaction();
+                    fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
+                    fragmentTransaction.add(R.id.fragment_container, nextFrag, "findThisFragment")
                             .addToBackStack(null)
                             .commit();
                 }

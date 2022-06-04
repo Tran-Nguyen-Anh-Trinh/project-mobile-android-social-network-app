@@ -163,58 +163,7 @@ public class ShowFollowFragment extends Fragment {
         btn_close.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                String type = getArguments().getString("type");
-                if(type!=null) {
-                    if (type.equals("home")) {
-                        String typeTemp = getArguments().getString("typeTemp");
-                        if (typeTemp != null) {
-                            DetailPostFragment nextFrag = new DetailPostFragment();
-
-                            Bundle bundle = new Bundle();
-                            bundle.putString("id", idPost);
-                            bundle.putString("type", type);
-                            String idUser = getArguments().getString("idUser");
-                            bundle.putString("idUser", idUser);
-                            nextFrag.setArguments(bundle);
-                            FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
-                            fragmentTransaction.setCustomAnimations(R.anim.slide_out_down, R.anim.slide_up_dialog);
-                            fragmentTransaction.replace(R.id.fragment_container, nextFrag, "findThisFragment")
-                                    .addToBackStack(null)
-                                    .commit();
-                        } else {
-                            HomeFragment nextFrag = new HomeFragment();
-                            FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
-                            fragmentTransaction.setCustomAnimations(R.anim.slide_out_down, R.anim.slide_up_dialog);
-                            fragmentTransaction.replace(R.id.fragment_container, nextFrag, "findThisFragment")
-                                    .addToBackStack(null)
-                                    .commit();
-
-                        }
-                    } else {
-                        DetailPostFragment nextFrag = new DetailPostFragment();
-
-                        Bundle bundle = new Bundle();
-                        bundle.putString("id", idPost);
-                        bundle.putString("type", type);
-                        String idUser = getArguments().getString("idUser");
-                        bundle.putString("idUser", idUser);
-                        nextFrag.setArguments(bundle);
-                        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
-                        fragmentTransaction.setCustomAnimations(R.anim.slide_out_down, R.anim.slide_up_dialog);
-                        fragmentTransaction.replace(R.id.fragment_container, nextFrag, "findThisFragment")
-                                .addToBackStack(null)
-                                .commit();
-                    }
-                }
-                else{
-                    ProfileFragment nextFrag = new ProfileFragment();
-                    FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
-                    fragmentTransaction.setCustomAnimations(R.anim.slide_out_down, R.anim.slide_up_dialog);
-                    fragmentTransaction.replace(R.id.fragment_container, nextFrag, "findThisFragment")
-                            .addToBackStack(null)
-                            .commit();
-                }
+                getActivity().getSupportFragmentManager().popBackStack();
 
 //                getActivity().getSupportFragmentManager().popBackStackImmediate();
             }

@@ -74,6 +74,7 @@
             android:paddingRight="@dimen/_10sdp"
             android:layout_height="@dimen/_25sdp"
             android:layout_weight="1"
+            android:maxLines="1"
             android:background="@drawable/edtext_shape"
             android:textSize="@dimen/_12sdp"
             android:textColor="@color/black"
@@ -113,14 +114,28 @@
 
 
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/forgot_pass"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ln3"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:gravity="center"
+        android:text="Reset password"
+        android:textColor="@color/green"
+        android:textSize="12dp" />
     <LinearLayout
         android:id="@+id/ln4"
-        android:layout_below="@+id/ln3"
+        android:layout_below="@+id/forgot_pass"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_55sdp"
         android:orientation="horizontal"
         android:layout_marginLeft="@dimen/_30sdp"
-        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_5sdp"
         android:layout_marginRight="@dimen/_30sdp"
         android:gravity="right|center">
 

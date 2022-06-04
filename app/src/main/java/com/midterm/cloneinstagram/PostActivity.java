@@ -111,13 +111,7 @@ public class PostActivity extends AppCompatActivity {
         btnClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (idPost == null){
-                    Intent intent = new Intent(PostActivity.this, MainActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
-                }else{
-                    finishAndRemoveTask();
-                }
+                finishAndRemoveTask();
                 overridePendingTransition(R.anim.slide_out_down, R.anim.slide_up_dialog);
             }
         });
@@ -202,9 +196,7 @@ public class PostActivity extends AppCompatActivity {
                                                             if (task.isSuccessful()) {
                                                                 Toast.makeText(PostActivity.this, "Posted", Toast.LENGTH_SHORT).show();
                                                                 progressDialog.dismiss();
-                                                                Intent intent = new Intent(PostActivity.this, MainActivity.class);
-                                                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                                                startActivity(intent);
+                                                                finishAndRemoveTask();
                                                                 overridePendingTransition(R.anim.slide_out_down, R.anim.slide_up_dialog);                                                            } else {
                                                                 progressDialog.dismiss();
                                                                 Toast.makeText(PostActivity.this, "Error", Toast.LENGTH_SHORT).show();
@@ -256,9 +248,7 @@ public class PostActivity extends AppCompatActivity {
                                                             if (task.isSuccessful()) {
                                                                 Toast.makeText(PostActivity.this, "Posted", Toast.LENGTH_SHORT).show();
                                                                 progressDialog.dismiss();
-                                                                Intent intent = new Intent(PostActivity.this, MainActivity.class);
-                                                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                                                startActivity(intent);
+                                                                finishAndRemoveTask();
                                                                 overridePendingTransition(R.anim.slide_out_down, R.anim.slide_up_dialog);                                                            } else {
                                                                 progressDialog.dismiss();
                                                                 Toast.makeText(PostActivity.this, "Error", Toast.LENGTH_SHORT).show();
@@ -301,9 +291,7 @@ public class PostActivity extends AppCompatActivity {
                                                     if (task.isSuccessful()) {
                                                         Toast.makeText(PostActivity.this, "Updated", Toast.LENGTH_SHORT).show();
                                                         progressDialog.dismiss();
-                                                        Intent intent = new Intent(PostActivity.this, MainActivity.class);
-                                                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                                        startActivity(intent);
+                                                        finishAndRemoveTask();
                                                         overridePendingTransition(R.anim.slide_out_down, R.anim.slide_up_dialog);
                                                     } else {
                                                         progressDialog.dismiss();
@@ -340,9 +328,7 @@ public class PostActivity extends AppCompatActivity {
                                                     if (task.isSuccessful()) {
                                                         Toast.makeText(PostActivity.this, "Updated", Toast.LENGTH_SHORT).show();
                                                         progressDialog.dismiss();
-                                                        Intent intent = new Intent(PostActivity.this, MainActivity.class);
-                                                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                                        startActivity(intent);
+                                                        finishAndRemoveTask();
                                                         overridePendingTransition(R.anim.slide_out_down, R.anim.slide_up_dialog);
                                                     } else {
                                                         progressDialog.dismiss();
@@ -368,9 +354,7 @@ public class PostActivity extends AppCompatActivity {
                                 if (task.isSuccessful()) {
                                     Toast.makeText(PostActivity.this, "Updated", Toast.LENGTH_SHORT).show();
                                     progressDialog.dismiss();
-                                    Intent intent = new Intent(PostActivity.this, MainActivity.class);
-                                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                    startActivity(intent);
+                                    finishAndRemoveTask();
                                     overridePendingTransition(R.anim.slide_out_down, R.anim.slide_up_dialog);
                                 } else {
                                     progressDialog.dismiss();
@@ -410,13 +394,7 @@ public class PostActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (idPost == null){
-            Intent intent = new Intent(PostActivity.this, MainActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
-        }else{
-           finishAndRemoveTask();
-        }
+        finishAndRemoveTask();
         overridePendingTransition(R.anim.slide_out_down, R.anim.slide_up_dialog);
     }
 }

@@ -139,7 +139,7 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 getContext().startActivity(new Intent(getContext(), UpdateInformationActivity.class));
-                getActivity().overridePendingTransition(R.anim.slide_out_down, R.anim.slide_up_dialog);
+                getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left_1);
 
             }
         });
@@ -153,7 +153,7 @@ public class ProfileFragment extends Fragment {
 
                 FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
                 fragmentTransaction.setCustomAnimations(R.anim.slide_out_down, R.anim.slide_up_dialog);
-                fragmentTransaction.replace(R.id.fragment_container, nextFrag, "findThisFragment")
+                fragmentTransaction.add(R.id.fragment_container, nextFrag)
                         .addToBackStack(null)
                         .commit();
             }
@@ -168,7 +168,7 @@ public class ProfileFragment extends Fragment {
 
                 FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
                 fragmentTransaction.setCustomAnimations(R.anim.slide_out_down, R.anim.slide_up_dialog);
-                fragmentTransaction.replace(R.id.fragment_container, nextFrag, "findThisFragment")
+                fragmentTransaction.add(R.id.fragment_container, nextFrag)
                         .addToBackStack(null)
                         .commit();
             }

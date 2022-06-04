@@ -7,7 +7,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_marginBottom="10dp">
 
@@ -62,8 +62,7 @@
         <ImageView
             android:id="@+id/post_image"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:minHeight="@dimen/_300sdp"
+            android:layout_height="@dimen/_300sdp"
             android:layout_weight="1"
             android:scaleType="centerCrop"
             android:layout_marginTop="0dp"
@@ -127,6 +126,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
+            android:maxWidth="120dp"
+            android:maxLines="1"
+            android:ellipsize="end"
             android:textColor="@color/colorPrimaryDark"></TextView>
 
         <TextView
@@ -145,7 +147,6 @@
             android:layout_marginStart="10dp"
             android:layout_marginBottom="5dp"
             android:textSize="10dp"
-            android:text="View All Comments"
             android:textColor="@color/colorAccent"></TextView>
     </LinearLayout>
 </LinearLayout>

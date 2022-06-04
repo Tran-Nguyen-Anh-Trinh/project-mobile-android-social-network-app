@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/_1sdp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/profile_image"
+        android:layout_width="@dimen/_15sdp"
+        android:layout_height="@dimen/_15sdp"
+        android:layout_above="@+id/txtSeen"
+        android:layout_alignParentRight="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="@dimen/_3sdp"
+        android:layout_marginEnd="@dimen/_5sdp"
+        android:layout_marginRight="6dp"
+        android:layout_marginBottom="-2.2dp"
+        android:visibility="invisible"
+        app:civ_border_color="@color/green"
+        app:civ_border_width="@dimen/_1sdp"/>
+
+    <TextView
+        android:id="@+id/textSentMess"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="@dimen/_3sdp"
+        android:layout_marginTop="@dimen/_3sdp"
+        android:layout_marginEnd="@dimen/_3sdp"
+        android:layout_marginBottom="@dimen/_3sdp"
+        android:layout_toLeftOf="@id/profile_image"
+        android:background="@drawable/sender_shape"
+        android:maxWidth="250dp"
+        android:padding="@dimen/_7sdp"
+        android:textColor="@color/green"
+        android:textSize="@dimen/_12sdp" />
+    <TextView
+        android:id="@+id/dateTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#808080"
+        android:layout_centerInParent="true"
+        android:fontFamily="sans-serif-thin"
+        android:textSize="@dimen/_7sdp"
+        android:layout_marginRight="@dimen/_2sdp"
+        android:layout_toLeftOf="@+id/textSentMess"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/txtSeen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textSentMess"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="1dp"
+        android:layout_marginRight="33dp"
+        android:fontFamily="sans-serif-thin"
+        android:textColor="#808080"
+        android:textSize="@dimen/_6sdp"
+        android:textStyle="bold"
+        android:visibility="invisible" />
+
+</RelativeLayout>

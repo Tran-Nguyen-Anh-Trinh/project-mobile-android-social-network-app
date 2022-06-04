@@ -25,7 +25,7 @@ import com.google.firebase.storage.FirebaseStorage;
 public class LoginActivity extends AppCompatActivity {
 
     long pressedTime;
-    TextView signUp, signIn;
+    TextView signUp, signIn, forgot_pass;
     EditText email, password;
     ProgressDialog progressDialog;
 
@@ -45,6 +45,7 @@ public class LoginActivity extends AppCompatActivity {
         signUp  = findViewById(R.id.signup);
         signIn = findViewById(R.id.signIn);
         email = findViewById(R.id.email);
+        forgot_pass = findViewById(R.id.forgot_pass);
         password = findViewById(R.id.password);
         progressDialog = new ProgressDialog(this);
         progressDialog.setCancelable(false);
@@ -65,6 +66,14 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        forgot_pass.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(LoginActivity.this, ForgotPassWordActivity.class));
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+            }
+        });
+
     }
 
     @Override
@@ -80,7 +89,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     void functionSignIn(){
-        String emailText = email.getText().toString();
+        String emailText = email.getText().toString().trim();
         String passwordText = password.getText().toString();
 
         if(emailText.isEmpty()||passwordText.isEmpty()){
@@ -108,14 +117,13 @@ public class LoginActivity extends AppCompatActivity {
 
                 }else{
                     progressDialog.dismiss();
-                    Toast.makeText(LoginActivity.this, "Error in sign up!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, "Error in sign in!", Toast.LENGTH_SHORT).show();
                 }
             }
         });
     }
     @Override
     public void onBackPressed() {
-
         if (pressedTime + 2000 > System.currentTimeMillis()) {
             super.onBackPressed();
             finishAffinity();

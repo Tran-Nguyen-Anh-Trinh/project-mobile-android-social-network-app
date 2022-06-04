@@ -14,6 +14,7 @@ import androidx.fragment.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,7 +30,9 @@ import com.midterm.cloneinstagram.DetailPost;
 import com.midterm.cloneinstagram.LoginActivity;
 import com.midterm.cloneinstagram.Model.Notification;
 import com.midterm.cloneinstagram.Model.Post;
+import com.midterm.cloneinstagram.Model.Users;
 import com.midterm.cloneinstagram.PostActivity;
+import com.midterm.cloneinstagram.PushNotify.FCMSend;
 import com.midterm.cloneinstagram.R;
 import com.midterm.cloneinstagram.UpdateInformationActivity;
 import com.squareup.picasso.Picasso;
@@ -91,6 +94,8 @@ public class DetailPostFragment extends Fragment {
         setData();
         addEvent();
     }
+
+
     private void setData(){
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Post").child(idPost);
 
@@ -134,6 +139,8 @@ public class DetailPostFragment extends Fragment {
         });
 
     }
+
+
 
     private void getData(){
         username.setText(post.getUsers().getName());
@@ -228,6 +235,31 @@ public class DetailPostFragment extends Fragment {
                             FirebaseDatabase.getInstance().getReference()
                                     .child("Notify").child(post.getUsers().getUid())
                                     .push().setValue(notification);
+                            FirebaseDatabase.getInstance().getReference().child("User").child(FirebaseAuth.getInstance().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    Users users = snapshot.getValue(Users.class);
+                                    String timeStamp = new SimpleDateFormat("HH:mm dd/MM/yyyy")
+                                            .format(Calendar.getInstance().getTime());
+                                    FirebaseDatabase.getInstance().getReference().child("User").child(post.getUsers().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                            Users users1 = snapshot.getValue(Users.class);
+                                            FCMSend.pushNotification(getContext(), users1.getToken(), "Post", users.getName()+": Liked your post on "+ timeStamp, "", "", "", "", "", "");
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError error) {
+
+                                        }
+                                    });
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
                         }
 
                     } else {
@@ -342,6 +374,31 @@ public class DetailPostFragment extends Fragment {
                         FirebaseDatabase.getInstance().getReference()
                                 .child("Notify").child(post.getUsers().getUid())
                                 .push().setValue(notification);
+                        FirebaseDatabase.getInstance().getReference().child("User").child(FirebaseAuth.getInstance().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                Users users = snapshot.getValue(Users.class);
+                                String timeStamp = new SimpleDateFormat("HH:mm dd/MM/yyyy")
+                                        .format(Calendar.getInstance().getTime());
+                                FirebaseDatabase.getInstance().getReference().child("User").child(post.getUsers().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        Users users1 = snapshot.getValue(Users.class);
+                                        FCMSend.pushNotification(getContext(), users1.getToken(), "Post", users.getName()+": Liked your post on "+ timeStamp, "", "", "", "", "", "");
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
                     }
 
                 } else {
@@ -392,7 +449,7 @@ public class DetailPostFragment extends Fragment {
                 intent.putExtra("id", post.getPostid());
                 intent.putExtra("idUser", post.getUsers().getUid());
                 getContext().startActivity(intent);
-                getActivity().overridePendingTransition(R.anim.slide_out_down, R.anim.slide_up_dialog);
+                getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left_1);
 
             }
         });
@@ -403,7 +460,7 @@ public class DetailPostFragment extends Fragment {
                 intent.putExtra("id", post.getPostid());
                 intent.putExtra("idUser", post.getUsers().getUid());
                 getContext().startActivity(intent);
-                getActivity().overridePendingTransition(R.anim.slide_out_down, R.anim.slide_up_dialog);
+                getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left_1);
 
             }
         });
@@ -421,32 +478,14 @@ public class DetailPostFragment extends Fragment {
                             .addToBackStack(null)
                             .commit();
                 }else if(type.equals("home")){
-                    HomeFragment nextFrag = new HomeFragment();
-                    FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
-                    fragmentTransaction.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right);
-                    fragmentTransaction.replace(R.id.fragment_container, nextFrag, "findThisFragment")
-                            .addToBackStack(null)
-                            .commit();
+                    getActivity().getSupportFragmentManager().popBackStack();
                 } else if(type.equals("search")){
-                    SearchFragment nextFrag = new SearchFragment();
-                    FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
-                    fragmentTransaction.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right);
-                    fragmentTransaction.replace(R.id.fragment_container, nextFrag, "findThisFragment")
-                            .addToBackStack(null)
-                            .commit();
+                    getActivity().getSupportFragmentManager().popBackStack();
+                } else if(type.equals("activity")){
+                    getActivity().getSupportFragmentManager().popBackStack();
                 }
                 else{
-                    Bundle bundle = new Bundle();
-                    String idUser = getArguments().getString("idUser");
-                    bundle.putString("idUser", idUser);
-                    ProfileUserFragment nextFrag = new ProfileUserFragment();
-                    nextFrag.setArguments(bundle);
-                    FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
-                    fragmentTransaction.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right);
-                    fragmentTransaction.replace(R.id.fragment_container, nextFrag, "findThisFragment")
-                            .addToBackStack(null)
-                            .commit();
-
+                    getActivity().getSupportFragmentManager().popBackStack();
                 }
 
 
@@ -469,7 +508,7 @@ public class DetailPostFragment extends Fragment {
 
                 FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
                 fragmentTransaction.setCustomAnimations(R.anim.slide_out_down, R.anim.slide_up_dialog);
-                fragmentTransaction.replace(R.id.fragment_container, nextFrag, "findThisFragment")
+                fragmentTransaction.add(R.id.fragment_container, nextFrag, "findThisFragment")
                         .addToBackStack(null)
                         .commit();
             }

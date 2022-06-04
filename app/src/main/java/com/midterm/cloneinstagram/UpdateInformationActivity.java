@@ -46,6 +46,7 @@ public class UpdateInformationActivity extends AppCompatActivity {
     EditText editTextName;
     TextView btnApply;
     TextView btnCC;
+    TextView forgot_pass;
     TextView btnSingOut;
     Users users;
     ProgressDialog progressDialog;
@@ -70,11 +71,21 @@ public class UpdateInformationActivity extends AppCompatActivity {
         editTextName = findViewById(R.id.editName);
         btnApply = findViewById(R.id.btnApply);
         btnCC = findViewById(R.id.btnCC);
+        forgot_pass = findViewById(R.id.forgot_pass);
+
+        forgot_pass.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(UpdateInformationActivity.this, ForgotPassWordActivity.class));
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+            }
+        });
+
         btnCC.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finishAndRemoveTask();
-                overridePendingTransition(R.anim.slide_out_down, R.anim.slide_up_dialog);            }
+                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right_1);            }
         });
         btnSingOut = findViewById(R.id.btnSignOut);
         btnSingOut.setOnClickListener(new View.OnClickListener() {
@@ -117,7 +128,7 @@ public class UpdateInformationActivity extends AppCompatActivity {
 
 
         progressDialog=new ProgressDialog(this);
-        progressDialog.setMessage("Please wait");
+        progressDialog.setMessage("Updating...");
         progressDialog.setCancelable(false);
         btnApply.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -313,5 +324,11 @@ public class UpdateInformationActivity extends AppCompatActivity {
     void updateStatus(String status){
         DatabaseReference databaseReference = database.getReference().child("Users").child(auth.getUid()).child("status");
         databaseReference.setValue(status);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right_1);
     }
 }

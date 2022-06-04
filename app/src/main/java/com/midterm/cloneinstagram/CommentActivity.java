@@ -26,6 +26,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.midterm.cloneinstagram.Model.Comment;
 import com.midterm.cloneinstagram.Model.Notification;
 import com.midterm.cloneinstagram.Model.Users;
+import com.midterm.cloneinstagram.PushNotify.FCMSend;
 import com.midterm.cloneinstagram.comment.userAdapter;
 import com.midterm.cloneinstagram.comment.userCmt;
 
@@ -46,6 +47,7 @@ public class CommentActivity extends AppCompatActivity {
     EditText comment;
     LinearLayout rep;
     LinearLayoutManager linearLayoutManager;
+    String content = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,10 +101,13 @@ public class CommentActivity extends AppCompatActivity {
         notification.setType(child);
         notification.setDate(timeStamp);
         if(child.equals("comment")){
-            notification.setContent(child+" on your post");
+            content = child+" on your post";
+            notification.setContent(content);
         } else {
-            notification.setContent("replied to comment on your post");
+            content = "replied to comment on your post";
+            notification.setContent(content);
         }
+
         notification.setIdPost(idPost);
         if(!idUser.equals(FirebaseAuth.getInstance().getUid())) {
 
@@ -114,6 +119,32 @@ public class CommentActivity extends AppCompatActivity {
             FirebaseDatabase.getInstance().getReference()
                     .child("Notify").child(idUser)
                     .push().setValue(notification);
+
+            FirebaseDatabase.getInstance().getReference().child("User").child(FirebaseAuth.getInstance().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    Users users = snapshot.getValue(Users.class);
+                    String timeStamp = new SimpleDateFormat("HH:mm dd/MM/yyyy")
+                            .format(Calendar.getInstance().getTime());
+                    FirebaseDatabase.getInstance().getReference().child("User").child(idUser).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            Users usersNotify = snapshot.getValue(Users.class);
+                            FCMSend.pushNotification(CommentActivity.this, usersNotify.getToken(), "Post", users.getName()+": " + content+ " "+ timeStamp, "", "", "", "", "", "");
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    });
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
         }
     }
 
@@ -176,7 +207,7 @@ public class CommentActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 finishAndRemoveTask();
-                overridePendingTransition(R.anim.slide_out_down, R.anim.slide_up_dialog);
+                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right_1);
             }
         });
         huyRep.setOnClickListener(new View.OnClickListener() {
@@ -187,5 +218,11 @@ public class CommentActivity extends AppCompatActivity {
                 comment.setText("");
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        finishAndRemoveTask();
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right_1);
     }
 }

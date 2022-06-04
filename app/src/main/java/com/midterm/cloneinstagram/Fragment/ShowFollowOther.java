@@ -166,15 +166,7 @@ public class ShowFollowOther extends Fragment {
             @Override
             public void onClick(View view) {
 
-                ProfileUserFragment nextFrag = new ProfileUserFragment();
-                Bundle bundle = new Bundle();
-                bundle.putString("idUser", idUser);
-                nextFrag.setArguments(bundle);
-                FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
-                fragmentTransaction.setCustomAnimations(R.anim.slide_out_down, R.anim.slide_up_dialog);
-                fragmentTransaction.replace(R.id.fragment_container, nextFrag, "findThisFragment")
-                        .addToBackStack(null)
-                        .commit();
+                getActivity().getSupportFragmentManager().popBackStack();
 
 //                getActivity().getSupportFragmentManager().popBackStackImmediate();
             }

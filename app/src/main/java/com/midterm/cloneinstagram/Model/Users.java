@@ -12,6 +12,7 @@ public class Users implements Serializable {
     String status;
     ManagerFollow follower;
     ManagerFollow following;
+    String token;
 
     public Users(){
 
@@ -23,6 +24,14 @@ public class Users implements Serializable {
             instance = new Users();
         }
         return instance;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 
     public ManagerFollow getFollower() {
@@ -92,5 +101,19 @@ public class Users implements Serializable {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    @Override
+    public String toString() {
+        return "Users{" +
+                "uid='" + uid + '\'' +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", imageUri='" + imageUri + '\'' +
+                ", status='" + status + '\'' +
+                ", follower=" + follower +
+                ", following=" + following +
+                ", token='" + token + '\'' +
+                '}';
     }
 }

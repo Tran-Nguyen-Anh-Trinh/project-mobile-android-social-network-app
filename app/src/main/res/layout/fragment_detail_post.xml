@@ -2,7 +2,10 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:background="@color/white"
+    android:orientation="vertical"
+    android:clickable="true"
+    android:focusable="true">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -10,19 +13,31 @@
         android:orientation="vertical"
         android:layout_marginBottom="20dp">
 
-        <LinearLayout
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:id="@+id/ln1"
+            android:background="?android:attr/windowBackground">
+
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="?android:attr/windowBackground">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
             android:orientation="horizontal"
             android:gravity="center">
             <TextView
                 android:id="@+id/back"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:background="@drawable/left"
                 android:backgroundTint="@color/black"
                 android:layout_gravity="center"
-                android:layout_marginLeft="5dp"
                 android:visibility="visible"/>
 
             <de.hdodenhof.circleimageview.CircleImageView
@@ -63,6 +78,9 @@
                 android:backgroundTint="@color/black"
                 android:background="@drawable/delete_48px"></TextView>
         </LinearLayout>
+
+        </androidx.appcompat.widget.Toolbar>
+        </com.google.android.material.appbar.AppBarLayout>
 
         <ImageView
             android:id="@+id/post_image"
@@ -131,6 +149,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
             android:textColor="@color/colorPrimaryDark"></TextView>
 
         <TextView
@@ -148,7 +167,6 @@
             android:layout_marginStart="10dp"
             android:layout_marginBottom="5dp"
             android:textSize="10dp"
-            android:text="View All Comments"
             android:textColor="@color/colorAccent"></TextView>
     </LinearLayout>
     <ImageView
