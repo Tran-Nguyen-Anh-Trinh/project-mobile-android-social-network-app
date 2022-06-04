@@ -1,15 +1,17 @@
-package com.midterm.cloneinstagram.comment;
+package com.midterm.cloneinstagram.Comment;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.midterm.cloneinstagram.CommentActivity;
+import com.midterm.cloneinstagram.Fragment.ProfileUserFragment;
 import com.midterm.cloneinstagram.Model.Comment;
 import com.midterm.cloneinstagram.R;
 import com.squareup.picasso.Picasso;

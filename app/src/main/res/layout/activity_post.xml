@@ -80,8 +80,7 @@
             android:layout_height="wrap_content"
             android:hint="Add a caption"
             android:maxLines="10"
-            android:inputType="text"
-            android:textCursorDrawable="@color/green"/>
+            android:inputType="text"/>
 
     </com.google.android.material.textfield.TextInputLayout>
     <Space

@@ -88,7 +88,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             Notification.Builder notification = new Notification.Builder(this, CHANNEL_ID)
                     .setContentTitle(title)
                     .setContentText(text)
-                    .setSmallIcon(R.drawable.logo_app_green)
+                    .setSmallIcon(R.drawable.hashtag_100px)
                     .setAutoCancel(true);
 
             TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);

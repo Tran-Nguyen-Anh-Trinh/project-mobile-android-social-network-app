@@ -102,6 +102,7 @@ public class UpdateInformationActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         dialog.dismiss();
+                        updateStatus("offline");
                         FirebaseAuth.getInstance().signOut();
                         Intent intent = new Intent(UpdateInformationActivity.this, LoginActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -263,11 +264,12 @@ public class UpdateInformationActivity extends AppCompatActivity {
                     public void onClick(View v) {
                         if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA)
                                 == PackageManager.PERMISSION_DENIED) {
-                            Toast.makeText(UpdateInformationActivity.this, "Please grant camera permission to the app", Toast.LENGTH_SHORT).show();
-                        }else {
-                            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                            startActivityForResult(intent, 100);
+                            Toast.makeText(getApplicationContext(), "Please grant camera permission to the app", Toast.LENGTH_SHORT).show();
+                            dialog.dismiss();
+                            return;
                         }
+                        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                        startActivityForResult(intent, 100);
                         dialog.dismiss();
                     }
                 });
@@ -322,7 +324,7 @@ public class UpdateInformationActivity extends AppCompatActivity {
     }
 
     void updateStatus(String status){
-        DatabaseReference databaseReference = database.getReference().child("Users").child(auth.getUid()).child("status");
+        DatabaseReference databaseReference = database.getReference().child("User").child(auth.getUid()).child("status");
         databaseReference.setValue(status);
     }
 

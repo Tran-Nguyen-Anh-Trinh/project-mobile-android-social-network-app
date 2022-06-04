@@ -186,7 +186,7 @@ public class SearchFragment extends Fragment {
                 list.clear();
                 for(DataSnapshot snapshot: dataSnapshot.getChildren()) {
                     Post post = snapshot.getValue(Post.class);
-                    list.add(post);
+                    list.add(0, post);
                 }
                 searchAdapter.notifyDataSetChanged();
             }

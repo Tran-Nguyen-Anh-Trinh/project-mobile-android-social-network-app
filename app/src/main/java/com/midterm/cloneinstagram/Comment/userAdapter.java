@@ -1,7 +1,8 @@
-package com.midterm.cloneinstagram.comment;
+package com.midterm.cloneinstagram.Comment;
 
+import android.app.Activity;
 import android.content.Context;
-import android.util.Log;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -19,6 +22,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.midterm.cloneinstagram.CommentActivity;
+import com.midterm.cloneinstagram.Fragment.ProfileUserFragment;
+import com.midterm.cloneinstagram.MainActivity;
 import com.midterm.cloneinstagram.Model.Comment;
 import com.midterm.cloneinstagram.R;
 import com.squareup.picasso.Picasso;

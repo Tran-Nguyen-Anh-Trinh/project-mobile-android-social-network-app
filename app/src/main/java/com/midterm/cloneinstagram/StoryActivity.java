@@ -3,6 +3,7 @@ package com.midterm.cloneinstagram;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
@@ -10,25 +11,36 @@ import android.media.Image;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.midterm.cloneinstagram.Model.Messages;
 import com.midterm.cloneinstagram.Model.OnSwipeTouchListener;
 import com.midterm.cloneinstagram.Model.Story;
 import com.midterm.cloneinstagram.Model.Users;
+import com.midterm.cloneinstagram.PushNotify.FCMSend;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import jp.shts.android.storiesprogressview.StoriesProgressView;
 
@@ -50,11 +62,34 @@ public class StoryActivity extends AppCompatActivity implements StoriesProgressV
     String imageAvatar;
     String imageStory;
     ImageView delete;
+    ImageView sent;
+    EditText content;
+    String senderRoom;
+    String receiverRoom;
+    RelativeLayout linearLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_story);
+
+        linearLayout = findViewById(R.id.sum);
+        content = findViewById(R.id.content);
+        content.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                if(b){
+                    storiesProgressView.pause();
+                    System.out.println("qqqqqqqqqqq");
+                }else {
+                    storiesProgressView.resume();
+                    System.out.println("llllllllllllll");
+                }
+            }
+        });
+
+
+        sent = findViewById(R.id.send);
 
         View hold = findViewById(R.id.hold);
         hold.setOnClickListener(new View.OnClickListener() {
@@ -65,6 +100,8 @@ public class StoryActivity extends AppCompatActivity implements StoriesProgressV
         hold.setOnTouchListener(new OnSwipeTouchListener(this){
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
+                InputMethodManager inputMethodManager =(InputMethodManager)getSystemService(Activity.INPUT_METHOD_SERVICE);
+                inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
                 if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
                     pressTime = System.currentTimeMillis();
                     storiesProgressView.pause();
@@ -80,12 +117,16 @@ public class StoryActivity extends AppCompatActivity implements StoriesProgressV
         reserve.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                InputMethodManager inputMethodManager =(InputMethodManager)getSystemService(Activity.INPUT_METHOD_SERVICE);
+                inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
                 storiesProgressView.reverse();
             }
         });
         reserve.setOnTouchListener(new OnSwipeTouchListener(this){
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
+                InputMethodManager inputMethodManager =(InputMethodManager)getSystemService(Activity.INPUT_METHOD_SERVICE);
+                inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
                 if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
                     pressTime = System.currentTimeMillis();
                     storiesProgressView.pause();
@@ -133,6 +174,40 @@ public class StoryActivity extends AppCompatActivity implements StoriesProgressV
         name = getIntent().getStringExtra("name");
         imageAvatar = getIntent().getStringExtra("image");
         imageStory = getIntent().getStringExtra("imageStory");
+
+
+        sent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String messages = "Replied to your story: " + content.getText().toString().trim();
+                if (messages.isEmpty()) {
+                    Toast.makeText(StoryActivity.this, "Please enter a messages!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                Date now = new Date();
+                String format = new SimpleDateFormat("HH:mm dd/MM/yyyy").format(now);
+                content.setText("");
+                saveMessagesChat(messages, "", "");
+                FirebaseDatabase.getInstance().getReference().child("User").child(userid)
+                        .addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                Users usersReceive = snapshot.getValue(Users.class);
+                                if(!usersReceive.getUid().equals(FirebaseAuth.getInstance().getUid())){
+                                    FCMSend.pushNotification(StoryActivity.this, usersReceive.getToken(), "Messages", Users.getInstance().getName()+": "+messages + " on " + format,
+                                            Users.getInstance().getUid(),
+                                            Users.getInstance().getName(), Users.getInstance().getImageUri(), userid,
+                                            name, imageAvatar);
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+            }
+        });
 
         FirebaseDatabase.getInstance().getReference().child("Story").child(userid).child("isSeen")
                 .child(FirebaseAuth.getInstance().getUid())
@@ -240,5 +315,40 @@ public class StoryActivity extends AppCompatActivity implements StoriesProgressV
         super.onBackPressed();
         overridePendingTransition(R.anim.slide_out_down, R.anim.slide_up_dialog);
 
+    }
+
+    private void saveMessagesChat(String messages, String img, String vid) {
+        Date now = new Date();
+        String format = new SimpleDateFormat("EEE, d MMM yyyy HH:mm", Locale.ENGLISH).format(now);
+        Messages messages1;
+        messages1 = new Messages(messages, FirebaseAuth.getInstance().getUid(), img, vid, format);
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        senderRoom = FirebaseAuth.getInstance().getUid() + userid;
+        receiverRoom = userid + FirebaseAuth.getInstance().getUid();
+        if (FirebaseAuth.getInstance().getUid().equals(userid)) {
+            database.getReference().child("Chats")
+                    .child(senderRoom)
+                    .child("Messages")
+                    .push()
+                    .setValue(messages1);
+        } else {
+            database.getReference().child("Chats")
+                    .child(senderRoom)
+                    .child("Messages")
+                    .push()
+                    .setValue(messages1).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            database.getReference().child("Chats")
+                                    .child(receiverRoom)
+                                    .child("Messages")
+                                    .push().setValue(messages1);
+
+                        }
+                    });
+            database.getReference().child("Chats")
+                    .child(receiverRoom)
+                    .child("IsRead").setValue("true");
+        }
     }
 }

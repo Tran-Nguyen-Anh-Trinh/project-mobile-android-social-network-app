@@ -182,7 +182,7 @@ public class UserChatAdapter  extends RecyclerView.Adapter<UserChatAdapter.Viewh
                         if (auth.getUid().equals(users.getUid())) {
                             holder.user_messages.setText("Chat with yourself!");
                         } else {
-                            holder.user_messages.setText("Let's chat with friends.");
+                            holder.user_messages.setText("Let's chat with everyone.");
                         }
                     }
 

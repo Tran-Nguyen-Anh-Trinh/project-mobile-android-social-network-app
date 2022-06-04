@@ -1,8 +1,10 @@
 package com.midterm.cloneinstagram;
 
+import android.Manifest;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -16,6 +18,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -132,6 +135,12 @@ public class PostActivity extends AppCompatActivity {
                 takePhoto.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA)
+                                == PackageManager.PERMISSION_DENIED) {
+                            Toast.makeText(getApplicationContext(), "Please grant camera permission to the app", Toast.LENGTH_SHORT).show();
+                            dialog.dismiss();
+                            return;
+                        }
                         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                         startActivityForResult(intent, 100);
                         dialog.dismiss();
@@ -160,7 +169,7 @@ public class PostActivity extends AppCompatActivity {
             public void onClick(View view) {
                 if (idPost == null) {
                     if (bytes == null && uri == null) {
-                        Toast.makeText(PostActivity.this, "Please choose a image", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(PostActivity.this, "Please choose an image", Toast.LENGTH_SHORT).show();
                         return;
                     }
                 }

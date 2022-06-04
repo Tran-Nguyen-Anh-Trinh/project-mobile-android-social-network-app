@@ -196,6 +196,32 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.ViewHo
         FirebaseDatabase.getInstance().getReference()
                 .child("Notify").child(idUser)
                 .push().setValue(notification);
+
+        FirebaseDatabase.getInstance().getReference().child("User").child(FirebaseAuth.getInstance().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Users users = snapshot.getValue(Users.class);
+                String timeStamp = new SimpleDateFormat("HH:mm dd/MM/yyyy")
+                        .format(Calendar.getInstance().getTime());
+                FirebaseDatabase.getInstance().getReference().child("User").child(idUser).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        Users users1 = snapshot.getValue(Users.class);
+                        FCMSend.pushNotification(context, users1.getToken(), "Follow", users.getName()+": Followed you "+ timeStamp, "", "", "", "", "", "");
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
     private void notifyApp2(String idUser){
         String idNotify = new SimpleDateFormat("yyyyMMdd_HHmmssss").format(Calendar.getInstance().getTime());
@@ -217,6 +243,32 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.ViewHo
         FirebaseDatabase.getInstance().getReference()
                 .child("Notify").child(idUser)
                 .push().setValue(notification);
+        FirebaseDatabase.getInstance().getReference().child("User").child(FirebaseAuth.getInstance().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Users users = snapshot.getValue(Users.class);
+                String timeStamp = new SimpleDateFormat("HH:mm dd/MM/yyyy")
+                        .format(Calendar.getInstance().getTime());
+                FirebaseDatabase.getInstance().getReference().child("User").child(idUser).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        Users users1 = snapshot.getValue(Users.class);
+                        FCMSend.pushNotification(context, users1.getToken(), "Follow", users.getName()+": Unfollowed you "+ timeStamp, "", "", "", "", "", "");
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
     }
 
 }

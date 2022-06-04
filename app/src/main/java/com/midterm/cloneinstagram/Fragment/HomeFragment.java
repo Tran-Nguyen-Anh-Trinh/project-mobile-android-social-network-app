@@ -26,10 +26,13 @@ import com.midterm.cloneinstagram.HomeChatActivity;
 import com.midterm.cloneinstagram.Model.Post;
 import com.midterm.cloneinstagram.Model.Story;
 import com.midterm.cloneinstagram.Model.Storys;
+import com.midterm.cloneinstagram.Model.Users;
 import com.midterm.cloneinstagram.PostActivity;
 import com.midterm.cloneinstagram.R;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 
@@ -47,6 +50,8 @@ public class HomeFragment extends Fragment {
     private ImageView addPost;
     private ImageView add_chat;
     private List<String> followingList;
+    private TextView noti;
+    private List<String> listUserID;
 
 
     @Override
@@ -69,7 +74,7 @@ public class HomeFragment extends Fragment {
         postLists = new ArrayList<>();
         postAdapter = new PostAdapter(getContext(), postLists, getActivity(), imageView2, getActivity());
         recyclerView.setAdapter(postAdapter);
-
+        noti = view.findViewById(R.id.noti);
 
         recyclerView_story = view.findViewById(R.id.recycler_view_story);
         recyclerView_story.setHasFixedSize(true);
@@ -79,6 +84,7 @@ public class HomeFragment extends Fragment {
         storyLists = new ArrayList<>();
         storyAdapter = new StoryAdapter(getContext(), storyLists, getActivity());
         recyclerView_story.setAdapter(storyAdapter);
+        listUserID = new ArrayList<>();
         addEvent();
         checkFollowing();
         return view;
@@ -143,6 +149,8 @@ public class HomeFragment extends Fragment {
     }
 
     private void readStory() {
+        String timeStamp = new SimpleDateFormat("dd/MM/yyyy").format(Calendar.getInstance().getTime());
+
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Story");
 
         reference.addValueEventListener(new ValueEventListener() {
@@ -151,9 +159,10 @@ public class HomeFragment extends Fragment {
                 storyLists.clear();
                 for(DataSnapshot snapshot: dataSnapshot.getChildren()) {
                     Storys storys = snapshot.getValue(Storys.class);
-                    System.out.println("ppppp"+ storys.getPostimage());
                     if(followingList.contains(storys.getUsers().getUid())){
-                        storyLists.add(0, storys);
+                        if(timeStamp.equals(storys.getDate())){
+                            storyLists.add(0, storys);
+                        }
                     }
                 }
                 storyAdapter.notifyDataSetChanged();
@@ -166,7 +175,7 @@ public class HomeFragment extends Fragment {
         });
     }
 
-    private void addEvent(){
+    private void addEvent() {
         addPost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -182,6 +191,29 @@ public class HomeFragment extends Fragment {
                 getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left_1);
             }
         });
+
+
+
+        FirebaseDatabase.getInstance().getReference().child("Chats")
+                .orderByChild("IsRead").equalTo("true")
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        for (DataSnapshot dataSnapshot: snapshot.getChildren()) {
+                            String keyRoom = dataSnapshot.getKey().substring(0, 28);
+                            if (keyRoom.equals(FirebaseAuth.getInstance().getUid())) {
+                                noti.setVisibility(View.VISIBLE);
+                            } else {
+                                noti.setVisibility(View.INVISIBLE);
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
     }
 
     @Override

@@ -5,11 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -27,8 +24,7 @@ import com.midterm.cloneinstagram.Model.Comment;
 import com.midterm.cloneinstagram.Model.Notification;
 import com.midterm.cloneinstagram.Model.Users;
 import com.midterm.cloneinstagram.PushNotify.FCMSend;
-import com.midterm.cloneinstagram.comment.userAdapter;
-import com.midterm.cloneinstagram.comment.userCmt;
+import com.midterm.cloneinstagram.Comment.userAdapter;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -101,10 +97,10 @@ public class CommentActivity extends AppCompatActivity {
         notification.setType(child);
         notification.setDate(timeStamp);
         if(child.equals("comment")){
-            content = child+" on your post";
+            content = "Commented on your post";
             notification.setContent(content);
         } else {
-            content = "replied to comment on your post";
+            content = "Replied to comment on your post";
             notification.setContent(content);
         }
 

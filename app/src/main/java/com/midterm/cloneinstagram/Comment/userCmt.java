@@ -1,4 +1,4 @@
-package com.midterm.cloneinstagram.comment;
+package com.midterm.cloneinstagram.Comment;
 
 public class userCmt {
     String Name;
