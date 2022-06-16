@@ -1,4 +1,4 @@
-package com.midterm.cloneinstagram;
+package com.midterm.cloneinstagram.Controller.Activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -6,8 +6,6 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.View;
@@ -22,6 +20,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.midterm.cloneinstagram.Adapter.PostedAdapter;
 import com.midterm.cloneinstagram.Model.Post;
 import com.midterm.cloneinstagram.Model.Users;
+import com.midterm.cloneinstagram.R;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;

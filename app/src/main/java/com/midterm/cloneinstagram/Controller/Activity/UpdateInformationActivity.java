@@ -1,4 +1,4 @@
-package com.midterm.cloneinstagram;
+package com.midterm.cloneinstagram.Controller.Activity;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -8,6 +8,7 @@ import androidx.core.content.ContextCompat;
 import android.Manifest;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -16,8 +17,10 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,15 +28,13 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.midterm.cloneinstagram.Model.Users;
+import com.midterm.cloneinstagram.R;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
@@ -50,6 +51,7 @@ public class UpdateInformationActivity extends AppCompatActivity {
     TextView btnSingOut;
     Users users;
     ProgressDialog progressDialog;
+    RelativeLayout relativeLayout;
 
     Uri imgUri;
     byte[] bytes;
@@ -66,18 +68,26 @@ public class UpdateInformationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_information);
         circleImageView = (CircleImageView) findViewById(R.id.ImgAvatar);
-//        Picasso.get().load("https://firebasestorage.googleapis.com/v0/b/tchat-5e5a4.appspot.com/o/ImageChat%2FHRAqMYguN7W0S6pe9lgyXSgkajE3Mon-21-Feb-2022-17%3A06%3A50.66900?alt=media&token=3f854645-5216-4dac-a53b-034620b936b2").into(circleImageView);
         editTextEmail = findViewById(R.id.editEmail);
         editTextName = findViewById(R.id.editName);
         btnApply = findViewById(R.id.btnApply);
         btnCC = findViewById(R.id.btnCC);
         forgot_pass = findViewById(R.id.forgot_pass);
+        relativeLayout = findViewById(R.id.hide_relative);
+
+        relativeLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                InputMethodManager input = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                input.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            }
+        });
 
         forgot_pass.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(UpdateInformationActivity.this, ForgotPassWordActivity.class));
-                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left_1);
             }
         });
 
@@ -103,11 +113,12 @@ public class UpdateInformationActivity extends AppCompatActivity {
                     public void onClick(View v) {
                         dialog.dismiss();
                         updateStatus("offline");
+                        FirebaseDatabase.getInstance().getReference("User/" + FirebaseAuth.getInstance().getUid() + "/token").removeValue();
                         FirebaseAuth.getInstance().signOut();
                         Intent intent = new Intent(UpdateInformationActivity.this, LoginActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
-                        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left_1);
                     }
                 });
                 btnNo.setOnClickListener(new View.OnClickListener() {

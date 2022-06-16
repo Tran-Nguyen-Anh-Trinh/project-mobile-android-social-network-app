@@ -1,10 +1,12 @@
-package com.midterm.cloneinstagram;
+package com.midterm.cloneinstagram.Controller.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+
+import com.midterm.cloneinstagram.R;
 
 public class LaunchScreenActivity extends AppCompatActivity {
 

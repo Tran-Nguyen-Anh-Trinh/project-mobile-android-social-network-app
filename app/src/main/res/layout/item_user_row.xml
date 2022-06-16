@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginStart="@dimen/_10sdp"
-    android:layout_marginTop="@dimen/_10sdp"
+    android:layout_marginBottom="5dp"
+    android:layout_marginTop="5dp"
     android:layout_marginEnd="@dimen/_10sdp"
     android:background="@drawable/shape_item">
 
@@ -28,14 +29,15 @@
                 android:src="@drawable/profile"
                 app:civ_border_color="@color/green"
                 app:civ_border_width="1dp" />
+
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/status"
                 android:layout_width="@dimen/_10sdp"
                 android:layout_height="@dimen/_10sdp"
-                app:civ_border_color="@color/white"
-                app:civ_border_width="1.5dp"
+                android:layout_alignRight="@+id/profileImg"
                 android:layout_alignBottom="@+id/profileImg"
-                android:layout_alignRight="@+id/profileImg"/>
+                app:civ_border_color="@color/white"
+                app:civ_border_width="1.5dp" />
         </RelativeLayout>
 
         <LinearLayout
@@ -49,8 +51,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/black"
-                android:textStyle="bold"
-                android:textSize="14dp" />
+                android:textSize="14dp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/user_messages"

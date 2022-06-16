@@ -1,8 +1,8 @@
 package com.midterm.cloneinstagram.Adapter;
 
 
-import static com.midterm.cloneinstagram.ChatActivity.rImage;
-import static com.midterm.cloneinstagram.ChatActivity.sImage;
+import static com.midterm.cloneinstagram.Controller.Activity.ChatActivity.rImage;
+import static com.midterm.cloneinstagram.Controller.Activity.ChatActivity.sImage;
 
 import android.content.Context;
 import android.content.Intent;
@@ -22,8 +22,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.midterm.cloneinstagram.Model.Messages;
 import com.midterm.cloneinstagram.R;
-import com.midterm.cloneinstagram.seeImage;
-import com.midterm.cloneinstagram.seeVideo;
+import com.midterm.cloneinstagram.Controller.Activity.seeImage;
+import com.midterm.cloneinstagram.Controller.Activity.seeVideo;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -84,8 +84,11 @@ public class MessagesAdapter extends RecyclerView.Adapter {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     String check = snapshot.getValue(String.class);
-                    if ("true".equals(check))
+                    if ("true".equals(check)) {
                         viewholder.txtSeen.setText("");
+                        viewholder.circleImageView.setVisibility(View.INVISIBLE);
+                    }
+
                     else {
                         viewholder.txtSeen.setText("Seen");
                         if (position == messagesArrayList.size() -1) {

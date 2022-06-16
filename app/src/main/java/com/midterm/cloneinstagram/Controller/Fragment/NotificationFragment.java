@@ -1,4 +1,4 @@
-package com.midterm.cloneinstagram.Fragment;
+package com.midterm.cloneinstagram.Controller.Fragment;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

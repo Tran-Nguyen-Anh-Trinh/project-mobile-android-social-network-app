@@ -1,4 +1,4 @@
-package com.midterm.cloneinstagram;
+package com.midterm.cloneinstagram.Controller.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -13,6 +13,8 @@ import android.widget.ImageView;
 import android.widget.MediaController;
 import android.widget.Toast;
 import android.widget.VideoView;
+
+import com.midterm.cloneinstagram.R;
 
 import java.io.File;
 
@@ -79,10 +81,10 @@ public class seeVideo extends AppCompatActivity {
             DownloadManager.Request request = new DownloadManager.Request(uri);
             request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE)
                     .setAllowedOverRoaming(false)
-                    .setTitle("TChat")
+                    .setTitle("Naone Team")
                     .setMimeType("video/mp4")
                     .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
-                    .setDestinationInExternalPublicDir(Environment.DIRECTORY_MOVIES, File.separator + "TChat.mp4");
+                    .setDestinationInExternalPublicDir(Environment.DIRECTORY_MOVIES, File.separator + "NaoneTeam.mp4");
             downloadManager.enqueue(request);
             Toast.makeText(this, "Download started", Toast.LENGTH_SHORT).show();
 

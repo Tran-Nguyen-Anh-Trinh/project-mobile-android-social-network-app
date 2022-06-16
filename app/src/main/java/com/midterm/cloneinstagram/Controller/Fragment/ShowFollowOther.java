@@ -1,12 +1,10 @@
-package com.midterm.cloneinstagram.Fragment;
+package com.midterm.cloneinstagram.Controller.Fragment;
 
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -15,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -27,7 +24,8 @@ import com.midterm.cloneinstagram.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ShowFollowFragment extends Fragment {
+public class ShowFollowOther extends Fragment {
+
     private RecyclerView rv_user_follow;
     private UserAdapter adapter;
     private List<Users> usersList;
@@ -35,16 +33,23 @@ public class ShowFollowFragment extends Fragment {
     private TextView title;
     private TextView btn_close;
     private String idPost;
+    private String idUser;
 
-    public ShowFollowFragment() {
-        // Required empty public constructor
+    private static ShowFollowOther instance;
+
+    public static ShowFollowOther getInstance() {
+        instance = new ShowFollowOther();
+        return instance;
     }
+    private ShowFollowOther(){
 
+    }
     @Override
     public void onCreate(Bundle savedInstanceState) {
         if (getArguments() != null) {
             checkFollow = getArguments().getString("follow");
             idPost = getArguments().getString("idPost");
+            idUser = getArguments().getString("idUser");
         }
         super.onCreate(savedInstanceState);
     }
@@ -61,13 +66,13 @@ public class ShowFollowFragment extends Fragment {
         rv_user_follow = view.findViewById(R.id.rv_user_follow);
         btn_close = view.findViewById(R.id.btn_close);
         usersList = new ArrayList<>();
-        adapter = new UserAdapter(getContext(), usersList, getActivity());
+        adapter = new UserAdapter(getContext(), usersList, getActivity(), "1");
         rv_user_follow.setAdapter(adapter);
         rv_user_follow.setHasFixedSize(true);
         rv_user_follow.setLayoutManager(new LinearLayoutManager(getContext()));
         title = view.findViewById(R.id.title);
         if ("followers".equals(checkFollow)) {
-            FirebaseDatabase.getInstance().getReference().child("User").child(FirebaseAuth.getInstance().getUid())
+            FirebaseDatabase.getInstance().getReference().child("User").child(idUser)
                     .child("follower").addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -99,7 +104,7 @@ public class ShowFollowFragment extends Fragment {
         }
         if ("following".equals(checkFollow)){
             title.setText("List following");
-            FirebaseDatabase.getInstance().getReference().child("User").child(FirebaseAuth.getInstance().getUid())
+            FirebaseDatabase.getInstance().getReference().child("User").child(idUser)
                     .child("following").addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -163,6 +168,7 @@ public class ShowFollowFragment extends Fragment {
         btn_close.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 getActivity().getSupportFragmentManager().popBackStack();
 
 //                getActivity().getSupportFragmentManager().popBackStackImmediate();

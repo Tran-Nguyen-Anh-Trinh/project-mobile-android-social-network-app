@@ -1,4 +1,4 @@
-package com.midterm.cloneinstagram;
+package com.midterm.cloneinstagram.Controller.Activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,13 +10,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -38,13 +41,12 @@ import com.midterm.cloneinstagram.Adapter.MessagesAdapter;
 import com.midterm.cloneinstagram.Model.Messages;
 import com.midterm.cloneinstagram.Model.Users;
 import com.midterm.cloneinstagram.PushNotify.FCMSend;
+import com.midterm.cloneinstagram.R;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
-import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -135,6 +137,8 @@ public class ChatActivity extends AppCompatActivity {
 
 
 
+
+
         camera = findViewById(R.id.Camera);
         messagesArrayList = new ArrayList<>();
         receiverName = findViewById(R.id.receiver_Name);
@@ -165,6 +169,7 @@ public class ChatActivity extends AppCompatActivity {
 
             }
         };
+
 
 
         isReadRef = FirebaseDatabase.getInstance().getReference()
@@ -258,7 +263,7 @@ public class ChatActivity extends AppCompatActivity {
                 saveMessagesChat(messages, "", "");
                 linearLayoutManager.smoothScrollToPosition(messAdapter, null, adapter.getItemCount());
 
-                userRef.addValueEventListener(new ValueEventListener() {
+                userRef.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         usersReceive = snapshot.getValue(Users.class);
@@ -333,7 +338,7 @@ public class ChatActivity extends AppCompatActivity {
                                             linearLayoutManager.smoothScrollToPosition(messAdapter, null, adapter.getItemCount());
                                             String format = new SimpleDateFormat("HH:mm dd/MM/yyyy").format(now);
 
-                                            userRef.addValueEventListener(new ValueEventListener() {
+                                            userRef.addListenerForSingleValueEvent(new ValueEventListener() {
                                                 @Override
                                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                                                     usersReceive = snapshot.getValue(Users.class);
@@ -369,7 +374,7 @@ public class ChatActivity extends AppCompatActivity {
                                             saveMessagesChat("", "", uriSelectVid);
                                             linearLayoutManager.smoothScrollToPosition(messAdapter, null, adapter.getItemCount());
                                             String format = new SimpleDateFormat("HH:mm dd/MM/yyyy").format(now);
-                                            userRef.addValueEventListener(new ValueEventListener() {
+                                            userRef.addListenerForSingleValueEvent(new ValueEventListener() {
                                                 @Override
                                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                                                     usersReceive = snapshot.getValue(Users.class);
@@ -423,7 +428,7 @@ public class ChatActivity extends AppCompatActivity {
                                         linearLayoutManager.smoothScrollToPosition(messAdapter, null, adapter.getItemCount());
                                         String format = new SimpleDateFormat("HH:mm dd/MM/yyyy").format(now);
 
-                                        userRef.addValueEventListener(new ValueEventListener() {
+                                        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
                                             @Override
                                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                                 usersReceive = snapshot.getValue(Users.class);
@@ -486,14 +491,23 @@ public class ChatActivity extends AppCompatActivity {
     public void onBackPressed() {
         isReadRef.removeEventListener(valueEventListener);
         isReadRef.removeEventListener(valueEventListenerMessages);
-        finishAndRemoveTask();
-        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right_1);
+        String from = getIntent().getStringExtra("from");
+        if(from!=null){
+            Intent intent = new Intent(ChatActivity.this, HomeChatActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.putExtra("from", "notify");
+            ChatActivity.this.startActivity(intent);
+            overridePendingTransition(R.anim.slide_in_left_2, R.anim.slide_out_right_2);
+        } else {
+            finishAndRemoveTask();
+            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right_1);
+        }
+
     }
 
     public boolean isImageFile(Uri path) {
         ContentResolver cR = ChatActivity.this.getContentResolver();
         String type = cR.getType(path);
-        System.out.println("00000000000000: "+type.toString());
         if(type.contains("image")){
             return true;
         }

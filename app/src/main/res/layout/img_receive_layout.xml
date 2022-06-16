@@ -15,8 +15,8 @@
         android:layout_marginTop="@dimen/_5sdp"
         android:layout_marginEnd="@dimen/_3sdp"
         android:layout_marginRight="@dimen/_7sdp"
-        app:civ_border_color="@color/teal_200"
-        app:civ_border_width="@dimen/_1sdp" />
+        app:civ_border_color="@color/green"
+        app:civ_border_width="1dp" />
 
     <ImageView
         android:id="@+id/receiveImg"

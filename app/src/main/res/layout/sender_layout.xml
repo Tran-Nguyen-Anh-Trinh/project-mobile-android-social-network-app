@@ -18,7 +18,7 @@
         android:layout_marginBottom="-2.2dp"
         android:visibility="invisible"
         app:civ_border_color="@color/green"
-        app:civ_border_width="@dimen/_1sdp"/>
+        app:civ_border_width="1dp"/>
 
     <TextView
         android:id="@+id/textSentMess"

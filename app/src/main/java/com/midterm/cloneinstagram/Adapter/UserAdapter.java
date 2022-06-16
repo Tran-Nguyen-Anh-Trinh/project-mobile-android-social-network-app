@@ -1,14 +1,11 @@
 package com.midterm.cloneinstagram.Adapter;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.content.res.ColorStateList;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -18,17 +15,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.midterm.cloneinstagram.Fragment.DetailPostFragment;
-import com.midterm.cloneinstagram.Fragment.ProfileFragment;
-import com.midterm.cloneinstagram.Fragment.ProfileUserFragment;
+import com.midterm.cloneinstagram.Controller.Fragment.ProfileUserFragment;
 import com.midterm.cloneinstagram.Model.Notification;
-import com.midterm.cloneinstagram.Model.Post;
 import com.midterm.cloneinstagram.Model.Users;
 import com.midterm.cloneinstagram.PushNotify.FCMSend;
 import com.midterm.cloneinstagram.R;
@@ -46,12 +38,14 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 
     private Context mContext;
     private List<Users> mUsers;
-    public FragmentActivity fragmentActivity;
+    private FragmentActivity fragmentActivity;
+    private String type;
 
-    public UserAdapter(Context mContext, List<Users> mUsers, FragmentActivity fragmentActivity) {
+    public UserAdapter(Context mContext, List<Users> mUsers, FragmentActivity fragmentActivity, String type) {
         this.mContext = mContext;
         this.mUsers = mUsers;
         this.fragmentActivity = fragmentActivity;
+        this.type = type;
     }
 
     @NonNull
@@ -95,7 +89,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
             }
         });
 
-        FirebaseDatabase.getInstance().getReference().child("User").child(FirebaseAuth.getInstance().getUid()).child("following").child(users.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+        FirebaseDatabase.getInstance().getReference().child("User").child(FirebaseAuth.getInstance().getUid()).child("following").child(users.getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                     if(snapshot.exists()){
@@ -119,16 +113,27 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                View v = fragmentActivity.getCurrentFocus();
+                if (v != null) {
+                    InputMethodManager imm = (InputMethodManager) fragmentActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                }
                 Bundle bundle = new Bundle();
                 bundle.putString("idUser", users.getUid());
-                ProfileUserFragment nextFrag= new ProfileUserFragment();
+                ProfileUserFragment nextFrag= ProfileUserFragment.getInstance();
                 nextFrag.setArguments(bundle);
 
                 FragmentTransaction fragmentTransaction = fragmentActivity.getSupportFragmentManager().beginTransaction();
                 fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
-                fragmentTransaction.add(R.id.fragment_container, nextFrag, "findThisFragment")
-                        .addToBackStack(null)
-                        .commit();
+                if (type.equals("0")){
+                    fragmentTransaction.add(R.id.fragment_container, nextFrag)
+                            .addToBackStack(null)
+                            .commit();
+                } else {
+                    fragmentTransaction.replace(R.id.fragment_container, nextFrag)
+                            .addToBackStack(null)
+                            .commit();
+                }
             }
         });
 

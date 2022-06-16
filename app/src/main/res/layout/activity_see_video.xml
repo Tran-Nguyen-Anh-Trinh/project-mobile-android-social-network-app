@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".seeVideo"
+    tools:context=".Controller.Activity.seeVideo"
     android:orientation="vertical"
     android:background="@color/black">
     <LinearLayout
@@ -20,6 +20,7 @@
             android:textSize="@dimen/_12sdp"
             android:textColor="#FF90FA96"
             android:layout_weight="1"
+            android:textStyle="bold"
             android:layout_marginTop="@dimen/_5sdp"
             android:layout_marginBottom="@dimen/_5sdp"
             android:layout_marginLeft="@dimen/_10sdp"/>

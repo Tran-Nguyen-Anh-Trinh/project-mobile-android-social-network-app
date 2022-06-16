@@ -1,8 +1,9 @@
-package com.midterm.cloneinstagram;
+package com.midterm.cloneinstagram.Controller.Activity;
 
 import android.Manifest;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -10,6 +11,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -18,7 +20,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -32,6 +33,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.midterm.cloneinstagram.Model.Users;
+import com.midterm.cloneinstagram.R;
 
 import java.io.ByteArrayOutputStream;
 
@@ -42,6 +44,7 @@ public class RegisterActivity extends AppCompatActivity {
     EditText email, username, password, confirm_password;
     TextView signUp, signIn;
     CircleImageView profile;
+    LinearLayout linearLayout;
 
     Uri uri;
     byte[] bytes;
@@ -61,10 +64,18 @@ public class RegisterActivity extends AppCompatActivity {
         signUp = findViewById(R.id.signUp);
         profile = findViewById(R.id.profile);
         signIn = findViewById(R.id.signIn);
-
+        linearLayout = findViewById(R.id.lnnnnnn);
         progressDialog = new ProgressDialog(this);
         progressDialog.setCancelable(false);
         progressDialog.setMessage("Please wait...");
+
+        linearLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                InputMethodManager input = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                input.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            }
+        });
 
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -122,7 +133,7 @@ public class RegisterActivity extends AppCompatActivity {
         signIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+                finishAndRemoveTask();
                 overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
             }
         });
@@ -205,13 +216,13 @@ public class RegisterActivity extends AppCompatActivity {
                                                 public void onComplete(@NonNull Task<Void> task) {
                                                     if(task.isSuccessful()){
                                                         progressDialog.dismiss();
-                                                        Toast.makeText(RegisterActivity.this, "Created account successfully!", Toast.LENGTH_SHORT).show();
+                                                        Toast.makeText(RegisterActivity.this, "Created account successfully", Toast.LENGTH_SHORT).show();
                                                         startActivity(new Intent(RegisterActivity.this, MainActivity.class));
-                                                        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                                                        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left_1);
 
                                                     }else{
                                                         progressDialog.dismiss();
-                                                        Toast.makeText(RegisterActivity.this, "An error occurred while sing up!", Toast.LENGTH_SHORT).show();
+                                                        Toast.makeText(RegisterActivity.this, "An error has occurred", Toast.LENGTH_SHORT).show();
 
                                                     }
                                                 }
@@ -220,7 +231,7 @@ public class RegisterActivity extends AppCompatActivity {
                                     });
                                 }else{
                                     progressDialog.dismiss();
-                                    Toast.makeText(RegisterActivity.this, "An error occurred while upload image!", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(RegisterActivity.this, "An error occurred while upload image", Toast.LENGTH_SHORT).show();
                                 }
                             }
                         });
@@ -239,19 +250,22 @@ public class RegisterActivity extends AppCompatActivity {
                                                 public void onComplete(@NonNull Task<Void> task) {
                                                     if(task.isSuccessful()){
                                                         progressDialog.dismiss();
-                                                        Toast.makeText(RegisterActivity.this, "Created account successfully!", Toast.LENGTH_SHORT).show();
+                                                        Toast.makeText(RegisterActivity.this, "Created account successfully", Toast.LENGTH_SHORT).show();
                                                         startActivity(new Intent(RegisterActivity.this, MainActivity.class));
-                                                        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                                                        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left_1);
 
                                                     }else{
                                                         progressDialog.dismiss();
-                                                        Toast.makeText(RegisterActivity.this, "An error occurred while sing up!", Toast.LENGTH_SHORT).show();
+                                                        Toast.makeText(RegisterActivity.this, "An error has occurred", Toast.LENGTH_SHORT).show();
 
                                                     }
                                                 }
                                             });
                                         }
                                     });
+                                }else{
+                                    progressDialog.dismiss();
+                                    Toast.makeText(RegisterActivity.this, "An error occurred while upload image", Toast.LENGTH_SHORT).show();
                                 }
                             }
                         });
@@ -263,13 +277,13 @@ public class RegisterActivity extends AppCompatActivity {
                             public void onComplete(@NonNull Task<Void> task) {
                                 if(task.isSuccessful()){
                                     progressDialog.dismiss();
-                                    Toast.makeText(RegisterActivity.this, "Created account successfully!", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(RegisterActivity.this, "Created account successfully", Toast.LENGTH_SHORT).show();
                                     startActivity(new Intent(RegisterActivity.this, MainActivity.class));
-                                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left_1);
 
                                 }else{
                                     progressDialog.dismiss();
-                                    Toast.makeText(RegisterActivity.this, "An error occurred while sing up!", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(RegisterActivity.this, "An error has occurred", Toast.LENGTH_SHORT).show();
 
                                 }
                             }
@@ -279,7 +293,7 @@ public class RegisterActivity extends AppCompatActivity {
                 }else{
                     progressDialog.dismiss();
 
-                    Toast.makeText(RegisterActivity.this, "An error occurred while sing up!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RegisterActivity.this, "Email was registered", Toast.LENGTH_SHORT).show();
                 }
             }
         });

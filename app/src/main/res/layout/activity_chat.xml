@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ChatActivity">
+    tools:context=".Controller.Activity.ChatActivity">
 
     <LinearLayout
         android:id="@+id/TouchBar"
@@ -70,8 +70,8 @@
         android:layout_height="wrap_content"
         android:layout_above="@id/EditMes"
         android:layout_below="@+id/TouchBar"
-        android:paddingTop="@dimen/_7sdp"
-        android:layout_marginBottom="-1dp" />
+        android:layout_marginBottom="-1dp"
+        android:paddingTop="@dimen/_7sdp" />
 
     <LinearLayout
         android:id="@+id/EditMes"
@@ -116,7 +116,7 @@
             android:layout_height="@dimen/_35sdp"
             android:layout_margin="@dimen/_3sdp"
             android:layout_weight="1"
-            app:cardBackgroundColor="#9AED9F"
+            app:cardBackgroundColor="#FF90FA96"
             app:cardCornerRadius="@dimen/_540sdp">
 
             <EditText

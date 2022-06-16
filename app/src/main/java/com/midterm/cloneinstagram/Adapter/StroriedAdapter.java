@@ -2,7 +2,6 @@ package com.midterm.cloneinstagram.Adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,11 +11,9 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.midterm.cloneinstagram.Fragment.DetailPostFragment;
-import com.midterm.cloneinstagram.Model.Post;
 import com.midterm.cloneinstagram.Model.Storys;
 import com.midterm.cloneinstagram.R;
-import com.midterm.cloneinstagram.StoryActivity;
+import com.midterm.cloneinstagram.Controller.Activity.StoryActivity;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;

@@ -1,26 +1,27 @@
 package com.midterm.cloneinstagram.PushNotify;
 
-import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
-import android.content.Context;
 import android.content.Intent;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Build;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationManagerCompat;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
-import com.midterm.cloneinstagram.ChatActivity;
-import com.midterm.cloneinstagram.MainActivity;
+import com.midterm.cloneinstagram.Controller.Activity.ChatActivity;
+import com.midterm.cloneinstagram.Controller.Activity.HomeChatActivity;
+import com.midterm.cloneinstagram.Controller.Activity.MainActivity;
 import com.midterm.cloneinstagram.R;
 
 import java.util.Map;
+import java.util.Random;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
@@ -46,6 +47,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
 
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
         Map<String, String> data = remoteMessage.getData();
         if (!data.isEmpty()) {
             title = data.get("title").toString();
@@ -68,6 +70,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 intent.putExtra("idSend", Uid);
                 intent.putExtra("nameSend", Name);
                 intent.putExtra("avaSend", ReceiverImg);
+                intent.putExtra("from", "notify");
             }
         } else {
             title = remoteMessage.getNotification().getTitle();
@@ -76,8 +79,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         }
         CHANNEL_ID = "MESSAGES";
         TYPE = "Messages Notification";
-        ID = 1;
+        ID = 0;
         LEVEL = NotificationManager.IMPORTANCE_HIGH;
+
+        Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(
@@ -85,17 +90,25 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     TYPE,
                     LEVEL);
             getSystemService(NotificationManager.class).createNotificationChannel(channel);
-            Notification.Builder notification = new Notification.Builder(this, CHANNEL_ID)
+            Notification.Builder notification = new Notification.Builder(getApplicationContext(), CHANNEL_ID)
                     .setContentTitle(title)
                     .setContentText(text)
                     .setSmallIcon(R.drawable.hashtag_100px)
+                    .setAutoCancel(true)
+                    .setSound(alarmSound)
                     .setAutoCancel(true);
 
-            TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
             stackBuilder.addNextIntent(intent);
-            PendingIntent notificationIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+            PendingIntent notificationIntent;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+                notificationIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_IMMUTABLE);
+            }
+            else {
+                notificationIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+            };
             notification.setContentIntent(notificationIntent);
-            NotificationManagerCompat.from(this).notify(ID, notification.build());
+            Random generator = new Random();
+            NotificationManagerCompat.from(this).notify(generator.nextInt(10000), notification.build());
             super.onMessageReceived(remoteMessage);
         }
     }

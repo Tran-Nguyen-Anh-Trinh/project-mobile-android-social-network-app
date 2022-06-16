@@ -1,7 +1,6 @@
-package com.midterm.cloneinstagram.Fragment;
+package com.midterm.cloneinstagram.Controller.Fragment;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +26,16 @@ public class ActivityFragment extends Fragment {
     RecyclerView rv_notify;
     ActivityAdapter adapter;
     private ArrayList<Notification> listNotify;
+
+    private static ActivityFragment instance;
+
+    public static ActivityFragment getInstance() {
+        instance = new ActivityFragment();
+        return instance;
+    }
+    private ActivityFragment(){
+
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context=".Fragment.ProfileFragment">
+    tools:context=".Controller.Fragment.ProfileFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <LinearLayout
@@ -150,9 +150,7 @@
         android:id="@+id/rv_posted"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
         android:layout_marginBottom="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -193,7 +191,7 @@
                 android:id="@+id/select"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/black"
+                android:background="@drawable/bg_select"
                 android:orientation="vertical" />
 
         </LinearLayout>
@@ -216,7 +214,7 @@
                 android:id="@+id/select1"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/black"
+                android:background="@drawable/bg_select"
                 android:orientation="vertical"
                 android:visibility="invisible" />
 

@@ -4,18 +4,14 @@ package com.midterm.cloneinstagram.Adapter;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
-import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -30,14 +26,12 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.firestore.auth.User;
-import com.midterm.cloneinstagram.ChatActivity;
-import com.midterm.cloneinstagram.CommentActivity;
-import com.midterm.cloneinstagram.Fragment.DetailPostFragment;
-import com.midterm.cloneinstagram.Fragment.ShowFollowFragment;
+import com.midterm.cloneinstagram.Controller.Activity.CommentActivity;
+import com.midterm.cloneinstagram.Controller.Fragment.DetailPostFragment;
+import com.midterm.cloneinstagram.Controller.Fragment.ShowFollowFragment;
 import com.midterm.cloneinstagram.Model.Notification;
 import com.midterm.cloneinstagram.Model.Post;
-import com.midterm.cloneinstagram.Fragment.ProfileUserFragment;
+import com.midterm.cloneinstagram.Controller.Fragment.ProfileUserFragment;
 import com.midterm.cloneinstagram.PushNotify.FCMSend;
 import com.midterm.cloneinstagram.R;
 import com.midterm.cloneinstagram.Model.Users;
@@ -83,7 +77,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                 Bundle bundle = new Bundle();
                 bundle.putString("idUser", post.getUsers().getUid());
                 bundle.putString("type", "home");
-                ProfileUserFragment nextFrag = new ProfileUserFragment();
+                ProfileUserFragment nextFrag = ProfileUserFragment.getInstance();
                 nextFrag.setArguments(bundle);
 
                 FragmentTransaction fragmentTransaction = fragmentActivity.getSupportFragmentManager().beginTransaction();
@@ -99,12 +93,12 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                 Bundle bundle = new Bundle();
                 bundle.putString("type", "home");
                 bundle.putString("idUser", post.getUsers().getUid());
-                ProfileUserFragment nextFrag = new ProfileUserFragment();
+                ProfileUserFragment nextFrag = ProfileUserFragment.getInstance();
                 nextFrag.setArguments(bundle);
 
                 FragmentTransaction fragmentTransaction = fragmentActivity.getSupportFragmentManager().beginTransaction();
                 fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
-                fragmentTransaction.add(R.id.fragment_container, nextFrag, "findThisFragment")
+                fragmentTransaction.add(R.id.fragment_container, nextFrag)
                         .addToBackStack(null)
                         .commit();
             }
@@ -418,7 +412,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         holder.likes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ShowFollowFragment nextFrag = new ShowFollowFragment();
+                ShowFollowFragment nextFrag = ShowFollowFragment.getInstance();
                 Bundle bundle = new Bundle();
                 bundle.putString("idPost", post.getPostid());
                 bundle.putString("type", "home");
@@ -426,7 +420,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
                 FragmentTransaction fragmentTransaction = fragmentActivity.getSupportFragmentManager().beginTransaction();
                 fragmentTransaction.setCustomAnimations(R.anim.slide_out_down, R.anim.slide_up_dialog);
-                fragmentTransaction.add(R.id.fragment_container, nextFrag, "findThisFragment")
+                fragmentTransaction.add(R.id.fragment_container, nextFrag)
                         .addToBackStack(null)
                         .commit();
             }
@@ -435,14 +429,14 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DetailPostFragment nextFrag = new DetailPostFragment();
+                DetailPostFragment nextFrag = DetailPostFragment.getInstance();
                 Bundle bundle = new Bundle();
                 bundle.putString("id", post.getPostid());
                 bundle.putString("type", "home");
                 nextFrag.setArguments(bundle);
                 FragmentTransaction fragmentTransaction = fragmentActivity.getSupportFragmentManager().beginTransaction();
                 fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
-                fragmentTransaction.add(R.id.fragment_container, nextFrag, "findThisFragment")
+                fragmentTransaction.add(R.id.fragment_container, nextFrag)
                         .addToBackStack(null)
                         .commit();
             }

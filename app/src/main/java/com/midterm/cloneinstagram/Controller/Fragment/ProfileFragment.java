@@ -1,12 +1,18 @@
-package com.midterm.cloneinstagram.Fragment;
+package com.midterm.cloneinstagram.Controller.Fragment;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.Transformation;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -23,15 +29,13 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.midterm.cloneinstagram.Adapter.PostAdapter;
 import com.midterm.cloneinstagram.Adapter.PostedAdapter;
-import com.midterm.cloneinstagram.Adapter.StoryAdapter;
 import com.midterm.cloneinstagram.Adapter.StroriedAdapter;
 import com.midterm.cloneinstagram.Model.Post;
 import com.midterm.cloneinstagram.Model.Storys;
 import com.midterm.cloneinstagram.Model.Users;
 import com.midterm.cloneinstagram.R;
-import com.midterm.cloneinstagram.UpdateInformationActivity;
+import com.midterm.cloneinstagram.Controller.Activity.UpdateInformationActivity;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -54,6 +58,17 @@ public class ProfileFragment extends Fragment {
     private TextView tv_posts;
     private TextView tv_followers;
     private TextView tv_following;
+    private Animation animZoomIn;
+
+    private static ProfileFragment instance;
+
+    public static ProfileFragment getInstance() {
+        instance = new ProfileFragment();
+        return instance;
+    }
+    private ProfileFragment(){
+
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -122,17 +137,55 @@ public class ProfileFragment extends Fragment {
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                select.setVisibility(View.VISIBLE);
-                select1.setVisibility(View.INVISIBLE);
                 readPost();
+                select1.setVisibility(View.INVISIBLE);
+                animZoomIn = AnimationUtils.loadAnimation(getContext(),
+                        R.anim.zoom_in);
+                animZoomIn.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        select.setVisibility(View.VISIBLE);
+                        select.clearAnimation();
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+
+                    }
+                });
+                select.startAnimation(animZoomIn);
             }
         });
         imageView1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                select.setVisibility(View.INVISIBLE);
-                select1.setVisibility(View.VISIBLE);
                 readStory();
+                select.setVisibility(View.INVISIBLE);
+                animZoomIn = AnimationUtils.loadAnimation(getContext(),
+                        R.anim.zoom_in);
+                animZoomIn.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        select1.setVisibility(View.VISIBLE);
+                        select1.clearAnimation();
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+
+                    }
+                });
+                select1.startAnimation(animZoomIn);
             }
         });
         tvEditProfile.setOnClickListener(new View.OnClickListener() {
@@ -146,7 +199,7 @@ public class ProfileFragment extends Fragment {
         tv_followers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ShowFollowFragment nextFrag = new ShowFollowFragment();
+                ShowFollowFragment nextFrag = ShowFollowFragment.getInstance();
                 Bundle bundle = new Bundle();
                 bundle.putString("follow", "followers");
                 nextFrag.setArguments(bundle);
@@ -161,7 +214,7 @@ public class ProfileFragment extends Fragment {
         tv_following.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ShowFollowFragment nextFrag = new ShowFollowFragment();
+                ShowFollowFragment nextFrag = ShowFollowFragment.getInstance();
                 Bundle bundle = new Bundle();
                 bundle.putString("follow", "following");
                 nextFrag.setArguments(bundle);
@@ -194,6 +247,15 @@ public class ProfileFragment extends Fragment {
                     tv_posts.setText(list.size() + "");
                 }
                 postedAdapter.notifyDataSetChanged();
+                recyclerView.animate().translationX(recyclerView.getWidth()*-1)
+                        .setDuration(0)
+                        .setListener(new AnimatorListenerAdapter() {
+                            @Override
+                            public void onAnimationEnd(Animator animation) {
+                                super.onAnimationEnd(animation);
+                                recyclerView.animate().translationX(0).setDuration(400);
+                            }
+                        });
             }
 
             @Override
@@ -218,6 +280,15 @@ public class ProfileFragment extends Fragment {
                     }
                 }
                 storyAdapter.notifyDataSetChanged();
+                recyclerView.animate().translationX(recyclerView.getWidth())
+                        .setDuration(0)
+                        .setListener(new AnimatorListenerAdapter() {
+                            @Override
+                            public void onAnimationEnd(Animator animation) {
+                                super.onAnimationEnd(animation);
+                                recyclerView.animate().translationX(0).setDuration(400);
+                            }
+                        });
             }
 
             @Override

@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context=".Fragment.HomeFragment">
+    android:id="@+id/homeFragment"
+    tools:context=".Controller.Fragment.HomeFragment">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -48,7 +49,7 @@
                 android:layout_height="23dp"
                 android:gravity="center"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="20dp"
+                android:layout_marginRight="15dp"
                 android:layout_toLeftOf="@+id/add_post">
 
                 <ImageView

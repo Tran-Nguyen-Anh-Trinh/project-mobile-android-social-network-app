@@ -1,4 +1,4 @@
-package com.midterm.cloneinstagram;
+package com.midterm.cloneinstagram.Controller.Activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -8,8 +8,10 @@ import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.OnLifecycleEvent;
 import androidx.lifecycle.ProcessLifecycleOwner;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -17,7 +19,6 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -31,15 +32,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.messaging.FirebaseMessaging;
-import com.midterm.cloneinstagram.Fragment.ActivityFragment;
-import com.midterm.cloneinstagram.Fragment.HomeFragment;
-import com.midterm.cloneinstagram.Fragment.NotificationFragment;
-import com.midterm.cloneinstagram.Fragment.ProfileFragment;
-import com.midterm.cloneinstagram.Fragment.SearchFragment;
-import com.midterm.cloneinstagram.Model.Notification;
+import com.midterm.cloneinstagram.Controller.Fragment.ActivityFragment;
+import com.midterm.cloneinstagram.Controller.Fragment.HomeFragment;
+import com.midterm.cloneinstagram.Controller.Fragment.ProfileFragment;
+import com.midterm.cloneinstagram.Controller.Fragment.SearchFragment;
 import com.midterm.cloneinstagram.Model.Users;
-
-import java.net.InetAddress;
+import com.midterm.cloneinstagram.R;
 
 public class MainActivity extends AppCompatActivity implements LifecycleObserver {
 
@@ -50,6 +48,8 @@ public class MainActivity extends AppCompatActivity implements LifecycleObserver
     Fragment selectedFragment = null;
     String token;
     String checkFragment;
+    Fragment fragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,24 +77,23 @@ public class MainActivity extends AppCompatActivity implements LifecycleObserver
             }
         }
 
-        if(mAuth.getCurrentUser() == null){
+        if (mAuth.getCurrentUser() == null) {
             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
-            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left_1);
             return;
         }
-
 
 
         FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
             @Override
             public void onComplete(@NonNull Task<String> task) {
-                if(!task.isSuccessful()){
+                if (!task.isSuccessful()) {
                     return;
                 }
                 token = task.getResult();
-                FirebaseDatabase.getInstance().getReference("User/"+mAuth.getUid()+"/token").setValue(token);
+                FirebaseDatabase.getInstance().getReference("User/" + mAuth.getUid() + "/token").setValue(token);
             }
         });
 
@@ -141,49 +140,50 @@ public class MainActivity extends AppCompatActivity implements LifecycleObserver
 
         bottomNavigationView.setOnNavigationItemSelectedListener(navigationItemSelectedListener);
 
+
         checkFragment = getIntent().getStringExtra("activity");
-        if("true".equals(checkFragment)){
+        if ("true".equals(checkFragment)) {
             FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
             fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_right);
-            fragmentTransaction.addToBackStack(null).replace(R.id.fragment_container, new ActivityFragment()).commit();
+            fragmentTransaction.addToBackStack(null).replace(R.id.fragment_container, ActivityFragment.getInstance()).commit();
             bottomNavigationView.setSelectedItemId(R.id.nav_heart);
         } else {
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, HomeFragment.getInstance()).commit();
         }
     }
+
     private BottomNavigationView.OnNavigationItemSelectedListener navigationItemSelectedListener =
             new BottomNavigationView.OnNavigationItemSelectedListener() {
                 @Override
                 public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                    switch (item.getItemId()){
+                    switch (item.getItemId()) {
                         case R.id.nav_home:
-                            selectedFragment = new HomeFragment();
+                            selectedFragment = HomeFragment.getInstance();
                             break;
                         case R.id.nav_search:
-                            selectedFragment = new SearchFragment();
+                            selectedFragment = SearchFragment.getInstance();
                             break;
                         case R.id.nav_heart:
 //                            selectedFragment = new NotificationFragment();
                             FirebaseDatabase.getInstance().getReference()
                                     .child("Notify").child(FirebaseAuth.getInstance().getUid())
                                     .child("isRead").removeValue();
-                            selectedFragment = new ActivityFragment();
+                            selectedFragment = ActivityFragment.getInstance();
                             break;
                         case R.id.nav_profile:
-                            SharedPreferences.Editor editor = getSharedPreferences("PRESS", MODE_PRIVATE).edit();
-                            editor.putString("profileid", FirebaseAuth.getInstance().getCurrentUser().getUid());
-                            editor.apply();
-                            selectedFragment = new ProfileFragment();
+                            selectedFragment = ProfileFragment.getInstance();
                             break;
                     }
                     if(selectedFragment!=null){
                         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
                         fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_right);
-                        fragmentTransaction.addToBackStack(null).replace(R.id.fragment_container, selectedFragment).commit();
+                        fragmentTransaction.addToBackStack(null).replace(R.id.fragment_container, selectedFragment)
+                                .commit();
                     }
                     return true;
                 }
             };
+
     @Override
     public void onBackPressed() {
 
@@ -203,7 +203,7 @@ public class MainActivity extends AppCompatActivity implements LifecycleObserver
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
-    void updateStatus(String status){
+    void updateStatus(String status) {
         DatabaseReference databaseReference = database.getReference().child("User").child(mAuth.getUid()).child("status");
         databaseReference.setValue(status);
     }

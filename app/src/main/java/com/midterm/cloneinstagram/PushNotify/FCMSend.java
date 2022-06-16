@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.StrictMode;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -63,7 +64,6 @@ public class FCMSend {
                     return params;
                 }
             };
-
             queue.add(jsonObjectRequest);
 
 

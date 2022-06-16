@@ -1,9 +1,8 @@
-package com.midterm.cloneinstagram.Fragment;
+package com.midterm.cloneinstagram.Controller.Fragment;
 
-import android.annotation.SuppressLint;
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Intent;
-import android.content.res.ColorStateList;
-import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
 
@@ -14,10 +13,11 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -29,7 +29,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.midterm.cloneinstagram.Adapter.PostedAdapter;
 import com.midterm.cloneinstagram.Adapter.StroriedAdapter;
-import com.midterm.cloneinstagram.ChatActivity;
+import com.midterm.cloneinstagram.Controller.Activity.ChatActivity;
 import com.midterm.cloneinstagram.Model.Notification;
 import com.midterm.cloneinstagram.Model.Post;
 import com.midterm.cloneinstagram.Model.Storys;
@@ -62,9 +62,16 @@ public class ProfileUserFragment extends Fragment {
     private LinearLayout imageView, imageView1;
     private LinearLayout select, select1;
     private TextView messages;
+    private Animation animZoomIn;
 
+    private static ProfileUserFragment instance;
 
-    public ProfileUserFragment() {
+    public static ProfileUserFragment getInstance() {
+        instance = new ProfileUserFragment();
+        return instance;
+    }
+    private ProfileUserFragment(){
+
     }
 
     @Override
@@ -211,24 +218,62 @@ public class ProfileUserFragment extends Fragment {
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                select.setVisibility(View.VISIBLE);
-                select1.setVisibility(View.INVISIBLE);
                 readPost();
+                select1.setVisibility(View.INVISIBLE);
+                animZoomIn = AnimationUtils.loadAnimation(getContext(),
+                        R.anim.zoom_in);
+                animZoomIn.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        select.setVisibility(View.VISIBLE);
+                        select.clearAnimation();
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+
+                    }
+                });
+                select.startAnimation(animZoomIn);
             }
         });
         imageView1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                select.setVisibility(View.INVISIBLE);
-                select1.setVisibility(View.VISIBLE);
                 readStory();
+                select.setVisibility(View.INVISIBLE);
+                animZoomIn = AnimationUtils.loadAnimation(getContext(),
+                        R.anim.zoom_in);
+                animZoomIn.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        select1.setVisibility(View.VISIBLE);
+                        select1.clearAnimation();
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+
+                    }
+                });
+                select1.startAnimation(animZoomIn);
             }
         });
 
         tv_followers.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ShowFollowOther nextFrag = new ShowFollowOther();
+                ShowFollowOther nextFrag = ShowFollowOther.getInstance();
                 Bundle bundle = new Bundle();
                 bundle.putString("follow", "followers");
                 bundle.putString("idUser", idUser);
@@ -244,7 +289,7 @@ public class ProfileUserFragment extends Fragment {
         tv_following.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ShowFollowOther nextFrag = new ShowFollowOther();
+                ShowFollowOther nextFrag = ShowFollowOther.getInstance();
                 Bundle bundle = new Bundle();
                 bundle.putString("follow", "following");
                 bundle.putString("idUser", idUser);
@@ -277,6 +322,15 @@ public class ProfileUserFragment extends Fragment {
                     }
                 }
                 storyAdapter.notifyDataSetChanged();
+                recyclerView.animate().translationX(recyclerView.getWidth())
+                        .setDuration(0)
+                        .setListener(new AnimatorListenerAdapter() {
+                            @Override
+                            public void onAnimationEnd(Animator animation) {
+                                super.onAnimationEnd(animation);
+                                recyclerView.animate().translationX(0).setDuration(400);
+                            }
+                        });
             }
 
             @Override
@@ -303,6 +357,15 @@ public class ProfileUserFragment extends Fragment {
                 }
                 tv_posts.setText(list.size() + "");
                 postedAdapter.notifyDataSetChanged();
+                recyclerView.animate().translationX(recyclerView.getWidth()*-1)
+                        .setDuration(0)
+                        .setListener(new AnimatorListenerAdapter() {
+                            @Override
+                            public void onAnimationEnd(Animator animation) {
+                                super.onAnimationEnd(animation);
+                                recyclerView.animate().translationX(0).setDuration(400);
+                            }
+                        });
             }
 
             @Override

@@ -16,7 +16,7 @@
         android:layout_marginEnd="@dimen/_5sdp"
         android:layout_marginRight="@dimen/_7sdp"
         app:civ_border_color="@color/green"
-        app:civ_border_width="@dimen/_1sdp"
+        app:civ_border_width="1dp"
         android:visibility="invisible"/>
 
     <ImageView

@@ -6,8 +6,9 @@
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:layout_margin="10dp"
+    android:id="@+id/hide_relative"
     android:background="@drawable/shape_frame"
-    tools:context=".UpdateInformationActivity">
+    tools:context=".Controller.Activity.UpdateInformationActivity">
 
     <LinearLayout
         android:id="@+id/ln1"

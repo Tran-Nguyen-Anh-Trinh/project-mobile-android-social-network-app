@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -18,8 +17,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.midterm.cloneinstagram.Fragment.DetailPostFragment;
-import com.midterm.cloneinstagram.Fragment.ProfileUserFragment;
+import com.midterm.cloneinstagram.Controller.Fragment.DetailPostFragment;
+import com.midterm.cloneinstagram.Controller.Fragment.ProfileUserFragment;
 import com.midterm.cloneinstagram.Model.Notification;
 import com.midterm.cloneinstagram.Model.Users;
 import com.midterm.cloneinstagram.PushNotify.FCMSend;
@@ -76,16 +75,16 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.ViewHo
                 if(notification.getType().equals("follow")){
                     Bundle bundle = new Bundle();
                     bundle.putString("idUser", notification.getIdUser());
-                    ProfileUserFragment nextFrag= new ProfileUserFragment();
+                    ProfileUserFragment nextFrag= ProfileUserFragment.getInstance();
                     nextFrag.setArguments(bundle);
 
                     FragmentTransaction fragmentTransaction = fragmentActivity.getSupportFragmentManager().beginTransaction();
                     fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
-                    fragmentTransaction.add(R.id.fragment_container, nextFrag, "findThisFragment")
+                    fragmentTransaction.add(R.id.fragment_container, nextFrag)
                             .addToBackStack(null)
                             .commit();
                 } else {
-                    DetailPostFragment nextFrag = new DetailPostFragment();
+                    DetailPostFragment nextFrag = DetailPostFragment.getInstance();
                     Bundle bundle = new Bundle();
                     bundle.putString("id", notification.getIdPost());
                     bundle.putString("type", "activity");
@@ -93,7 +92,7 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.ViewHo
 
                     FragmentTransaction fragmentTransaction = fragmentActivity.getSupportFragmentManager().beginTransaction();
                     fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
-                    fragmentTransaction.add(R.id.fragment_container, nextFrag, "findThisFragment")
+                    fragmentTransaction.add(R.id.fragment_container, nextFrag)
                             .addToBackStack(null)
                             .commit();
                 }

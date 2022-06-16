@@ -1,8 +1,9 @@
-package com.midterm.cloneinstagram;
+package com.midterm.cloneinstagram.Controller.Activity;
 
 import android.Manifest;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -10,6 +11,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -35,6 +37,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.midterm.cloneinstagram.Model.Post;
 import com.midterm.cloneinstagram.Model.Users;
+import com.midterm.cloneinstagram.R;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
@@ -54,6 +57,7 @@ public class PostActivity extends AppCompatActivity {
     private FirebaseStorage firebaseStorage;
     private DatabaseReference reference;
     private StorageReference storageReference;
+    private LinearLayout linearLayout;
     ProgressDialog progressDialog;
     Post postPrimary;
 
@@ -70,6 +74,7 @@ public class PostActivity extends AppCompatActivity {
     }
 
     private void setup() {
+        linearLayout = findViewById(R.id.ln_hide);
         btnClose = findViewById(R.id.btn_close_post);
         btnPost = findViewById(R.id.btn_post);
         title = findViewById(R.id.title);
@@ -111,11 +116,18 @@ public class PostActivity extends AppCompatActivity {
     }
 
     private void addEvent() {
+        linearLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                InputMethodManager input = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                input.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            }
+        });
         btnClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finishAndRemoveTask();
-                overridePendingTransition(R.anim.slide_out_down, R.anim.slide_up_dialog);
+                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right_1);
             }
         });
         imageChoose.setOnClickListener(new View.OnClickListener() {
@@ -206,7 +218,7 @@ public class PostActivity extends AppCompatActivity {
                                                                 Toast.makeText(PostActivity.this, "Posted", Toast.LENGTH_SHORT).show();
                                                                 progressDialog.dismiss();
                                                                 finishAndRemoveTask();
-                                                                overridePendingTransition(R.anim.slide_out_down, R.anim.slide_up_dialog);                                                            } else {
+                                                                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right_1);                                                            } else {
                                                                 progressDialog.dismiss();
                                                                 Toast.makeText(PostActivity.this, "Error", Toast.LENGTH_SHORT).show();
                                                             }
@@ -258,7 +270,7 @@ public class PostActivity extends AppCompatActivity {
                                                                 Toast.makeText(PostActivity.this, "Posted", Toast.LENGTH_SHORT).show();
                                                                 progressDialog.dismiss();
                                                                 finishAndRemoveTask();
-                                                                overridePendingTransition(R.anim.slide_out_down, R.anim.slide_up_dialog);                                                            } else {
+                                                                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right_1);                                                            } else {
                                                                 progressDialog.dismiss();
                                                                 Toast.makeText(PostActivity.this, "Error", Toast.LENGTH_SHORT).show();
                                                             }
@@ -301,7 +313,7 @@ public class PostActivity extends AppCompatActivity {
                                                         Toast.makeText(PostActivity.this, "Updated", Toast.LENGTH_SHORT).show();
                                                         progressDialog.dismiss();
                                                         finishAndRemoveTask();
-                                                        overridePendingTransition(R.anim.slide_out_down, R.anim.slide_up_dialog);
+                                                        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right_1);
                                                     } else {
                                                         progressDialog.dismiss();
                                                         Toast.makeText(PostActivity.this, "Error", Toast.LENGTH_SHORT).show();
@@ -338,7 +350,7 @@ public class PostActivity extends AppCompatActivity {
                                                         Toast.makeText(PostActivity.this, "Updated", Toast.LENGTH_SHORT).show();
                                                         progressDialog.dismiss();
                                                         finishAndRemoveTask();
-                                                        overridePendingTransition(R.anim.slide_out_down, R.anim.slide_up_dialog);
+                                                        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right_1);
                                                     } else {
                                                         progressDialog.dismiss();
                                                         Toast.makeText(PostActivity.this, "Error", Toast.LENGTH_SHORT).show();
@@ -364,7 +376,7 @@ public class PostActivity extends AppCompatActivity {
                                     Toast.makeText(PostActivity.this, "Updated", Toast.LENGTH_SHORT).show();
                                     progressDialog.dismiss();
                                     finishAndRemoveTask();
-                                    overridePendingTransition(R.anim.slide_out_down, R.anim.slide_up_dialog);
+                                    overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right_1);
                                 } else {
                                     progressDialog.dismiss();
                                     Toast.makeText(PostActivity.this, "Error", Toast.LENGTH_SHORT).show();
@@ -404,6 +416,6 @@ public class PostActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         finishAndRemoveTask();
-        overridePendingTransition(R.anim.slide_out_down, R.anim.slide_up_dialog);
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right_1);
     }
 }

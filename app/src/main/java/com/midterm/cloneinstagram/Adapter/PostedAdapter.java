@@ -12,8 +12,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.midterm.cloneinstagram.Fragment.DetailPostFragment;
+import com.midterm.cloneinstagram.Controller.Fragment.DetailPostFragment;
 import com.midterm.cloneinstagram.Model.Post;
 import com.midterm.cloneinstagram.R;
 import com.squareup.picasso.Picasso;
@@ -47,7 +46,7 @@ public class PostedAdapter  extends RecyclerView.Adapter<PostedAdapter.ViewHolde
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DetailPostFragment nextFrag= new DetailPostFragment();
+                DetailPostFragment nextFrag= DetailPostFragment.getInstance();
                 Bundle bundle = new Bundle();
                 bundle.putString("id",  post.getPostid());
                 bundle.putString("idUser", post.getUsers().getUid());
@@ -56,7 +55,7 @@ public class PostedAdapter  extends RecyclerView.Adapter<PostedAdapter.ViewHolde
 
                 FragmentTransaction fragmentTransaction = fragmentActivity.getSupportFragmentManager().beginTransaction();
                 fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
-                fragmentTransaction.replace(R.id.fragment_container, nextFrag, "findThisFragment")
+                fragmentTransaction.replace(R.id.fragment_container, nextFrag)
                         .addToBackStack(null)
                         .commit();
             }

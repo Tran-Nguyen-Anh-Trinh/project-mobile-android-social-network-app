@@ -1,4 +1,4 @@
-package com.midterm.cloneinstagram;
+package com.midterm.cloneinstagram.Controller.Activity;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -36,7 +36,7 @@ import com.google.firebase.storage.UploadTask;
 import com.midterm.cloneinstagram.Model.Post;
 import com.midterm.cloneinstagram.Model.Storys;
 import com.midterm.cloneinstagram.Model.Users;
-import com.squareup.picasso.Picasso;
+import com.midterm.cloneinstagram.R;
 
 import java.io.ByteArrayOutputStream;
 import java.text.DateFormat;
@@ -92,7 +92,8 @@ public class NewStory extends AppCompatActivity {
                 Intent intent = new Intent(NewStory.this, MainActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
-                overridePendingTransition(R.anim.slide_out_down, R.anim.slide_up_dialog);            }
+                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right_1);
+            }
         });
         imageChoose.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -183,7 +184,7 @@ public class NewStory extends AppCompatActivity {
                                                             Intent intent = new Intent(NewStory.this, MainActivity.class);
                                                             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                                                             startActivity(intent);
-                                                            overridePendingTransition(R.anim.slide_out_down, R.anim.slide_up_dialog);
+                                                            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right_1);
                                                         } else {
                                                             progressDialog.dismiss();
                                                             Toast.makeText(NewStory.this, "Error", Toast.LENGTH_SHORT).show();
@@ -237,7 +238,7 @@ public class NewStory extends AppCompatActivity {
                                                             Intent intent = new Intent(NewStory.this, MainActivity.class);
                                                             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                                                             startActivity(intent);
-                                                            overridePendingTransition(R.anim.slide_out_down, R.anim.slide_up_dialog);
+                                                            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right_1);
                                                         } else {
                                                             progressDialog.dismiss();
                                                             Toast.makeText(NewStory.this, "Error", Toast.LENGTH_SHORT).show();
@@ -293,5 +294,6 @@ public class NewStory extends AppCompatActivity {
         Intent intent = new Intent(NewStory.this, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
-        overridePendingTransition(R.anim.slide_out_down, R.anim.slide_up_dialog);    }
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right_1);
+    }
 }

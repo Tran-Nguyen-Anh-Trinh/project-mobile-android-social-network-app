@@ -1,4 +1,4 @@
-package com.midterm.cloneinstagram.Fragment;
+package com.midterm.cloneinstagram.Controller.Fragment;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -14,7 +14,6 @@ import androidx.fragment.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,16 +24,13 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.midterm.cloneinstagram.CommentActivity;
-import com.midterm.cloneinstagram.DetailPost;
-import com.midterm.cloneinstagram.LoginActivity;
+import com.midterm.cloneinstagram.Controller.Activity.CommentActivity;
 import com.midterm.cloneinstagram.Model.Notification;
 import com.midterm.cloneinstagram.Model.Post;
 import com.midterm.cloneinstagram.Model.Users;
-import com.midterm.cloneinstagram.PostActivity;
+import com.midterm.cloneinstagram.Controller.Activity.PostActivity;
 import com.midterm.cloneinstagram.PushNotify.FCMSend;
 import com.midterm.cloneinstagram.R;
-import com.midterm.cloneinstagram.UpdateInformationActivity;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
@@ -49,10 +45,17 @@ public class DetailPostFragment extends Fragment {
     public ImageView image_profile, post_image, like, likeed,  comment, save;
     private static long LAST_CLICK_TIME = 0;
     private final int mDoubleClickInterval = 400; // Milliseconds
-    public DetailPostFragment() {
-        // Required empty public constructor
-    }
 
+
+    private static DetailPostFragment instance;
+
+    public static DetailPostFragment getInstance() {
+        instance = new DetailPostFragment();
+        return instance;
+    }
+    private DetailPostFragment(){
+
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -153,12 +156,12 @@ public class DetailPostFragment extends Fragment {
                 Bundle bundle = new Bundle();
                 bundle.putString("type", "home");
                 bundle.putString("idUser", post.getUsers().getUid());
-                ProfileUserFragment nextFrag = new ProfileUserFragment();
+                ProfileUserFragment nextFrag = ProfileUserFragment.getInstance();
                 nextFrag.setArguments(bundle);
 
                 FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
                 fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
-                fragmentTransaction.replace(R.id.fragment_container, nextFrag, "findThisFragment")
+                fragmentTransaction.replace(R.id.fragment_container, nextFrag)
                         .addToBackStack(null)
                         .commit();
             }
@@ -170,12 +173,12 @@ public class DetailPostFragment extends Fragment {
                 Bundle bundle = new Bundle();
                 bundle.putString("type", "home");
                 bundle.putString("idUser", post.getUsers().getUid());
-                ProfileUserFragment nextFrag = new ProfileUserFragment();
+                ProfileUserFragment nextFrag = ProfileUserFragment.getInstance();
                 nextFrag.setArguments(bundle);
 
                 FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
                 fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
-                fragmentTransaction.replace(R.id.fragment_container, nextFrag, "findThisFragment")
+                fragmentTransaction.replace(R.id.fragment_container, nextFrag)
                         .addToBackStack(null)
                         .commit();
             }
@@ -470,33 +473,14 @@ public class DetailPostFragment extends Fragment {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(type.equals("profile")){
-                    ProfileFragment nextFrag = new ProfileFragment();
-                    FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
-                    fragmentTransaction.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right);
-                    fragmentTransaction.replace(R.id.fragment_container, nextFrag, "findThisFragment")
-                            .addToBackStack(null)
-                            .commit();
-                }else if(type.equals("home")){
                     getActivity().getSupportFragmentManager().popBackStack();
-                } else if(type.equals("search")){
-                    getActivity().getSupportFragmentManager().popBackStack();
-                } else if(type.equals("activity")){
-                    getActivity().getSupportFragmentManager().popBackStack();
-                }
-                else{
-                    getActivity().getSupportFragmentManager().popBackStack();
-                }
-
-
-//                getActivity().getSupportFragmentManager().popBackStackImmediate();
             }
         });
 
         likes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ShowFollowFragment nextFrag= new ShowFollowFragment();
+                ShowFollowFragment nextFrag= ShowFollowFragment.getInstance();
                 Bundle bundle = new Bundle();
                 bundle.putString("idPost", post.getPostid());
 //                bundle.putString("type", "detail");
@@ -508,7 +492,7 @@ public class DetailPostFragment extends Fragment {
 
                 FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
                 fragmentTransaction.setCustomAnimations(R.anim.slide_out_down, R.anim.slide_up_dialog);
-                fragmentTransaction.add(R.id.fragment_container, nextFrag, "findThisFragment")
+                fragmentTransaction.add(R.id.fragment_container, nextFrag)
                         .addToBackStack(null)
                         .commit();
             }
@@ -530,10 +514,10 @@ public class DetailPostFragment extends Fragment {
                         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Post").child(idPost);
                         reference.removeValue();
                         Toast.makeText(getContext(), "Deleted", Toast.LENGTH_SHORT).show();
-                        HomeFragment nextFrag = new HomeFragment();
+                        HomeFragment nextFrag = HomeFragment.getInstance();
                         FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
                         fragmentTransaction.setCustomAnimations(R.anim.slide_out_down, R.anim.slide_up_dialog);
-                        fragmentTransaction.replace(R.id.fragment_container, nextFrag, "findThisFragment")
+                        fragmentTransaction.replace(R.id.fragment_container, nextFrag)
                                 .addToBackStack(null)
                                 .commit();
                     }
@@ -555,7 +539,7 @@ public class DetailPostFragment extends Fragment {
                 Intent intent = new Intent(getContext(), PostActivity.class);
                 intent.putExtra("idPost", idPost);
                 getContext().startActivity(intent);
-                getActivity().overridePendingTransition(R.anim.slide_out_down, R.anim.slide_up_dialog);
+                getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left_1);
             }
         });
 

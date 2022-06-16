@@ -1,12 +1,11 @@
-package com.midterm.cloneinstagram.Fragment;
+package com.midterm.cloneinstagram.Controller.Fragment;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.text.method.KeyListener;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -15,6 +14,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 
 import androidx.annotation.NonNull;
@@ -28,7 +28,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.midterm.cloneinstagram.Adapter.UserAdapter;
 import com.midterm.cloneinstagram.Model.Post;
@@ -50,7 +49,19 @@ public class SearchFragment extends Fragment {
     private ImageView delete;
     private List<Users> mUsers;
     private UserAdapter userAdapter;
+    private LinearLayout linearLayout;
     private long ms_press;
+
+    private static SearchFragment instance;
+
+    public static SearchFragment getInstance() {
+        instance = new SearchFragment();
+        return instance;
+    }
+    private SearchFragment(){
+
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -58,8 +69,9 @@ public class SearchFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_search, container, false);
         delete = view.findViewById(R.id.btn_delete);
         searchbar = view.findViewById(R.id.search_bar);
+        linearLayout = view.findViewById(R.id.hide);
         mUsers = new ArrayList<>();
-        userAdapter = new UserAdapter(getContext(), mUsers, getActivity());
+        userAdapter = new UserAdapter(getContext(), mUsers, getActivity(), "0");
         recycleViewSearch = view.findViewById(R.id.recycle_view_search);
         recycleViewSearch.setAdapter(userAdapter);
         recycleViewSearch.setHasFixedSize(true);
@@ -104,7 +116,10 @@ public class SearchFragment extends Fragment {
                 if(charSequence.toString().isEmpty()){
                     mUsers.clear();
                     userAdapter.notifyDataSetChanged();
+                    delete.setVisibility(View.INVISIBLE);
+
                 } else {
+                    delete.setVisibility(View.VISIBLE);
                     searchUser(charSequence.toString().toLowerCase());
                 }
             }
@@ -112,6 +127,8 @@ public class SearchFragment extends Fragment {
             public void afterTextChanged(Editable editable) {
             }
         });
+
+
         return view;
     }
 
@@ -159,6 +176,7 @@ public class SearchFragment extends Fragment {
 
                     outRect.left = spacing - column * spacing / spanCount;
                     outRect.right = (column + 1) * spacing / spanCount;
+
                     if (position < spanCount) {
                         outRect.top = spacing;
                     }
@@ -175,6 +193,23 @@ public class SearchFragment extends Fragment {
         searchAdapter = new SearchAdapter(getContext(), list, getActivity());
         recyclerView.setAdapter(searchAdapter);
         readPost();
+        recyclerView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                InputMethodManager input = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                input.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                return false;
+            }
+        });
+
+        recycleViewSearch.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                InputMethodManager input = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                input.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                return false;
+            }
+        });
     }
 
     private void readPost() {

@@ -6,8 +6,9 @@
     android:layout_height="match_parent"
     android:layout_marginBottom="10dp"
     android:clickable="true"
+    android:id="@+id/comment_relative"
     android:focusableInTouchMode="true"
-    tools:context=".MainActivity">
+    tools:context=".Controller.Activity.CommentActivity">
 
 
     <com.google.android.material.appbar.AppBarLayout
@@ -56,12 +57,12 @@
 
     <androidx.recyclerview.widget.RecyclerView
 
-        android:layout_marginTop="10dp"
         android:id="@+id/list_cmt"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_below="@+id/ln1"
-        android:layout_marginBottom="70dp" />
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="50dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -129,7 +130,7 @@
             android:layout_weight="1"
             android:background="@drawable/custom_send_comment"
             android:hint="Add a comment"
-            android:padding="15dp"
+            android:padding="10dp"
             android:textColor="@color/black"
             android:textColorHint="@color/colorAccent"
             android:textSize="14sp"></EditText>

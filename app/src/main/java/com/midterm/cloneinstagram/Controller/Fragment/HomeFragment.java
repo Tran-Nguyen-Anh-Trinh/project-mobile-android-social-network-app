@@ -1,4 +1,4 @@
-package com.midterm.cloneinstagram.Fragment;
+package com.midterm.cloneinstagram.Controller.Fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -22,12 +22,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.midterm.cloneinstagram.Adapter.PostAdapter;
 import com.midterm.cloneinstagram.Adapter.StoryAdapter;
-import com.midterm.cloneinstagram.HomeChatActivity;
+import com.midterm.cloneinstagram.Controller.Activity.HomeChatActivity;
 import com.midterm.cloneinstagram.Model.Post;
-import com.midterm.cloneinstagram.Model.Story;
 import com.midterm.cloneinstagram.Model.Storys;
-import com.midterm.cloneinstagram.Model.Users;
-import com.midterm.cloneinstagram.PostActivity;
+import com.midterm.cloneinstagram.Controller.Activity.PostActivity;
 import com.midterm.cloneinstagram.R;
 
 import java.text.SimpleDateFormat;
@@ -53,13 +51,25 @@ public class HomeFragment extends Fragment {
     private TextView noti;
     private List<String> listUserID;
 
+    private static HomeFragment instance;
+
+    public static HomeFragment getInstance() {
+        instance = new HomeFragment();
+        return instance;
+    }
+
+    private HomeFragment() {
+
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        Fragment fragment = getActivity().getSupportFragmentManager().findFragmentById(R.id.homeFragment);
+//        getActivity().getSupportFragmentManager().beginTransaction().detach(fragment).attach(fragment).commit();
         View view = inflater.inflate(R.layout.fragment_home, container, false);
-
         notify = view.findViewById(R.id.notify);
 
         imageView2 = view.findViewById(R.id.imageView2);
@@ -90,7 +100,7 @@ public class HomeFragment extends Fragment {
         return view;
     }
 
-    private void checkFollowing(){
+    private void checkFollowing() {
         followingList = new ArrayList<>();
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference().child("User")
                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
@@ -122,17 +132,17 @@ public class HomeFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 postLists.clear();
-                for(DataSnapshot snapshot: dataSnapshot.getChildren()) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Post post = snapshot.getValue(Post.class);
-                    if(followingList.contains(post.getUsers().getUid())){
+                    if (followingList.contains(post.getUsers().getUid())) {
                         postLists.add(post);
                     }
-                    if(post.getUsers().getUid().equals(FirebaseAuth.getInstance().getUid())){
+                    if (post.getUsers().getUid().equals(FirebaseAuth.getInstance().getUid())) {
                         postLists.add(post);
                     }
 //                    postLists.add(post);
                 }
-                if (postLists.isEmpty()){
+                if (postLists.isEmpty()) {
                     notify.setVisibility(View.VISIBLE);
                 } else {
                     notify.setVisibility(View.GONE);
@@ -157,10 +167,10 @@ public class HomeFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 storyLists.clear();
-                for(DataSnapshot snapshot: dataSnapshot.getChildren()) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Storys storys = snapshot.getValue(Storys.class);
-                    if(followingList.contains(storys.getUsers().getUid())){
-                        if(timeStamp.equals(storys.getDate())){
+                    if (followingList.contains(storys.getUsers().getUid())) {
+                        if (timeStamp.equals(storys.getDate())) {
                             storyLists.add(0, storys);
                         }
                     }
@@ -180,7 +190,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(getActivity(), PostActivity.class));
-                getActivity().overridePendingTransition(R.anim.slide_out_down, R.anim.slide_up_dialog);
+                getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left_1);
             }
         });
 
@@ -193,27 +203,56 @@ public class HomeFragment extends Fragment {
         });
 
 
+//        FirebaseDatabase.getInstance().getReference().child("Chats")
+//                .orderByChild("IsRead").equalTo("true")
+//                .addValueEventListener(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                        for (DataSnapshot dataSnapshot: snapshot.getChildren()) {
+//                            String keyRoom = dataSnapshot.getKey().substring(0, 28);
+//                            if (keyRoom.equals(FirebaseAuth.getInstance().getUid())) {
+//                                System.out.println("do chua xem");
+//                                noti.setVisibility(View.VISIBLE);
+//                                break;
+//                            } else {
+//                                System.out.println("do da xem");
+//                                noti.setVisibility(View.INVISIBLE);
+//
+//                            }
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError error) {
+//
+//                    }
+//                });
+        FirebaseDatabase.getInstance().getReference().child("Chats").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    String keyRoom = dataSnapshot.getKey().substring(0, 28);
+                    String check = dataSnapshot.child("IsRead").getValue(String.class);
+                    if (keyRoom.equals(FirebaseAuth.getInstance().getUid())) {
+                        if (check.equals("true")) {
+                            System.out.println("do chua xem");
+                            noti.setVisibility(View.VISIBLE);
+                            break;
+                        } else {
+                            System.out.println("do da xem");
+                            noti.setVisibility(View.INVISIBLE);
 
-        FirebaseDatabase.getInstance().getReference().child("Chats")
-                .orderByChild("IsRead").equalTo("true")
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        for (DataSnapshot dataSnapshot: snapshot.getChildren()) {
-                            String keyRoom = dataSnapshot.getKey().substring(0, 28);
-                            if (keyRoom.equals(FirebaseAuth.getInstance().getUid())) {
-                                noti.setVisibility(View.VISIBLE);
-                            } else {
-                                noti.setVisibility(View.INVISIBLE);
-                            }
                         }
                     }
+                }
+            }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
 
-                    }
-                });
+            }
+        });
+
     }
 
     @Override

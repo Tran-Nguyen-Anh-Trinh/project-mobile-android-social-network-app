@@ -1,19 +1,16 @@
 package com.midterm.cloneinstagram.Comment;
 
-import android.app.Activity;
 import android.content.Context;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -21,9 +18,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.midterm.cloneinstagram.CommentActivity;
-import com.midterm.cloneinstagram.Fragment.ProfileUserFragment;
-import com.midterm.cloneinstagram.MainActivity;
+import com.midterm.cloneinstagram.Controller.Activity.CommentActivity;
 import com.midterm.cloneinstagram.Model.Comment;
 import com.midterm.cloneinstagram.R;
 import com.squareup.picasso.Picasso;
@@ -38,8 +33,6 @@ public class userAdapter extends RecyclerView.Adapter<userAdapter.Viewholder> {
     private static final String TAG = "MyActivity";
     Context mainActivity;
     ArrayList<Comment> listCmt;
-    private userAdapterFeedback adapterFeedback;
-    private ArrayList<Comment> list;
     EditText sendComment;
     ImageView send;
     TextView duocRep, huyRep;
@@ -57,8 +50,6 @@ public class userAdapter extends RecyclerView.Adapter<userAdapter.Viewholder> {
             LinearLayout rep) {
         this.mainActivity = mainActivity;
         this.listCmt = listCmt;
-        this.list = new ArrayList<>();
-        adapterFeedback = new userAdapterFeedback(mainActivity, list);
 
         this.send = send;
         this.sendComment = sendComment;
@@ -80,8 +71,38 @@ public class userAdapter extends RecyclerView.Adapter<userAdapter.Viewholder> {
         holder.name.setText(u.getUsers().getName());
         holder.content.setText(u.getComment());
         Picasso.get().load(u.getUsers().getImageUri()).into(holder.imgUser);
-        holder.recyclerView.setAdapter(adapterFeedback);
         holder.recyclerView.setLayoutManager(new LinearLayoutManager(mainActivity));
+        ArrayList<Comment> list = new ArrayList<>();
+        userAdapterFeedback adapterFeedback = new userAdapterFeedback(mainActivity, list);
+        holder.recyclerView.setAdapter(adapterFeedback);
+        holder.recyclerView.setVisibility(View.VISIBLE);
+        holder.linearLayout.setVisibility(View.GONE);
+        FirebaseDatabase.getInstance().getReference()
+                .child("Post").child(CommentActivity.idPost).child("comment")
+                .child(u.getId())
+                .child("RepComment").addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        list.clear();
+                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                            Comment comment = dataSnapshot.getValue(Comment.class);
+                            list.add(comment);
+                        }
+                        if (list.isEmpty()){
+                            holder.linearLayoutHide.setVisibility(View.GONE);
+                        } else {
+                            holder.linearLayoutHide.setVisibility(View.VISIBLE);
+                        }
+                        adapterFeedback.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
+
         holder.linearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -92,10 +113,9 @@ public class userAdapter extends RecyclerView.Adapter<userAdapter.Viewholder> {
                 FirebaseDatabase.getInstance().getReference()
                         .child("Post").child(CommentActivity.idPost).child("comment")
                         .child(u.getId())
-                        .child("RepComment").addValueEventListener(new ValueEventListener() {
+                        .child("RepComment").addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                System.out.println("gajvsjdhascs");
                                 list.clear();
                                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                                     Comment comment = dataSnapshot.getValue(Comment.class);
@@ -113,25 +133,6 @@ public class userAdapter extends RecyclerView.Adapter<userAdapter.Viewholder> {
             }
         });
 
-        FirebaseDatabase.getInstance().getReference()
-                .child("Post").child(CommentActivity.idPost).child("comment")
-                .child(u.getId())
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if (snapshot.hasChild("RepComment")) {
-                            if (holder.linearLayoutHide.getVisibility() == View.GONE) {
-                                holder.linearLayout.setVisibility(View.VISIBLE);
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-
         holder.linearLayoutHide.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -147,9 +148,12 @@ public class userAdapter extends RecyclerView.Adapter<userAdapter.Viewholder> {
             public void onClick(View view) {
                 idPost = u.getId();
                 sendComment.setText("@" + u.getUsers().getName() + " ");
+                sendComment.setSelection(sendComment.getText().length());
+                sendComment.requestFocus();
+                InputMethodManager imm = (InputMethodManager) mainActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.showSoftInput(sendComment, InputMethodManager.SHOW_IMPLICIT);
                 rep.setVisibility(View.VISIBLE);
                 duocRep.setText(u.getUsers().getName());
-                System.out.println("id ne0" + idPost);
 
             }
         });

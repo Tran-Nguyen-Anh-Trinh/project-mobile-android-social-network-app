@@ -1,15 +1,19 @@
-package com.midterm.cloneinstagram;
+package com.midterm.cloneinstagram.Controller.Activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +29,7 @@ import com.midterm.cloneinstagram.Model.Notification;
 import com.midterm.cloneinstagram.Model.Users;
 import com.midterm.cloneinstagram.PushNotify.FCMSend;
 import com.midterm.cloneinstagram.Comment.userAdapter;
+import com.midterm.cloneinstagram.R;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -43,6 +48,7 @@ public class CommentActivity extends AppCompatActivity {
     EditText comment;
     LinearLayout rep;
     LinearLayoutManager linearLayoutManager;
+    RelativeLayout relativeLayout;
     String content = "";
 
     @Override
@@ -57,6 +63,7 @@ public class CommentActivity extends AppCompatActivity {
         duocRep = findViewById(R.id.duocRep);
         huyRep = findViewById(R.id.huyRep);
         rep = findViewById(R.id.rep);
+        relativeLayout = findViewById(R.id.comment_relative);
 
         adapter = new userAdapter(CommentActivity.this, listCmt, comment, send, duocRep, huyRep, rep);
         recyclerView = findViewById(R.id.list_cmt);
@@ -145,6 +152,13 @@ public class CommentActivity extends AppCompatActivity {
     }
 
     private void setUp(){
+        relativeLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                InputMethodManager input = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                input.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            }
+        });
         send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -168,7 +182,6 @@ public class CommentActivity extends AppCompatActivity {
                                     if(task.isSuccessful()){
                                         comment.setText("");
                                         userAdapter.idPost = "";
-                                        linearLayoutManager.smoothScrollToPosition(recyclerView, null, adapter.getItemCount());
                                         Toast.makeText(CommentActivity.this, "Added comment", Toast.LENGTH_SHORT).show();
 
                                         notifyApp("RepComment");
@@ -212,6 +225,15 @@ public class CommentActivity extends AppCompatActivity {
                 rep.setVisibility(View.GONE);
                 userAdapter.idPost = "";
                 comment.setText("");
+            }
+        });
+
+        recyclerView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                InputMethodManager input = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                input.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                return false;
             }
         });
     }

@@ -18,7 +18,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.midterm.cloneinstagram.ChatActivity;
+import com.midterm.cloneinstagram.Controller.Activity.ChatActivity;
 import com.midterm.cloneinstagram.Model.Messages;
 import com.midterm.cloneinstagram.Model.Users;
 import com.midterm.cloneinstagram.R;
@@ -82,7 +82,10 @@ public class UserChatAdapter  extends RecyclerView.Adapter<UserChatAdapter.Viewh
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                 Messages messages;
-                                if (!snapshot.exists()) return;
+                                if (!snapshot.exists()) {
+                                    holder.user_messages.setText("Chat with yourself!");
+                                    return;
+                                }
                                 DataSnapshot dataSnapshot = snapshot.getChildren().iterator().next();
                                 messages = dataSnapshot.getValue(Messages.class);
                                 if (messages.getMessages().isEmpty() && messages.getUriVid().isEmpty()) {
@@ -129,8 +132,6 @@ public class UserChatAdapter  extends RecyclerView.Adapter<UserChatAdapter.Viewh
                                         }
                                     }
                                 }
-                                System.out.println("oooooooo: "+ chatRoom);
-                                System.out.println("oooooooo1: "+ chatRoom1);
                                 database.getReference().child("Chats").child(chatRoom).child("IsRead").addValueEventListener(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -140,7 +141,6 @@ public class UserChatAdapter  extends RecyclerView.Adapter<UserChatAdapter.Viewh
                                         } else {
                                             holder.user_messages.setTypeface(null, Typeface.NORMAL);
                                             Picasso.get().load(users.getImageUri()).into(holder.isRead);
-                                            System.out.println("aaaaaa: "+messages.getSenderID() + ": " + auth.getUid());
                                         }
                                     }
 
