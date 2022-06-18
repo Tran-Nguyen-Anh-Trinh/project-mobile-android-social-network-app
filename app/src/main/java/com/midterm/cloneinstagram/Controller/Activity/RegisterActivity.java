@@ -7,12 +7,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,6 +24,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -36,6 +40,10 @@ import com.midterm.cloneinstagram.Model.Users;
 import com.midterm.cloneinstagram.R;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -49,6 +57,7 @@ public class RegisterActivity extends AppCompatActivity {
     Uri uri;
     byte[] bytes;
     ProgressDialog progressDialog;
+    String currentPhotoPath;
 
     String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
 
@@ -100,8 +109,7 @@ public class RegisterActivity extends AppCompatActivity {
                             dialog.dismiss();
                             return;
                         }
-                        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                        startActivityForResult(intent, 100);
+                        dispatchTakePictureIntent();
                         dialog.dismiss();
                     }
                 });
@@ -143,23 +151,25 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode==10){
-            if(data!=null){
+        if (requestCode == 10) {
+            if (data != null) {
+                profile.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 bytes = null;
                 uri = data.getData();
                 profile.setImageURI(uri);
             }
         }
-        if(requestCode==100){
-            if(data!=null){
-                if(data.getExtras()==null)  return;
-                Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-                profile.setImageBitmap(bitmap);
-                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
-                bytes = byteArrayOutputStream.toByteArray();
-                uri = null;
+        if (requestCode == 100) {
+            profile.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            Bitmap bitmap = BitmapFactory.decodeFile(currentPhotoPath);
+            if (bitmap==null) {
+                return;
             }
+            profile.setImageBitmap(bitmap);
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
+            bytes = byteArrayOutputStream.toByteArray();
+            uri = null;
         }
     }
 
@@ -308,5 +318,37 @@ public class RegisterActivity extends AppCompatActivity {
             Toast.makeText(getBaseContext(), "Press back again to exit", Toast.LENGTH_SHORT).show();
         }
         pressedTime = System.currentTimeMillis();
+    }
+
+    private File createImageFile() throws IOException {
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,
+                ".jpg",
+                storageDir
+        );
+        currentPhotoPath = image.getAbsolutePath();
+        return image;
+    }
+
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+            if (photoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(this,
+                        "com.midterm.cloneinstagram.fileprovider",
+                        photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(takePictureIntent, 100);
+            }
+        }
     }
 }

@@ -204,8 +204,10 @@ public class MainActivity extends AppCompatActivity implements LifecycleObserver
     }
 
     void updateStatus(String status) {
-        DatabaseReference databaseReference = database.getReference().child("User").child(mAuth.getUid()).child("status");
-        databaseReference.setValue(status);
+        if(mAuth.getUid()!=null) {
+            DatabaseReference databaseReference = database.getReference().child("User").child(mAuth.getUid()).child("status");
+            databaseReference.setValue(status);
+        }
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_STOP)

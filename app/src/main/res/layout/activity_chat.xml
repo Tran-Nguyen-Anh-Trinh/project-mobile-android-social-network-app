@@ -78,6 +78,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:gravity="bottom"
         android:layout_margin="@dimen/_2sdp"
         android:orientation="horizontal">
 
@@ -113,11 +114,11 @@
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_35sdp"
+            android:layout_height="wrap_content"
             android:layout_margin="@dimen/_3sdp"
             android:layout_weight="1"
             app:cardBackgroundColor="#FF90FA96"
-            app:cardCornerRadius="@dimen/_540sdp">
+            app:cardCornerRadius="20dp">
 
             <EditText
                 android:id="@+id/editMess"
@@ -126,9 +127,10 @@
                 android:layout_gravity="center_vertical"
                 android:background="@null"
                 android:fontFamily="sans-serif-light"
+                android:maxLines="5"
+                android:minHeight="@dimen/_35sdp"
                 android:hint="Type your messages..."
-                android:paddingStart="@dimen/_10sdp"
-                android:paddingLeft="@dimen/_10sdp"
+                android:padding="10dp"
                 android:textSize="@dimen/_12sdp" />
 
         </androidx.cardview.widget.CardView>

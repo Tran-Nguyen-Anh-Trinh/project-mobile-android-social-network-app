@@ -8,6 +8,7 @@ import android.app.Dialog;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AnimationUtils;
@@ -101,6 +102,7 @@ public class StoryActivity extends AppCompatActivity implements StoriesProgressV
                 inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
                 if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
                     pressTime = System.currentTimeMillis();
+                    content.clearFocus();
                     storiesProgressView.pause();
                     return false;
                 }
@@ -126,6 +128,7 @@ public class StoryActivity extends AppCompatActivity implements StoriesProgressV
                 inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
                 if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
                     pressTime = System.currentTimeMillis();
+                    content.clearFocus();
                     storiesProgressView.pause();
                     return false;
                 }
@@ -148,6 +151,7 @@ public class StoryActivity extends AppCompatActivity implements StoriesProgressV
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
                     pressTime = System.currentTimeMillis();
+                    content.clearFocus();
                     storiesProgressView.pause();
                     return false;
                 }
@@ -192,7 +196,11 @@ public class StoryActivity extends AppCompatActivity implements StoriesProgressV
                                 Users usersReceive = snapshot.getValue(Users.class);
                                 if(!usersReceive.getUid().equals(FirebaseAuth.getInstance().getUid())){
                                     Toast.makeText(StoryActivity.this, "Replied!", Toast.LENGTH_SHORT).show();
-                                    FCMSend.pushNotification(StoryActivity.this, usersReceive.getToken(), "Messages", Users.getInstance().getName()+": "+messages + " on " + format,
+                                    String cut = messages;
+                                    if (messages.length() > 26) {
+                                        cut = messages.substring(0, 26)+" ...";
+                                    }
+                                    FCMSend.pushNotification(StoryActivity.this, usersReceive.getToken(), "Messages", Users.getInstance().getName()+": "+ cut + " on " + format,
                                             Users.getInstance().getUid(),
                                             Users.getInstance().getName(), Users.getInstance().getImageUri(), userid,
                                             name, imageAvatar);
@@ -233,7 +241,10 @@ public class StoryActivity extends AppCompatActivity implements StoriesProgressV
 
             }
         };
-        Picasso.get().load(imageStory).into(target);
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int height = displayMetrics.heightPixels;
+        Picasso.get().load(imageStory).resize(0, height).into(target);
 
 
         addEvent();
@@ -261,7 +272,8 @@ public class StoryActivity extends AppCompatActivity implements StoriesProgressV
                         dialog.dismiss();
                         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Story").child(userid);
                         reference.removeValue();
-                        storiesProgressView.skip();
+                        finishAndRemoveTask();
+                        overridePendingTransition(R.anim.slide_up_dialog, R.anim.slide_out_down_1);
                         Toast.makeText(StoryActivity.this, "Deleted", Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -290,7 +302,8 @@ public class StoryActivity extends AppCompatActivity implements StoriesProgressV
 
     @Override
     public void onComplete() {
-        finish();
+        finishAndRemoveTask();
+        overridePendingTransition(R.anim.slide_up_dialog, R.anim.slide_out_down_1);
     }
 
     @Override

@@ -7,8 +7,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -21,6 +23,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -41,6 +44,8 @@ import com.midterm.cloneinstagram.R;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -60,6 +65,7 @@ public class PostActivity extends AppCompatActivity {
     private LinearLayout linearLayout;
     ProgressDialog progressDialog;
     Post postPrimary;
+    String currentPhotoPath;
 
     Uri uri;
     byte[] bytes;
@@ -153,8 +159,7 @@ public class PostActivity extends AppCompatActivity {
                             dialog.dismiss();
                             return;
                         }
-                        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                        startActivityForResult(intent, 100);
+                        dispatchTakePictureIntent();
                         dialog.dismiss();
                     }
                 });
@@ -395,21 +400,23 @@ public class PostActivity extends AppCompatActivity {
 
         if (requestCode == 10) {
             if (data != null) {
+                imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 bytes = null;
                 uri = data.getData();
                 imageView.setImageURI(uri);
             }
         }
         if (requestCode == 100) {
-            if (data != null) {
-                if (data.getExtras() == null) return;
-                Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-                imageView.setImageBitmap(bitmap);
-                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
-                bytes = byteArrayOutputStream.toByteArray();
-                uri = null;
+            Bitmap bitmap = BitmapFactory.decodeFile(currentPhotoPath);
+            if (bitmap==null) {
+                return;
             }
+            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            imageView.setImageBitmap(bitmap);
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
+            bytes = byteArrayOutputStream.toByteArray();
+            uri = null;
         }
     }
 
@@ -417,5 +424,37 @@ public class PostActivity extends AppCompatActivity {
     public void onBackPressed() {
         finishAndRemoveTask();
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right_1);
+    }
+
+    private File createImageFile() throws IOException {
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,
+                ".jpg",
+                storageDir
+        );
+        currentPhotoPath = image.getAbsolutePath();
+        return image;
+    }
+
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+            if (photoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(this,
+                        "com.midterm.cloneinstagram.fileprovider",
+                        photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(takePictureIntent, 100);
+            }
+        }
     }
 }
