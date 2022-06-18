@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 
 import android.Manifest;
 import android.app.Dialog;
@@ -12,13 +13,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -38,6 +42,10 @@ import com.midterm.cloneinstagram.R;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -62,6 +70,7 @@ public class UpdateInformationActivity extends AppCompatActivity {
     FirebaseStorage storage;
     String token = "";
     String ID = FirebaseAuth.getInstance().getUid();
+    String currentPhotoPath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -171,7 +180,7 @@ public class UpdateInformationActivity extends AppCompatActivity {
                                                                 progressDialog.dismiss();
                                                                 Toast.makeText(getBaseContext(), "Saved successfully", Toast.LENGTH_SHORT).show();
                                                                 finishAndRemoveTask();
-                                                                overridePendingTransition(R.anim.slide_out_down, R.anim.slide_up_dialog);
+                                                                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right_1);
                                                             } else {
                                                                 progressDialog.dismiss();
                                                                 Toast.makeText(UpdateInformationActivity.this, "Wrong something", Toast.LENGTH_SHORT).show();
@@ -213,7 +222,7 @@ public class UpdateInformationActivity extends AppCompatActivity {
                                                                 progressDialog.dismiss();
                                                                 Toast.makeText(getBaseContext(), "Saved successfully", Toast.LENGTH_SHORT).show();
                                                                 finishAndRemoveTask();
-                                                                overridePendingTransition(R.anim.slide_out_down, R.anim.slide_up_dialog);
+                                                                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right_1);
                                                             } else {
                                                                 progressDialog.dismiss();
                                                                 Toast.makeText(UpdateInformationActivity.this, "Wrong something", Toast.LENGTH_SHORT).show();
@@ -243,8 +252,8 @@ public class UpdateInformationActivity extends AppCompatActivity {
                                 progressDialog.dismiss();
                                 Toast.makeText(getBaseContext(), "Saved successfully", Toast.LENGTH_SHORT).show();
                                 finishAndRemoveTask();
-                                overridePendingTransition(R.anim.slide_out_down, R.anim.slide_up_dialog);
-                            } else {
+                                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right_1);
+                            }else {
                                 progressDialog.dismiss();
                                 Toast.makeText(UpdateInformationActivity.this, "Wrong something", Toast.LENGTH_SHORT).show();
                             }
@@ -279,8 +288,7 @@ public class UpdateInformationActivity extends AppCompatActivity {
                             dialog.dismiss();
                             return;
                         }
-                        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                        startActivityForResult(intent, 100);
+                        dispatchTakePictureIntent();
                         dialog.dismiss();
                     }
                 });
@@ -309,28 +317,26 @@ public class UpdateInformationActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 
         UpdateInformationActivity.super.onActivityResult(requestCode, resultCode, data);
+
         if (requestCode == 10) {
-            Log.i("rrrrrr", requestCode+"");
             if (data != null) {
+                circleImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 bytes = null;
                 imgUri = data.getData();
-                Log.i("eeeeeeee", imgUri+"");
-
                 circleImageView.setImageURI(imgUri);
             }
         }
         if (requestCode == 100) {
-            if (data != null) {
-                if (data.getExtras() == null) {
-                    return;
-                }
-                imgUri = null;
-                Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-                circleImageView.setImageBitmap(bitmap);
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-                bytes = baos.toByteArray();
+            circleImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            Bitmap bitmap = BitmapFactory.decodeFile(currentPhotoPath);
+            if (bitmap==null) {
+                return;
             }
+            circleImageView.setImageBitmap(bitmap);
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
+            bytes = byteArrayOutputStream.toByteArray();
+            imgUri = null;
         }
     }
 
@@ -343,5 +349,37 @@ public class UpdateInformationActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right_1);
+    }
+
+    private File createImageFile() throws IOException {
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,
+                ".jpg",
+                storageDir
+        );
+        currentPhotoPath = image.getAbsolutePath();
+        return image;
+    }
+
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+            if (photoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(this,
+                        "com.midterm.cloneinstagram.fileprovider",
+                        photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(takePictureIntent, 100);
+            }
+        }
     }
 }

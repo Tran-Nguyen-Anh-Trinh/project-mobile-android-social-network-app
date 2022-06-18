@@ -187,7 +187,6 @@ public class DetailPostFragment extends Fragment {
         post_image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 long doubleClickCurrentTime = System.currentTimeMillis();
                 long currentClickTime = System.currentTimeMillis();
                 if (currentClickTime - LAST_CLICK_TIME <= mDoubleClickInterval) {

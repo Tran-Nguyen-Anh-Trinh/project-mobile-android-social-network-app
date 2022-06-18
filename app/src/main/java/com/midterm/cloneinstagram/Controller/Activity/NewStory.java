@@ -1,19 +1,27 @@
 package com.midterm.cloneinstagram.Controller.Activity;
 
+import static com.midterm.cloneinstagram.Adapter.ActivityAdapter.context;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 
 import android.Manifest;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -39,10 +47,13 @@ import com.midterm.cloneinstagram.Model.Users;
 import com.midterm.cloneinstagram.R;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 public class NewStory extends AppCompatActivity {
     private TextView btnClose, btnPost, title;
@@ -59,6 +70,8 @@ public class NewStory extends AppCompatActivity {
 
     Uri uri;
     byte[] bytes;
+    String currentPhotoPath;
+    private Uri imageUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,8 +119,6 @@ public class NewStory extends AppCompatActivity {
                 takePhoto = dialog.findViewById(R.id.takePhoto);
                 chooseFromGallery = dialog.findViewById(R.id.chooseFromGallery);
                 cancel = dialog.findViewById(R.id.cancel_option);
-
-
                 dialog.show();
                 takePhoto.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -118,8 +129,7 @@ public class NewStory extends AppCompatActivity {
                             dialog.dismiss();
                             return;
                         }
-                        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                        startActivityForResult(intent, 100);
+                        dispatchTakePictureIntent();
                         dialog.dismiss();
                     }
                 });
@@ -271,21 +281,23 @@ public class NewStory extends AppCompatActivity {
 
         if (requestCode == 10) {
             if (data != null) {
+                imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 bytes = null;
                 uri = data.getData();
                 imageView.setImageURI(uri);
             }
         }
         if (requestCode == 100) {
-            if (data != null) {
-                if (data.getExtras() == null) return;
-                Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-                imageView.setImageBitmap(bitmap);
-                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
-                bytes = byteArrayOutputStream.toByteArray();
-                uri = null;
+            Bitmap bitmap = BitmapFactory.decodeFile(currentPhotoPath);
+            if (bitmap==null) {
+                return;
             }
+            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            imageView.setImageBitmap(bitmap);
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
+            bytes = byteArrayOutputStream.toByteArray();
+            uri = null;
         }
     }
 
@@ -295,5 +307,37 @@ public class NewStory extends AppCompatActivity {
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right_1);
+    }
+
+    private File createImageFile() throws IOException {
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,
+                ".jpg",
+                storageDir
+        );
+        currentPhotoPath = image.getAbsolutePath();
+        return image;
+    }
+
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+            if (photoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(this,
+                        "com.midterm.cloneinstagram.fileprovider",
+                        photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(takePictureIntent, 100);
+            }
+        }
     }
 }

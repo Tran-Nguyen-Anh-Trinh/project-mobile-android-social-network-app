@@ -13,6 +13,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -190,7 +191,10 @@ public class ProfileUserFragment extends Fragment {
             public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
                 int position = parent.getChildAdapterPosition(view);
                 int spanCount = 3;
-                int spacing = 10;
+                DisplayMetrics displayMetrics = new DisplayMetrics();
+                getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+                int height = displayMetrics.heightPixels;
+                int spacing = height/(int)Math.round(197.7);
 
                 if (position >= 0) {
                     int column = position % spanCount; // item column
@@ -309,6 +313,7 @@ public class ProfileUserFragment extends Fragment {
 
     private void readStory() {
         recyclerView.setAdapter(storyAdapter);
+        recyclerView.setVisibility(View.INVISIBLE);
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Story");
 
         reference.addValueEventListener(new ValueEventListener() {
@@ -328,6 +333,7 @@ public class ProfileUserFragment extends Fragment {
                             @Override
                             public void onAnimationEnd(Animator animation) {
                                 super.onAnimationEnd(animation);
+                                recyclerView.setVisibility(View.VISIBLE);
                                 recyclerView.animate().translationX(0).setDuration(400);
                             }
                         });
@@ -343,6 +349,7 @@ public class ProfileUserFragment extends Fragment {
     private void readPost() {
 
         recyclerView.setAdapter(postedAdapter);
+        recyclerView.setVisibility(View.INVISIBLE);
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Post");
 
         reference.addValueEventListener(new ValueEventListener() {
@@ -363,6 +370,7 @@ public class ProfileUserFragment extends Fragment {
                             @Override
                             public void onAnimationEnd(Animator animation) {
                                 super.onAnimationEnd(animation);
+                                recyclerView.setVisibility(View.VISIBLE);
                                 recyclerView.animate().translationX(0).setDuration(400);
                             }
                         });

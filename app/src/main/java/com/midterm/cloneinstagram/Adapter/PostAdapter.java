@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -35,6 +37,8 @@ import com.midterm.cloneinstagram.Controller.Fragment.ProfileUserFragment;
 import com.midterm.cloneinstagram.PushNotify.FCMSend;
 import com.midterm.cloneinstagram.R;
 import com.midterm.cloneinstagram.Model.Users;
+import com.squareup.picasso.MemoryPolicy;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
@@ -104,8 +108,16 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             }
         });
         holder.username.setText(post.getUsers().getName());
-        Picasso.get().load(post.getUsers().getImageUri()).into(holder.image_profile);
-        Picasso.get().load(post.getPostimage()).into(holder.post_image);
+        Glide.with(mContext).load(post.getPostimage()).placeholder(mContext.getDrawable(R.drawable.accent)).into(holder.image_profile);
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        fragmentActivity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int height = displayMetrics.heightPixels;
+        holder.post_image.getLayoutParams().height = (int)Math.round(height/1.84);
+        Glide.with(mContext).load(post.getPostimage())
+                .transition(DrawableTransitionOptions.withCrossFade())
+                .placeholder(mContext.getDrawable(R.drawable.accent)).into(holder.post_image);
+
+
 
         holder.post_image.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -251,7 +263,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
             }
         });
-
+        holder.likeed.setVisibility(View.GONE);
         FirebaseDatabase.getInstance().getReference().child("Post").child(post.getPostid()).child("like")
                 .child(FirebaseAuth.getInstance().getUid())
                 .addListenerForSingleValueEvent(new ValueEventListener() {

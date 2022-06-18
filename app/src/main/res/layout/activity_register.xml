@@ -67,6 +67,7 @@
                 android:inputType="text"
                 android:maxLines="1"
                 android:padding="10dp"
+                android:maxLength="15"
                 android:textSize="14dp" />
 
             <EditText

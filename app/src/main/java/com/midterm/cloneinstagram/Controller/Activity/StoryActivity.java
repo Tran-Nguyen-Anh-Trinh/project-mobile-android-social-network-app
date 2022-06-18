@@ -8,6 +8,7 @@ import android.app.Dialog;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AnimationUtils;
@@ -192,7 +193,11 @@ public class StoryActivity extends AppCompatActivity implements StoriesProgressV
                                 Users usersReceive = snapshot.getValue(Users.class);
                                 if(!usersReceive.getUid().equals(FirebaseAuth.getInstance().getUid())){
                                     Toast.makeText(StoryActivity.this, "Replied!", Toast.LENGTH_SHORT).show();
-                                    FCMSend.pushNotification(StoryActivity.this, usersReceive.getToken(), "Messages", Users.getInstance().getName()+": "+messages + " on " + format,
+                                    String cut = messages;
+                                    if (messages.length() > 26) {
+                                        cut = messages.substring(0, 26)+" ...";
+                                    }
+                                    FCMSend.pushNotification(StoryActivity.this, usersReceive.getToken(), "Messages", Users.getInstance().getName()+": "+ cut + " on " + format,
                                             Users.getInstance().getUid(),
                                             Users.getInstance().getName(), Users.getInstance().getImageUri(), userid,
                                             name, imageAvatar);
@@ -233,7 +238,10 @@ public class StoryActivity extends AppCompatActivity implements StoriesProgressV
 
             }
         };
-        Picasso.get().load(imageStory).into(target);
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int height = displayMetrics.heightPixels;
+        Picasso.get().load(imageStory).resize(0, height).into(target);
 
 
         addEvent();
