@@ -70,12 +70,13 @@ public class LoginActivity extends AppCompatActivity {
         progressDialog.setCancelable(false);
         progressDialog.setMessage("Please wait...");
 
-        linearLayout.setOnClickListener(new View.OnClickListener() {
+
+        linearLayout.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View view) {
-                System.out.println("àgaushsajfn");
+            public boolean onTouch(View view, MotionEvent motionEvent) {
                 InputMethodManager input = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 input.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                return false;
             }
         });
 

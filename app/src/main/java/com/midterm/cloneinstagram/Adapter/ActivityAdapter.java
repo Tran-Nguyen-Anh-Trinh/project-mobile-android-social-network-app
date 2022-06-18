@@ -12,6 +12,8 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -61,7 +63,9 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.ViewHo
                 Users users = snapshot.getValue(Users.class);
                 String content = users.getName() + " " + notification.getContent()+". On "+ notification.getDate();
                 holder.content.setText(content);
-                Picasso.get().load(users.getImageUri()).into(holder.profile);
+                Glide.with(context).load(users.getImageUri())
+                        .transition(DrawableTransitionOptions.withCrossFade())
+                        .placeholder(context.getDrawable(R.drawable.accent)).into(holder.profile);
             }
 
             @Override

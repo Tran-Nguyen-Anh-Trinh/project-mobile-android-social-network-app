@@ -34,7 +34,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginBottom="5dp"
                 android:layout_marginRight="8dp"
-                app:civ_border_color="@color/black"
+                app:civ_border_color="@color/green"
                 app:civ_border_width="1dp"
                 android:layout_marginTop="5dp"></de.hdodenhof.circleimageview.CircleImageView>
 
@@ -62,9 +62,9 @@
         <ImageView
             android:id="@+id/post_image"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_300sdp"
-            android:layout_weight="1"
+            android:layout_height="wrap_content"
             android:scaleType="centerCrop"
+            android:layout_weight="1"
             android:layout_marginTop="0dp"
             android:layout_marginBottom="10dp"></ImageView>
 
@@ -109,7 +109,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:text="0 like"
             android:textColor="@color/colorPrimaryDark"
             android:textStyle="bold"></TextView>
 

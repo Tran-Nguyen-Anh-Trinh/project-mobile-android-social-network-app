@@ -20,29 +20,28 @@
         android:layout_height="wrap_content"
         android:background="?android:attr/windowBackground">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:gravity="center">
-        <TextView
-            android:id="@+id/btn_close"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_alignParentLeft="true"
-            android:background="@drawable/left"
-            android:backgroundTint="@color/green"/>
-
-        <TextView
-            android:id="@+id/title"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:text="List follower"
-            android:textAlignment="center"
-            android:textColor="@color/black"
-            android:paddingLeft="-20dp"
-            android:textSize="16dp"
-            android:textStyle="bold" />
+            android:layout_height="40dp">
+            <TextView
+                android:id="@+id/btn_close"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/ic_baseline_keyboard_double_arrow_left_24" />
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="10dp"
+                android:layout_toEndOf="@+id/btn_close"
+                android:text="Followers"
+                android:textColor="@color/black"
+                android:textSize="16dp"
+                android:textStyle="bold" />
 
     </RelativeLayout>
     </androidx.appcompat.widget.Toolbar>

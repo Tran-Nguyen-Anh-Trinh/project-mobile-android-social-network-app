@@ -101,7 +101,7 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:text="No post to display"
+                android:text="No posts to display"
                 android:textColor="@color/green"
                 android:textSize="14dp"
                 android:visibility="gone" />

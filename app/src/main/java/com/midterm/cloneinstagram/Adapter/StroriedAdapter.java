@@ -2,6 +2,7 @@ package com.midterm.cloneinstagram.Adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,8 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.midterm.cloneinstagram.Model.Storys;
 import com.midterm.cloneinstagram.R;
 import com.midterm.cloneinstagram.Controller.Activity.StoryActivity;
@@ -38,7 +41,14 @@ public class StroriedAdapter  extends RecyclerView.Adapter<StroriedAdapter.ViewH
     @Override
     public void onBindViewHolder(@NonNull StroriedAdapter.ViewHolder holder, int position) {
         Storys storys = listImage.get(position);
-        Picasso.get().load(storys.getPostimage()).into(holder.image_post_personal);
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        fragmentActivity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int height = displayMetrics.heightPixels;
+        holder.image_post_personal.getLayoutParams().height = (int)Math.round(height/5.52);
+
+        Glide.with(mContext).load(storys.getPostimage())
+                .transition(DrawableTransitionOptions.withCrossFade())
+                .placeholder(mContext.getDrawable(R.drawable.accent)).into(holder.image_post_personal);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -8,12 +8,14 @@ import android.app.Dialog;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -101,6 +103,7 @@ public class StoryActivity extends AppCompatActivity implements StoriesProgressV
                 inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
                 if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
                     pressTime = System.currentTimeMillis();
+                    content.clearFocus();
                     storiesProgressView.pause();
                     return false;
                 }
@@ -126,6 +129,7 @@ public class StoryActivity extends AppCompatActivity implements StoriesProgressV
                 inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
                 if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
                     pressTime = System.currentTimeMillis();
+                    content.clearFocus();
                     storiesProgressView.pause();
                     return false;
                 }
@@ -148,6 +152,7 @@ public class StoryActivity extends AppCompatActivity implements StoriesProgressV
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
                     pressTime = System.currentTimeMillis();
+                    content.clearFocus();
                     storiesProgressView.pause();
                     return false;
                 }
@@ -192,7 +197,11 @@ public class StoryActivity extends AppCompatActivity implements StoriesProgressV
                                 Users usersReceive = snapshot.getValue(Users.class);
                                 if(!usersReceive.getUid().equals(FirebaseAuth.getInstance().getUid())){
                                     Toast.makeText(StoryActivity.this, "Replied!", Toast.LENGTH_SHORT).show();
-                                    FCMSend.pushNotification(StoryActivity.this, usersReceive.getToken(), "Messages", Users.getInstance().getName()+": "+messages + " on " + format,
+                                    String cut = messages;
+                                    if (messages.length() > 26) {
+                                        cut = messages.substring(0, 26)+" ...";
+                                    }
+                                    FCMSend.pushNotification(StoryActivity.this, usersReceive.getToken(), "Messages", Users.getInstance().getName()+": "+ cut + " on " + format,
                                             Users.getInstance().getUid(),
                                             Users.getInstance().getName(), Users.getInstance().getImageUri(), userid,
                                             name, imageAvatar);
@@ -215,7 +224,7 @@ public class StoryActivity extends AppCompatActivity implements StoriesProgressV
         target = new Target() {
             @Override
             public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                image.setScaleType(ImageView.ScaleType.CENTER_CROP);
+//                image.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 image.setImageBitmap(bitmap);
                 image.startAnimation(AnimationUtils.loadAnimation(StoryActivity.this, R.anim.fade_in_3));
                 storiesProgressView.setStoriesCount(1);
@@ -233,7 +242,11 @@ public class StoryActivity extends AppCompatActivity implements StoriesProgressV
 
             }
         };
-        Picasso.get().load(imageStory).into(target);
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int height = displayMetrics.heightPixels;
+        image.getLayoutParams().height = height;
+        Picasso.get().load(imageStory).resize(0, height).into(target);
 
 
         addEvent();
@@ -253,15 +266,31 @@ public class StoryActivity extends AppCompatActivity implements StoriesProgressV
                 dialog.setContentView(R.layout.dialog_delete);
                 TextView btnYes;
                 TextView btnNo;
+                LinearLayout linearLayout;
                 btnYes = dialog.findViewById(R.id.button_Yes);
                 btnNo = dialog.findViewById(R.id.button_No);
+
+                linearLayout = dialog.findViewById(R.id.bg_delete);
+                linearLayout.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View view, MotionEvent motionEvent) {
+                        storiesProgressView.resume();
+                        dialog.dismiss();
+                        return false;
+                    }
+                });
+
+
+
+
                 btnYes.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         dialog.dismiss();
                         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Story").child(userid);
                         reference.removeValue();
-                        storiesProgressView.skip();
+                        finishAndRemoveTask();
+                        overridePendingTransition(R.anim.slide_up_dialog, R.anim.slide_out_down_1);
                         Toast.makeText(StoryActivity.this, "Deleted", Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -290,7 +319,8 @@ public class StoryActivity extends AppCompatActivity implements StoriesProgressV
 
     @Override
     public void onComplete() {
-        finish();
+        finishAndRemoveTask();
+        overridePendingTransition(R.anim.slide_up_dialog, R.anim.slide_out_down_1);
     }
 
     @Override

@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -14,8 +15,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.MotionEvent;
 import android.view.View;
@@ -45,6 +48,8 @@ import com.midterm.cloneinstagram.R;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -97,6 +102,7 @@ public class ChatActivity extends AppCompatActivity {
 
     ValueEventListener valueEventListener;
     ValueEventListener valueEventListenerMessages;
+    String currentPhotoPath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,11 +140,6 @@ public class ChatActivity extends AppCompatActivity {
         });
 
 
-
-
-
-
-
         camera = findViewById(R.id.Camera);
         messagesArrayList = new ArrayList<>();
         receiverName = findViewById(R.id.receiver_Name);
@@ -171,7 +172,6 @@ public class ChatActivity extends AppCompatActivity {
         };
 
 
-
         isReadRef = FirebaseDatabase.getInstance().getReference()
                 .child("Chats").child(senderRoom)
                 .child("IsRead");
@@ -183,9 +183,9 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 Users users = snapshot.getValue(Users.class);
-                if("online".equals(users.getStatus())){
+                if ("online".equals(users.getStatus())) {
                     status.setImageResource(R.drawable.color_online);
-                }else{
+                } else {
                     status.setImageResource(R.drawable.color_offline);
                 }
             }
@@ -267,8 +267,12 @@ public class ChatActivity extends AppCompatActivity {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         usersReceive = snapshot.getValue(Users.class);
-                        if(!usersReceive.getUid().equals(FirebaseAuth.getInstance().getUid())){
-                            FCMSend.pushNotification(ChatActivity.this, usersReceive.getToken(), "Messages", nameSend+": "+messages + " on " + format, idSend, nameSend, avaSend, Uid, Name, ReceiverImg);
+                        if (!usersReceive.getUid().equals(FirebaseAuth.getInstance().getUid())) {
+                            String cut = messages;
+                            if (messages.length() > 20) {
+                                cut = messages.substring(0, 20) + " ...";
+                            }
+                            FCMSend.pushNotification(ChatActivity.this, usersReceive.getToken(), "Messages", nameSend + ": " + cut + " on " + format, idSend, nameSend, avaSend, Uid, Name, ReceiverImg);
                         }
                     }
 
@@ -302,8 +306,7 @@ public class ChatActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Please grant camera permission to the app", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(intent, 100);
+                dispatchTakePictureIntent();
             }
         });
     }
@@ -318,7 +321,6 @@ public class ChatActivity extends AppCompatActivity {
             if (data != null) {
                 progressDialog.show();
                 uriImg = data.getData();
-                System.out.println("uuuuuuuuuuu: " + uriImg);
                 storage = FirebaseStorage.getInstance();
                 Date now = new Date();
                 String format = new SimpleDateFormat("EEE-d-MMM-yyyy-HH:mm:ss.SSSSS", Locale.ENGLISH).format(now);
@@ -342,8 +344,8 @@ public class ChatActivity extends AppCompatActivity {
                                                 @Override
                                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                                                     usersReceive = snapshot.getValue(Users.class);
-                                                    if(!usersReceive.getUid().equals(FirebaseAuth.getInstance().getUid())){
-                                                        FCMSend.pushNotification(ChatActivity.this, usersReceive.getToken(), "Messages", nameSend+": Send image messages on "+ format, idSend, nameSend, avaSend, Uid, Name, ReceiverImg);
+                                                    if (!usersReceive.getUid().equals(FirebaseAuth.getInstance().getUid())) {
+                                                        FCMSend.pushNotification(ChatActivity.this, usersReceive.getToken(), "Messages", nameSend + ": Image messages on " + format, idSend, nameSend, avaSend, Uid, Name, ReceiverImg);
                                                     }
                                                 }
 
@@ -378,8 +380,8 @@ public class ChatActivity extends AppCompatActivity {
                                                 @Override
                                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                                                     usersReceive = snapshot.getValue(Users.class);
-                                                    if(!usersReceive.getUid().equals(FirebaseAuth.getInstance().getUid())){
-                                                        FCMSend.pushNotification(ChatActivity.this, usersReceive.getToken(), "Messages", nameSend+": Send video messages on "+ format, idSend, nameSend, avaSend, Uid, Name, ReceiverImg);
+                                                    if (!usersReceive.getUid().equals(FirebaseAuth.getInstance().getUid())) {
+                                                        FCMSend.pushNotification(ChatActivity.this, usersReceive.getToken(), "Messages", nameSend + ": Video messages on " + format, idSend, nameSend, avaSend, Uid, Name, ReceiverImg);
                                                     }
                                                 }
 
@@ -400,57 +402,55 @@ public class ChatActivity extends AppCompatActivity {
             }
         }
         if (requestCode == 100) {
-            if (data != null) {
-                if(data.getExtras()==  null){
-                    return;
-                }
-                Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-                byte[] dt = baos.toByteArray();
-                storage = FirebaseStorage.getInstance();
-                Date now = new Date();
-                String format = new SimpleDateFormat("EEE-d-MMM-yyyy-HH:mm:ss.SSSSS", Locale.ENGLISH).format(now);
-                uriImg = data.getData();
-                progressDialog.show();
-                StorageReference storageReference;
-                storageReference = storage.getReference().child("ImageChat").child(mAuth.getUid() + format);
-                storageReference.putBytes(dt).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                        if (task.isSuccessful()) {
-                            storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                @Override
-                                public void onSuccess(Uri uri) {
-                                    if (uri != null) {
-                                        uriSelectImg = uri.toString();
-                                        saveMessagesChat("", uriSelectImg, "");
-                                        linearLayoutManager.smoothScrollToPosition(messAdapter, null, adapter.getItemCount());
-                                        String format = new SimpleDateFormat("HH:mm dd/MM/yyyy").format(now);
-
-                                        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                                            @Override
-                                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                usersReceive = snapshot.getValue(Users.class);
-                                                if(!usersReceive.getUid().equals(FirebaseAuth.getInstance().getUid())) {
-                                                    FCMSend.pushNotification(ChatActivity.this, usersReceive.getToken(), "Messages", nameSend+": Send image messages on "+ format, idSend, nameSend, avaSend, Uid, Name, ReceiverImg);
-                                                }
-                                            }
-
-                                            @Override
-                                            public void onCancelled(@NonNull DatabaseError error) {
-
-                                            }
-                                        });
-                                        progressDialog.dismiss();
-                                    }
-                                }
-                            });
-
-                        }
-                    }
-                });
+            Bitmap bitmap = BitmapFactory.decodeFile(currentPhotoPath);
+            if (bitmap==null) {
+                return;
             }
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            byte[] dt = baos.toByteArray();
+            storage = FirebaseStorage.getInstance();
+            Date now = new Date();
+            String format = new SimpleDateFormat("EEE-d-MMM-yyyy-HH:mm:ss.SSSSS", Locale.ENGLISH).format(now);
+            uriImg = data.getData();
+            progressDialog.show();
+            StorageReference storageReference;
+            storageReference = storage.getReference().child("ImageChat").child(mAuth.getUid() + format);
+            storageReference.putBytes(dt).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                if (uri != null) {
+                                    uriSelectImg = uri.toString();
+                                    saveMessagesChat("", uriSelectImg, "");
+                                    linearLayoutManager.smoothScrollToPosition(messAdapter, null, adapter.getItemCount());
+                                    String format = new SimpleDateFormat("HH:mm dd/MM/yyyy").format(now);
+
+                                    userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                            usersReceive = snapshot.getValue(Users.class);
+                                            if (!usersReceive.getUid().equals(FirebaseAuth.getInstance().getUid())) {
+                                                FCMSend.pushNotification(ChatActivity.this, usersReceive.getToken(), "Messages", nameSend + ": Image messages on " + format, idSend, nameSend, avaSend, Uid, Name, ReceiverImg);
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError error) {
+
+                                        }
+                                    });
+                                    progressDialog.dismiss();
+                                }
+                            }
+                        });
+
+                    }
+                }
+            });
         }
     }
 
@@ -492,7 +492,7 @@ public class ChatActivity extends AppCompatActivity {
         isReadRef.removeEventListener(valueEventListener);
         isReadRef.removeEventListener(valueEventListenerMessages);
         String from = getIntent().getStringExtra("from");
-        if(from!=null){
+        if (from != null) {
             Intent intent = new Intent(ChatActivity.this, HomeChatActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.putExtra("from", "notify");
@@ -508,10 +508,42 @@ public class ChatActivity extends AppCompatActivity {
     public boolean isImageFile(Uri path) {
         ContentResolver cR = ChatActivity.this.getContentResolver();
         String type = cR.getType(path);
-        if(type.contains("image")){
+        if (type.contains("image")) {
             return true;
         }
         return false;
+    }
+
+    private File createImageFile() throws IOException {
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,
+                ".jpg",
+                storageDir
+        );
+        currentPhotoPath = image.getAbsolutePath();
+        return image;
+    }
+
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+            if (photoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(this,
+                        "com.midterm.cloneinstagram.fileprovider",
+                        photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(takePictureIntent, 100);
+            }
+        }
     }
 
 }

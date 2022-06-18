@@ -11,6 +11,14 @@
     android:orientation="vertical"
     tools:context=".Controller.Activity.LoginActivity">
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:scrollbarThumbVertical="@null"
+        android:scrollbarThumbHorizontal="@null"
+        android:scrollbars="vertical"
+        android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -39,7 +47,7 @@
             android:layout_marginRight="20dp"
             android:background="@drawable/edit_text"
             android:hint="Email"
-            android:inputType="text"
+            android:inputType="textEmailAddress"
             android:maxLines="1"
             android:padding="10dp"
             android:textSize="14dp" />
@@ -106,4 +114,5 @@
             android:textColor="@color/green"
             android:textSize="12dp" />
     </LinearLayout>
+    </ScrollView>
 </LinearLayout>

@@ -83,53 +83,34 @@ public class UserChatAdapter  extends RecyclerView.Adapter<UserChatAdapter.Viewh
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
                                 Messages messages;
                                 if (!snapshot.exists()) {
-                                    holder.user_messages.setText("Chat with yourself!");
                                     return;
                                 }
                                 DataSnapshot dataSnapshot = snapshot.getChildren().iterator().next();
                                 messages = dataSnapshot.getValue(Messages.class);
+                                holder.user_time.setText(" • " + messages.getTimeStamp());
                                 if (messages.getMessages().isEmpty() && messages.getUriVid().isEmpty()) {
                                     String mess;
                                     if (auth.getUid().equals(messages.getSenderID())) {
-                                        holder.user_messages.setText("You: Image me... • " + messages.getTimeStamp());
+                                        holder.user_messages.setText("You: Image messages");
                                     } else {
                                         mess = users.getName() + ": Image messages";
-                                        if (mess.length() > 10) {
-                                            holder.user_messages.setText(mess.substring(0, 10) + "... • " + messages.getTimeStamp());
-                                        } else {
-                                            holder.user_messages.setText(mess + " • " + messages.getTimeStamp());
-                                        }
+                                        holder.user_messages.setText(mess);
                                     }
                                 } else if (messages.getUriImg().isEmpty() && messages.getUriVid().isEmpty()) {
                                     String mess;
                                     if (auth.getUid().equals(messages.getSenderID())) {
                                         mess = "You: " + messages.getMessages();
-                                        if (mess.length() > 10) {
-
-                                            holder.user_messages.setText(mess.substring(0, 10) + "...  •  " + messages.getTimeStamp());
-                                        } else {
-                                            holder.user_messages.setText(mess + "  •  " + messages.getTimeStamp());
-                                        }
-
                                     } else {
                                         mess = users.getName() + ": " + messages.getMessages();
-                                        if (mess.length() > 10) {
-                                            holder.user_messages.setText(mess.substring(0, 10) + "...  •  " + messages.getTimeStamp());
-                                        } else {
-                                            holder.user_messages.setText(mess + "  •  " + messages.getTimeStamp());
-                                        }
                                     }
+                                    holder.user_messages.setText(mess);
                                 } else {
                                     String mess;
                                     if (auth.getUid().equals(messages.getSenderID())) {
-                                        holder.user_messages.setText("You: Video me... • " + messages.getTimeStamp());
+                                        holder.user_messages.setText("You: Video messages");
                                     } else {
                                         mess = users.getName() + ": Video messages";
-                                        if (mess.length() > 10) {
-                                            holder.user_messages.setText(mess.substring(0, 10) + "... • " + messages.getTimeStamp());
-                                        } else {
-                                            holder.user_messages.setText(mess + " • " + messages.getTimeStamp());
-                                        }
+                                        holder.user_messages.setText(mess);
                                     }
                                 }
                                 database.getReference().child("Chats").child(chatRoom).child("IsRead").addValueEventListener(new ValueEventListener() {
@@ -138,8 +119,10 @@ public class UserChatAdapter  extends RecyclerView.Adapter<UserChatAdapter.Viewh
                                         String check = snapshot.getValue(String.class);
                                         if ("true".equals(check)) {
                                             holder.user_messages.setTypeface(null, Typeface.BOLD);
+                                            holder.user_time.setTypeface(null, Typeface.BOLD);
                                         } else {
                                             holder.user_messages.setTypeface(null, Typeface.NORMAL);
+                                            holder.user_time.setTypeface(null, Typeface.NORMAL);
                                             Picasso.get().load(users.getImageUri()).into(holder.isRead);
                                         }
                                     }
@@ -179,11 +162,7 @@ public class UserChatAdapter  extends RecyclerView.Adapter<UserChatAdapter.Viewh
                         });
 
                     } else {
-                        if (auth.getUid().equals(users.getUid())) {
-                            holder.user_messages.setText("Chat with yourself!");
-                        } else {
-                            holder.user_messages.setText("Let's chat with everyone.");
-                        }
+                        holder.user_messages.setText("...");
                     }
 
                 }
@@ -230,6 +209,7 @@ public class UserChatAdapter  extends RecyclerView.Adapter<UserChatAdapter.Viewh
         CircleImageView user_profile;
         TextView user_name;
         TextView user_messages;
+        TextView user_time;
         CircleImageView status;
         CircleImageView isRead;
 
@@ -240,6 +220,7 @@ public class UserChatAdapter  extends RecyclerView.Adapter<UserChatAdapter.Viewh
             user_profile = itemView.findViewById(R.id.profileImg);
             user_name = itemView.findViewById(R.id.user_name);
             user_messages = itemView.findViewById(R.id.user_messages);
+            user_time = itemView.findViewById(R.id.user_time);
             status = itemView.findViewById(R.id.status);
             isRead = itemView.findViewById(R.id.isRead);
         }

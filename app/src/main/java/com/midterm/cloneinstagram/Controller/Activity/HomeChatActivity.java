@@ -29,6 +29,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.midterm.cloneinstagram.Adapter.SearchUserChatAdapter;
 import com.midterm.cloneinstagram.Adapter.UserChatAdapter;
 import com.midterm.cloneinstagram.Model.Users;
 import com.midterm.cloneinstagram.R;
@@ -45,19 +46,24 @@ public class HomeChatActivity extends AppCompatActivity implements LifecycleObse
     UserChatAdapter adapter;
     ArrayList<Users> arrayListUser;
     CircleImageView circleImageView;
-    TextView textView;
+    TextView notify;
     Users InforUser;
     CircleImageView status;
     EditText searchbar;
     ImageView delete;
     RelativeLayout relativeLayout;
+    SearchUserChatAdapter searchUserChatAdapter;
+    RecyclerView searchRecycleView;
+
 
     public static String linkSendImg = "";
     FirebaseAuth mAuth;
     FirebaseDatabase database;
+    ArrayList<Users> tmpUserList;
 
 
     String Name = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,9 +73,11 @@ public class HomeChatActivity extends AppCompatActivity implements LifecycleObse
         database = FirebaseDatabase.getInstance();
 
         arrayListUser = new ArrayList<>();
+        tmpUserList = new ArrayList<>();
 
         DatabaseReference reference = database.getReference().child("User");
         mainUserRecycleView = findViewById(R.id.mainRecycle);
+        searchRecycleView = findViewById(R.id.searchRecycle);
         reference.child(mAuth.getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -77,12 +85,17 @@ public class HomeChatActivity extends AppCompatActivity implements LifecycleObse
                 linkSendImg = InforUser.getImageUri();
                 Picasso.get().load(InforUser.getImageUri()).into(circleImageView);
 //                textView.setText(InforUser.getName());
+                searchUserChatAdapter = new SearchUserChatAdapter(HomeChatActivity.this, HomeChatActivity.this, tmpUserList, mAuth.getUid(), InforUser.getName(), InforUser.getImageUri());
+
                 adapter = new UserChatAdapter(HomeChatActivity.this, HomeChatActivity.this, arrayListUser, mAuth.getUid(), InforUser.getName(), InforUser.getImageUri());
                 mainUserRecycleView.setLayoutManager(new LinearLayoutManager(HomeChatActivity.this));
                 mainUserRecycleView.setAdapter(adapter);
-                if("online".equals(InforUser.getStatus())){
+
+                searchRecycleView.setLayoutManager(new LinearLayoutManager(HomeChatActivity.this));
+                searchRecycleView.setAdapter(searchUserChatAdapter);
+                if ("online".equals(InforUser.getStatus())) {
                     status.setImageResource(R.drawable.color_online);
-                }else{
+                } else {
                     status.setImageResource(R.drawable.color_offline);
                 }
             }
@@ -98,8 +111,8 @@ public class HomeChatActivity extends AppCompatActivity implements LifecycleObse
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 arrayListUser.clear();
                 Users users;
-                for(DataSnapshot dataSnapshot:snapshot.getChildren()){
-                    users=dataSnapshot.getValue(Users.class);
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    users = dataSnapshot.getValue(Users.class);
                     arrayListUser.add(users);
                 }
                 adapter.notifyDataSetChanged();
@@ -113,9 +126,18 @@ public class HomeChatActivity extends AppCompatActivity implements LifecycleObse
 
         status = findViewById(R.id.status);
         circleImageView = findViewById(R.id.profileImg_1);
-//        textView = findViewById(R.id.receiver_Name);
+        notify = findViewById(R.id.notify);
 
         relativeLayout = findViewById(R.id.relative_hide);
+
+        searchRecycleView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                hideKeyboard(view);
+                return false;
+            }
+        });
+
         mainUserRecycleView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -124,12 +146,14 @@ public class HomeChatActivity extends AppCompatActivity implements LifecycleObse
             }
         });
 
+
         delete = findViewById(R.id.btn_delete);
         searchbar = findViewById(R.id.search_bar);
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 searchbar.setText("");
+                notify.setVisibility(View.GONE);
                 searchbar.clearFocus();
             }
         });
@@ -147,13 +171,14 @@ public class HomeChatActivity extends AppCompatActivity implements LifecycleObse
             @Override
             public boolean onKey(View view, int i, KeyEvent keyEvent) {
                 if(i == keyEvent.KEYCODE_DEL && searchbar.getText().toString().isEmpty()){
-                    arrayListUser.clear();
-                    searchUser("");
-                    adapter.notifyDataSetChanged();
+                    tmpUserList.clear();
+                    notify.setVisibility(View.GONE);
+                    searchUserChatAdapter.notifyDataSetChanged();
                 }
                 return false;
             }
         });
+
 
         searchbar.addTextChangedListener(new TextWatcher() {
 
@@ -161,18 +186,20 @@ public class HomeChatActivity extends AppCompatActivity implements LifecycleObse
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
             }
+
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 if(charSequence.toString().isEmpty()){
+                    tmpUserList.clear();
+                    searchUserChatAdapter.notifyDataSetChanged();
                     delete.setVisibility(View.INVISIBLE);
-                    searchUser("");
-                    adapter.notifyDataSetChanged();
 
                 } else {
                     delete.setVisibility(View.VISIBLE);
                     searchUser(charSequence.toString().toLowerCase());
                 }
             }
+
             @Override
             public void afterTextChanged(Editable editable) {
             }
@@ -183,7 +210,7 @@ public class HomeChatActivity extends AppCompatActivity implements LifecycleObse
     }
 
     public void hideKeyboard(View view) {
-        InputMethodManager inputMethodManager =(InputMethodManager)getSystemService(Activity.INPUT_METHOD_SERVICE);
+        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
@@ -192,14 +219,19 @@ public class HomeChatActivity extends AppCompatActivity implements LifecycleObse
         FirebaseDatabase.getInstance().getReference().child("User").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                arrayListUser.clear();
+                tmpUserList.clear();
                 for (DataSnapshot dataSnapshot: snapshot.getChildren()){
                     Users users = dataSnapshot.getValue(Users.class);
                     if(users.getName().toLowerCase().contains(key)){
-                        arrayListUser.add(users);
+                        tmpUserList.add(users);
                     }
                 }
-                adapter.notifyDataSetChanged();
+                if(tmpUserList.isEmpty()){
+                    notify.setVisibility(View.VISIBLE);
+                } else {
+                    notify.setVisibility(View.GONE);
+                }
+                searchUserChatAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -210,18 +242,18 @@ public class HomeChatActivity extends AppCompatActivity implements LifecycleObse
     }
 
 
-
-
-    void updateStatus(String status){
-        DatabaseReference databaseReference = database.getReference().child("User").child(mAuth.getUid()).child("status");
-        databaseReference.setValue(status);
+    void updateStatus(String status) {
+        if(mAuth.getUid()!=null) {
+            DatabaseReference databaseReference = database.getReference().child("User").child(mAuth.getUid()).child("status");
+            databaseReference.setValue(status);
+        }
     }
 
 
     @Override
     public void onBackPressed() {
         String from = getIntent().getStringExtra("from");
-        if(from!=null){
+        if (from != null) {
             Intent intent = new Intent(HomeChatActivity.this, MainActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             HomeChatActivity.this.startActivity(intent);

@@ -152,11 +152,12 @@ public class CommentActivity extends AppCompatActivity {
     }
 
     private void setUp(){
-        relativeLayout.setOnClickListener(new View.OnClickListener() {
+        relativeLayout.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View view) {
+            public boolean onTouch(View view, MotionEvent motionEvent) {
                 InputMethodManager input = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 input.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                return false;
             }
         });
         send.setOnClickListener(new View.OnClickListener() {

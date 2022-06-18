@@ -21,30 +21,54 @@
             android:id="@+id/btnCC"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:layout_margin="@dimen/_5sdp"
-            android:background="@drawable/left"
-            android:backgroundTint="@color/green"
+            android:layout_margin="5dp"
+            android:background="@drawable/ic_baseline_keyboard_double_arrow_left_24"
             android:gravity="center" />
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/ImgAvatar"
+        <RelativeLayout
             android:layout_width="@dimen/_100sdp"
             android:layout_height="@dimen/_100sdp"
-            android:src="@drawable/profile"
-            app:civ_border_color="@color/green"
-            app:civ_border_width="1dp"
             android:layout_gravity="center"
             android:layout_weight="1"
             android:layout_marginTop="@dimen/_7sdp"
-            android:layout_marginBottom="@dimen/_7sdp"/>
+            android:layout_marginBottom="@dimen/_7sdp">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/ImgAvatar"
+                android:layout_width="@dimen/_100sdp"
+                android:layout_height="@dimen/_100sdp"
+                android:layout_centerInParent="true"
+                android:layout_marginBottom="10dp"
+                android:src="@drawable/profile_icon"
+                app:civ_border_color="@color/black"
+                app:civ_border_width="1dp" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cv_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/ImgAvatar"
+                android:layout_alignParentBottom="true"
+                android:layout_marginEnd="0dp"
+                android:layout_marginBottom="5dp"
+                app:cardCornerRadius="20dp">
+
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:foregroundTint="@color/white"
+                    android:padding="5dp"
+                    android:src="@drawable/ic_baseline_camera_alt_24" />
+            </androidx.cardview.widget.CardView>
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/btnSignOut"
-            android:layout_width="@dimen/_20sdp"
-            android:layout_height="@dimen/_20sdp"
-            android:layout_margin="@dimen/_5sdp"
-            android:background="@drawable/shutdown"
-            android:backgroundTint="@color/green"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:layout_margin="5dp"
+            android:background="@drawable/ic_baseline_logout_24"
             android:gravity="center" />
 
 
@@ -71,11 +95,12 @@
             android:layout_width="match_parent"
             android:layout_marginLeft="10dp"
             android:inputType="textPersonName"
-            android:paddingLeft="@dimen/_10sdp"
-            android:paddingRight="@dimen/_10sdp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
             android:layout_height="@dimen/_25sdp"
             android:layout_weight="1"
             android:maxLines="1"
+            android:maxLength="15"
             android:background="@drawable/edtext_shape"
             android:textSize="@dimen/_12sdp"
             android:textColor="@color/black"
@@ -105,9 +130,11 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/_25sdp"
             android:layout_marginLeft="10dp"
-            android:paddingLeft="@dimen/_10sdp"
-            android:paddingRight="@dimen/_10sdp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
             android:layout_weight="1"
+            android:maxLines="1"
+            android:ellipsize="end"
             android:background="@drawable/edtext_shape"
             android:textSize="@dimen/_12sdp"
             android:textColor="@color/black"

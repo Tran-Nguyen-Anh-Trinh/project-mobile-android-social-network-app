@@ -88,6 +88,7 @@ public class HomeFragment extends Fragment {
 
         recyclerView_story = view.findViewById(R.id.recycler_view_story);
         recyclerView_story.setHasFixedSize(true);
+
         LinearLayoutManager linearLayoutManager1 = new LinearLayoutManager(getContext(),
                 LinearLayoutManager.HORIZONTAL, false);
         recyclerView_story.setLayoutManager(linearLayoutManager1);
@@ -234,12 +235,10 @@ public class HomeFragment extends Fragment {
                     String keyRoom = dataSnapshot.getKey().substring(0, 28);
                     String check = dataSnapshot.child("IsRead").getValue(String.class);
                     if (keyRoom.equals(FirebaseAuth.getInstance().getUid())) {
-                        if (check.equals("true")) {
-                            System.out.println("do chua xem");
+                        if ("true".equals(check)) {
                             noti.setVisibility(View.VISIBLE);
                             break;
                         } else {
-                            System.out.println("do da xem");
                             noti.setVisibility(View.INVISIBLE);
 
                         }

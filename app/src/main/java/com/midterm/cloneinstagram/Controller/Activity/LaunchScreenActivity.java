@@ -22,6 +22,7 @@ public class LaunchScreenActivity extends AppCompatActivity {
                 /* Create an Intent that will start the Menu-Activity. */
                 Intent mainIntent = new Intent(LaunchScreenActivity.this, MainActivity.class);
                 LaunchScreenActivity.this.startActivity(mainIntent);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left_1);
                 LaunchScreenActivity.this.finish();
             }
         }, SPLASH_DISPLAY_LENGTH);

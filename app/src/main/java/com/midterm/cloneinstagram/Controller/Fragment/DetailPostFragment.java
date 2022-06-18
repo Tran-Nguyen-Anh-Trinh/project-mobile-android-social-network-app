@@ -12,12 +12,15 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -148,7 +151,8 @@ public class DetailPostFragment extends Fragment {
     private void getData(){
         username.setText(post.getUsers().getName());
         Picasso.get().load(post.getUsers().getImageUri()).into(image_profile);
-        Picasso.get().load(post.getPostimage()).into(post_image);
+
+        Picasso.get().load(post.getPostimage()).placeholder(getContext().getDrawable(R.drawable.accent)).into(post_image);
 
         username.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -187,7 +191,6 @@ public class DetailPostFragment extends Fragment {
         post_image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 long doubleClickCurrentTime = System.currentTimeMillis();
                 long currentClickTime = System.currentTimeMillis();
                 if (currentClickTime - LAST_CLICK_TIME <= mDoubleClickInterval) {
@@ -505,8 +508,18 @@ public class DetailPostFragment extends Fragment {
                 dialog.setContentView(R.layout.dialog_delete);
                 TextView btnYes;
                 TextView btnNo;
+                LinearLayout linearLayout;
                 btnYes = dialog.findViewById(R.id.button_Yes);
                 btnNo = dialog.findViewById(R.id.button_No);
+                linearLayout = dialog.findViewById(R.id.bg_delete);
+                linearLayout.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View view, MotionEvent motionEvent) {
+                        dialog.dismiss();
+                        return false;
+                    }
+                });
+
                 btnYes.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

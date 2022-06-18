@@ -15,6 +15,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -148,7 +150,7 @@ public class MessagesAdapter extends RecyclerView.Adapter {
             });
             if (messages.getUriVid().isEmpty()) {
                 viewholder.btnPlay.setVisibility(View.INVISIBLE);
-                Picasso.get().load(messages.getUriImg()).into(viewholder.imageView);
+                Glide.with(context).load(messages.getUriImg()).placeholder(context.getDrawable(R.drawable.accent)).into(viewholder.imageView);
             } else {
                 viewholder.imageView.setImageResource(R.drawable.background_black);
                 viewholder.btnPlay.setVisibility(View.VISIBLE);
@@ -205,12 +207,16 @@ public class MessagesAdapter extends RecyclerView.Adapter {
             });
             if (messages.getUriVid().isEmpty()) {
                 viewholder.btnPlay.setVisibility(View.INVISIBLE);
-                Picasso.get().load(messages.getUriImg()).into(viewholder.imageView);
+                Glide.with(context).load(messages.getUriImg())
+                        .transition(DrawableTransitionOptions.withCrossFade())
+                        .placeholder(context.getDrawable(R.drawable.accent)).into(viewholder.imageView);
             } else {
                 viewholder.imageView.setImageResource(R.drawable.background_black);
                 viewholder.btnPlay.setVisibility(View.VISIBLE);
             }
-            Picasso.get().load(rImage).into(viewholder.circleImageView);
+            Glide.with(context).load(rImage)
+                    .transition(DrawableTransitionOptions.withCrossFade())
+                    .placeholder(context.getDrawable(R.drawable.accent)).into(viewholder.circleImageView);
         }
     }
 

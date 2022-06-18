@@ -3,6 +3,7 @@ package com.midterm.cloneinstagram.Adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,8 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -55,6 +58,10 @@ public class StoryAdapter extends RecyclerView.Adapter<StoryAdapter.ViewHolder>{
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int height = displayMetrics.heightPixels;
+        holder.story_photo.getLayoutParams().height = (int)Math.round(height/10.24);
         if (position==0){
             String timeStamp = new SimpleDateFormat("dd/MM/yyyy").format(Calendar.getInstance().getTime());
             FirebaseDatabase.getInstance().getReference()
@@ -66,14 +73,43 @@ public class StoryAdapter extends RecyclerView.Adapter<StoryAdapter.ViewHolder>{
                             if(snapshot.exists()){
                                 Storys storys = snapshot.getValue(Storys.class);
                                 if(timeStamp.equals(storys.getDate())){
-                                    Picasso.get().load(storys.getPostimage()).into(holder.story_photo);
+                                    holder.cardView.setForeground(mContext.getDrawable(R.drawable.shape));
+
+                                    holder.itemView.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            Intent intent = new Intent(mContext, StoryActivity.class);
+                                            intent.putExtra("userid", storys.getUsers().getUid());
+                                            intent.putExtra("storyid", storys.getPostid());
+                                            intent.putExtra("name", storys.getUsers().getName());
+                                            intent.putExtra("image", storys.getUsers().getImageUri());
+                                            intent.putExtra("imageStory", storys.getPostimage());
+                                            mContext.startActivity(intent);
+                                            activity.overridePendingTransition(R.anim.slide_out_down, R.anim.slide_up_dialog);
+                                        }
+                                    });
+                                    Glide.with(mContext).load(storys.getPostimage())
+                                            .transition(DrawableTransitionOptions.withCrossFade())
+                                            .placeholder(mContext.getDrawable(R.drawable.accent)).into(holder.story_photo);
                                 } else {
                                     FirebaseDatabase.getInstance().getReference().child("User")
                                             .child(FirebaseAuth.getInstance().getUid())
                                             .child("imageUri").addListenerForSingleValueEvent(new ValueEventListener() {
                                                 @Override
                                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                    Picasso.get().load(snapshot.getValue(String.class)).into(holder.story_photo);
+                                                    holder.cardView.setForeground(mContext.getDrawable(R.drawable.shape_seen));
+
+                                                    holder.itemView.setOnClickListener(new View.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(View view) {
+                                                            Intent intent = new Intent(mContext, NewStory.class);
+                                                            mContext.startActivity(intent);
+                                                            activity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left_1);
+                                                        }
+                                                    });
+                                                    Glide.with(mContext).load(snapshot.getValue(String.class))
+                                                            .transition(DrawableTransitionOptions.withCrossFade())
+                                                            .placeholder(mContext.getDrawable(R.drawable.accent)).into(holder.story_photo);
                                                 }
 
                                                 @Override
@@ -88,7 +124,18 @@ public class StoryAdapter extends RecyclerView.Adapter<StoryAdapter.ViewHolder>{
                                         .child("imageUri").addListenerForSingleValueEvent(new ValueEventListener() {
                                             @Override
                                             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                                Picasso.get().load(snapshot.getValue(String.class)).into(holder.story_photo);
+                                                holder.cardView.setForeground(mContext.getDrawable(R.drawable.shape_seen));
+                                                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View view) {
+                                                        Intent intent = new Intent(mContext, NewStory.class);
+                                                        mContext.startActivity(intent);
+                                                        activity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left_1);
+                                                    }
+                                                });
+                                                Glide.with(mContext).load(snapshot.getValue(String.class))
+                                                        .transition(DrawableTransitionOptions.withCrossFade())
+                                                        .placeholder(mContext.getDrawable(R.drawable.accent)).into(holder.story_photo);
                                             }
 
                                             @Override
@@ -104,17 +151,10 @@ public class StoryAdapter extends RecyclerView.Adapter<StoryAdapter.ViewHolder>{
 
                         }
                     });
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    mContext.startActivity(new Intent(mContext, NewStory.class));
-                    activity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left_1);
-                }
-            });
-            holder.cardView.setForeground(mContext.getDrawable(R.drawable.shape_1));
+
         }else {
             Storys storys =mStory.get(position-1);
-            Picasso.get().load(storys.getPostimage()).into(holder.story_photo);
+            Glide.with(mContext).load(storys.getPostimage()).placeholder(mContext.getDrawable(R.drawable.accent)).into(holder.story_photo);
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

@@ -6,6 +6,7 @@ import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -90,7 +91,10 @@ public class ProfileFragment extends Fragment {
             public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
                 int position = parent.getChildAdapterPosition(view);
                 int spanCount = 3;
-                int spacing = 10;
+                DisplayMetrics displayMetrics = new DisplayMetrics();
+                getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+                int height = displayMetrics.heightPixels;
+                int spacing = height/(int)Math.round(197.7);
 
                 if (position >= 0) {
                     int column = position % spanCount; // item column
@@ -231,6 +235,7 @@ public class ProfileFragment extends Fragment {
 
     private void readPost() {
         recyclerView.setAdapter(postedAdapter);
+        recyclerView.setVisibility(View.INVISIBLE);
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Post");
 
         reference.addValueEventListener(new ValueEventListener() {
@@ -253,6 +258,7 @@ public class ProfileFragment extends Fragment {
                             @Override
                             public void onAnimationEnd(Animator animation) {
                                 super.onAnimationEnd(animation);
+                                recyclerView.setVisibility(View.VISIBLE);
                                 recyclerView.animate().translationX(0).setDuration(400);
                             }
                         });
@@ -267,6 +273,7 @@ public class ProfileFragment extends Fragment {
 
     private void readStory() {
         recyclerView.setAdapter(storyAdapter);
+        recyclerView.setVisibility(View.INVISIBLE);
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Story");
 
         reference.addValueEventListener(new ValueEventListener() {
@@ -286,6 +293,7 @@ public class ProfileFragment extends Fragment {
                             @Override
                             public void onAnimationEnd(Animator animation) {
                                 super.onAnimationEnd(animation);
+                                recyclerView.setVisibility(View.VISIBLE);
                                 recyclerView.animate().translationX(0).setDuration(400);
                             }
                         });

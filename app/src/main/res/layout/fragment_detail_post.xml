@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/white"
     android:orientation="vertical"
     android:clickable="true"
@@ -35,8 +36,7 @@
                 android:id="@+id/back"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:background="@drawable/left"
-                android:backgroundTint="@color/black"
+                android:background="@drawable/ic_baseline_keyboard_double_arrow_left_24"
                 android:layout_gravity="center"
                 android:visibility="visible"/>
 
@@ -47,6 +47,8 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginBottom="5dp"
                 android:layout_marginRight="10dp"
+                app:civ_border_width="1dp"
+                app:civ_border_color="@color/green"
                 android:layout_marginTop="5dp"></de.hdodenhof.circleimageview.CircleImageView>
 
             <TextView
@@ -66,7 +68,7 @@
                 android:layout_marginRight="20dp"
                 android:layout_gravity="center"
                 android:visibility="gone"
-                android:backgroundTint="@color/black"
+                android:backgroundTint="@color/green"
                 android:background="@drawable/edit_48px"></TextView>
             <TextView
                 android:id="@+id/btn_delete_post"
@@ -75,7 +77,7 @@
                 android:layout_marginRight="10dp"
                 android:layout_gravity="center"
                 android:visibility="gone"
-                android:backgroundTint="@color/black"
+                android:backgroundTint="@color/green"
                 android:background="@drawable/delete_48px"></TextView>
         </LinearLayout>
 

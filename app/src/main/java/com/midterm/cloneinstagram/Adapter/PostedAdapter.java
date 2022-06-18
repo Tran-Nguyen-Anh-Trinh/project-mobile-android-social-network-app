@@ -1,7 +1,9 @@
 package com.midterm.cloneinstagram.Adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +14,8 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.midterm.cloneinstagram.Controller.Fragment.DetailPostFragment;
 import com.midterm.cloneinstagram.Model.Post;
 import com.midterm.cloneinstagram.R;
@@ -42,7 +46,15 @@ public class PostedAdapter  extends RecyclerView.Adapter<PostedAdapter.ViewHolde
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Post post = listImage.get(position);
-        Picasso.get().load(post.getPostimage()).into(holder.image_post_personal);
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        fragmentActivity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int height = displayMetrics.heightPixels;
+        holder.image_post_personal.getLayoutParams().height = (int)Math.round(height/5.52);
+
+        Glide.with(mContext).load(post.getPostimage())
+                .transition(DrawableTransitionOptions.withCrossFade())
+                .placeholder(mContext.getDrawable(R.drawable.accent)).into(holder.image_post_personal);
+
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

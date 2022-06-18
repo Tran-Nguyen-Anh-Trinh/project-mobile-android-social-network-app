@@ -102,7 +102,7 @@ public class ShowFollowFragment extends Fragment {
                     });
         }
         if ("following".equals(checkFollow)){
-            title.setText("List following");
+            title.setText("Followings");
             FirebaseDatabase.getInstance().getReference().child("User").child(FirebaseAuth.getInstance().getUid())
                     .child("following").addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
@@ -134,7 +134,7 @@ public class ShowFollowFragment extends Fragment {
                     });
         }
         if (idPost!=null){
-            title.setText("Like");
+            title.setText("Likes");
             FirebaseDatabase.getInstance().getReference().child("Post").child(idPost).child("like").addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {

@@ -3,7 +3,9 @@ package com.midterm.cloneinstagram.Controller.Activity;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 
 import android.Manifest;
 import android.app.Dialog;
@@ -12,13 +14,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -38,6 +44,10 @@ import com.midterm.cloneinstagram.R;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -52,7 +62,7 @@ public class UpdateInformationActivity extends AppCompatActivity {
     Users users;
     ProgressDialog progressDialog;
     RelativeLayout relativeLayout;
-
+    CardView cardView;
     Uri imgUri;
     byte[] bytes;
     String linkDownload;
@@ -62,6 +72,7 @@ public class UpdateInformationActivity extends AppCompatActivity {
     FirebaseStorage storage;
     String token = "";
     String ID = FirebaseAuth.getInstance().getUid();
+    String currentPhotoPath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,14 +83,17 @@ public class UpdateInformationActivity extends AppCompatActivity {
         editTextName = findViewById(R.id.editName);
         btnApply = findViewById(R.id.btnApply);
         btnCC = findViewById(R.id.btnCC);
+        cardView = findViewById(R.id.cv_image);
         forgot_pass = findViewById(R.id.forgot_pass);
         relativeLayout = findViewById(R.id.hide_relative);
 
-        relativeLayout.setOnClickListener(new View.OnClickListener() {
+
+        relativeLayout.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View view) {
+            public boolean onTouch(View view, MotionEvent motionEvent) {
                 InputMethodManager input = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 input.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                return false;
             }
         });
 
@@ -105,8 +119,18 @@ public class UpdateInformationActivity extends AppCompatActivity {
                 dialog.setContentView(R.layout.dialog_layout);
                 TextView btnYes;
                 TextView btnNo;
+                LinearLayout linearLayout;
                 btnYes = dialog.findViewById(R.id.button_Yes);
                 btnNo = dialog.findViewById(R.id.button_No);
+                linearLayout = dialog.findViewById(R.id.bg_signout);
+
+                linearLayout.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View view, MotionEvent motionEvent) {
+                        dialog.dismiss();
+                        return false;
+                    }
+                });
 
                 btnYes.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -171,7 +195,7 @@ public class UpdateInformationActivity extends AppCompatActivity {
                                                                 progressDialog.dismiss();
                                                                 Toast.makeText(getBaseContext(), "Saved successfully", Toast.LENGTH_SHORT).show();
                                                                 finishAndRemoveTask();
-                                                                overridePendingTransition(R.anim.slide_out_down, R.anim.slide_up_dialog);
+                                                                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right_1);
                                                             } else {
                                                                 progressDialog.dismiss();
                                                                 Toast.makeText(UpdateInformationActivity.this, "Wrong something", Toast.LENGTH_SHORT).show();
@@ -213,7 +237,7 @@ public class UpdateInformationActivity extends AppCompatActivity {
                                                                 progressDialog.dismiss();
                                                                 Toast.makeText(getBaseContext(), "Saved successfully", Toast.LENGTH_SHORT).show();
                                                                 finishAndRemoveTask();
-                                                                overridePendingTransition(R.anim.slide_out_down, R.anim.slide_up_dialog);
+                                                                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right_1);
                                                             } else {
                                                                 progressDialog.dismiss();
                                                                 Toast.makeText(UpdateInformationActivity.this, "Wrong something", Toast.LENGTH_SHORT).show();
@@ -243,8 +267,8 @@ public class UpdateInformationActivity extends AppCompatActivity {
                                 progressDialog.dismiss();
                                 Toast.makeText(getBaseContext(), "Saved successfully", Toast.LENGTH_SHORT).show();
                                 finishAndRemoveTask();
-                                overridePendingTransition(R.anim.slide_out_down, R.anim.slide_up_dialog);
-                            } else {
+                                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right_1);
+                            }else {
                                 progressDialog.dismiss();
                                 Toast.makeText(UpdateInformationActivity.this, "Wrong something", Toast.LENGTH_SHORT).show();
                             }
@@ -262,45 +286,63 @@ public class UpdateInformationActivity extends AppCompatActivity {
         circleImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Dialog dialog = new Dialog(UpdateInformationActivity.this, R.style.Dialogs);
-                dialog.setContentView(R.layout.layout_option_image);
-                LinearLayout takePhoto;
-                LinearLayout chooseFromGallery;
-                LinearLayout cancel;
-                takePhoto = dialog.findViewById(R.id.takePhoto);
-                chooseFromGallery = dialog.findViewById(R.id.chooseFromGallery);
-                cancel = dialog.findViewById(R.id.cancel_option);
-                takePhoto.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA)
-                                == PackageManager.PERMISSION_DENIED) {
-                            Toast.makeText(getApplicationContext(), "Please grant camera permission to the app", Toast.LENGTH_SHORT).show();
-                            dialog.dismiss();
-                            return;
-                        }
-                        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                        startActivityForResult(intent, 100);
-                        dialog.dismiss();
-                    }
-                });
+                selectImage();
+            }
+        });
 
-                chooseFromGallery.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                        intent.setType("image/*");
-                        startActivityForResult(intent, 10);
-                        dialog.dismiss();
-                    }
-                });
-                cancel.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialog.dismiss();
-                    }
-                });
-                dialog.show();
+        cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                selectImage();
+            }
+        });
+    }
+
+    private void selectImage(){
+        Dialog dialog = new Dialog(UpdateInformationActivity.this, R.style.Dialogs);
+        dialog.setContentView(R.layout.layout_option_image);
+        LinearLayout takePhoto;
+        LinearLayout chooseFromGallery;
+        LinearLayout cancel;
+        takePhoto = dialog.findViewById(R.id.takePhoto);
+        chooseFromGallery = dialog.findViewById(R.id.chooseFromGallery);
+        cancel = dialog.findViewById(R.id.cancel_option);
+        RelativeLayout relativeLayout;
+        relativeLayout = dialog.findViewById(R.id.bg_select);
+        relativeLayout.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                dialog.dismiss();
+                return false;
+            }
+        });
+        dialog.show();
+        takePhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA)
+                        == PackageManager.PERMISSION_DENIED) {
+                    Toast.makeText(getApplicationContext(), "Please grant camera permission to the app", Toast.LENGTH_SHORT).show();
+                    dialog.dismiss();
+                    return;
+                }
+                dispatchTakePictureIntent();
+                dialog.dismiss();
+            }
+        });
+        chooseFromGallery.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.setType("image/*");
+                startActivityForResult(intent, 10);
+                dialog.dismiss();
+            }
+        });
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
             }
         });
     }
@@ -309,28 +351,26 @@ public class UpdateInformationActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 
         UpdateInformationActivity.super.onActivityResult(requestCode, resultCode, data);
+
         if (requestCode == 10) {
-            Log.i("rrrrrr", requestCode+"");
             if (data != null) {
+                circleImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 bytes = null;
                 imgUri = data.getData();
-                Log.i("eeeeeeee", imgUri+"");
-
                 circleImageView.setImageURI(imgUri);
             }
         }
         if (requestCode == 100) {
-            if (data != null) {
-                if (data.getExtras() == null) {
-                    return;
-                }
-                imgUri = null;
-                Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-                circleImageView.setImageBitmap(bitmap);
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-                bytes = baos.toByteArray();
+            circleImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            Bitmap bitmap = BitmapFactory.decodeFile(currentPhotoPath);
+            if (bitmap==null) {
+                return;
             }
+            circleImageView.setImageBitmap(bitmap);
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
+            bytes = byteArrayOutputStream.toByteArray();
+            imgUri = null;
         }
     }
 
@@ -343,5 +383,37 @@ public class UpdateInformationActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right_1);
+    }
+
+    private File createImageFile() throws IOException {
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,
+                ".jpg",
+                storageDir
+        );
+        currentPhotoPath = image.getAbsolutePath();
+        return image;
+    }
+
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+            if (photoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(this,
+                        "com.midterm.cloneinstagram.fileprovider",
+                        photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(takePictureIntent, 100);
+            }
+        }
     }
 }
