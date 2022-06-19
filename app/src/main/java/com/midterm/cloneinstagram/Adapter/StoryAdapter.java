@@ -117,14 +117,6 @@ public class StoryAdapter extends RecyclerView.Adapter<StoryAdapter.ViewHolder>{
 
                         }
                     });
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(mContext, NewStory.class);
-                    mContext.startActivity(intent);
-                    activity.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left_1);
-                }
-            });
             holder.cardView.setForeground(mContext.getDrawable(R.drawable.shape_1));
         }else {
             Storys storys =mStory.get(position-1);

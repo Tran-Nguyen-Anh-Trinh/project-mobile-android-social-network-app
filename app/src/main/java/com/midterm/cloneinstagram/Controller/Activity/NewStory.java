@@ -102,9 +102,7 @@ public class NewStory extends AppCompatActivity {
         btnClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(NewStory.this, MainActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
+                finishAndRemoveTask();
                 overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right_1);
             }
         });
@@ -191,9 +189,7 @@ public class NewStory extends AppCompatActivity {
                                                         if (task.isSuccessful()) {
                                                             Toast.makeText(NewStory.this, "Posted", Toast.LENGTH_SHORT).show();
                                                             progressDialog.dismiss();
-                                                            Intent intent = new Intent(NewStory.this, MainActivity.class);
-                                                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                                            startActivity(intent);
+                                                            finishAndRemoveTask();
                                                             overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right_1);
                                                         } else {
                                                             progressDialog.dismiss();
@@ -245,9 +241,7 @@ public class NewStory extends AppCompatActivity {
                                                         if (task.isSuccessful()) {
                                                             Toast.makeText(NewStory.this, "Posted", Toast.LENGTH_SHORT).show();
                                                             progressDialog.dismiss();
-                                                            Intent intent = new Intent(NewStory.this, MainActivity.class);
-                                                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                                            startActivity(intent);
+                                                            finishAndRemoveTask();
                                                             overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right_1);
                                                         } else {
                                                             progressDialog.dismiss();
@@ -303,9 +297,7 @@ public class NewStory extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent(NewStory.this, MainActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
+        finishAndRemoveTask();
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right_1);
     }
 
