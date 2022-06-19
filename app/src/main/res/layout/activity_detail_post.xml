@@ -6,4 +6,5 @@
     android:layout_height="match_parent"
     tools:context=".Controller.Activity.DetailPost">
 
+
 </androidx.constraintlayout.widget.ConstraintLayout>

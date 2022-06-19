@@ -10,7 +10,6 @@
     android:focusableInTouchMode="true"
     tools:context=".Controller.Activity.CommentActivity">
 
-
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="40dp"
@@ -144,6 +143,7 @@
             android:background="@drawable/sent_100px"
             android:backgroundTint="@color/black"></ImageView>
     </LinearLayout>
+
 
     </LinearLayout>
 

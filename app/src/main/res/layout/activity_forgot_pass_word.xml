@@ -7,7 +7,6 @@
     tools:context=".Controller.Activity.ForgotPassWordActivity"
     android:orientation="vertical"
     android:id="@+id/hide_kb">
-
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
@@ -32,7 +31,6 @@
                     android:layout_centerVertical="true"
                     android:background="@drawable/left"
                     android:backgroundTint="@color/green"/>"
-
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -44,6 +42,8 @@
                     android:textStyle="bold"
                     android:textSize="18dp" />
             </LinearLayout>
+
+
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -90,5 +90,6 @@
             android:text="Reset password"
             android:textColor="@color/white" />
     </LinearLayout>
+
 
 </RelativeLayout>

@@ -7,14 +7,11 @@
     android:background="@color/white"
     android:orientation="vertical">
 
-    <!-- TODO: Update blank fragment layout -->
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:id="@+id/ln1"
         android:background="?android:attr/windowBackground">
-
-
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -36,7 +33,6 @@
         android:paddingLeft="10dp"
         android:text="Activity"
         android:layout_weight="1"
-
         android:textStyle="bold"
         android:textColor="@color/black"/>
         <ImageView
@@ -48,12 +44,9 @@
     </LinearLayout>
     </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
-
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_notify"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
     </androidx.recyclerview.widget.RecyclerView>
-
 </LinearLayout>
