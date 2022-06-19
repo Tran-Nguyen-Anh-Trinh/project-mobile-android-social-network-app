@@ -4,60 +4,65 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginBottom="@dimen/_20sdp"
+    android:layout_marginBottom="10dp"
     android:clickable="true"
+    android:id="@+id/comment_relative"
     android:focusableInTouchMode="true"
-    tools:context=".MainActivity">
+    tools:context=".Controller.Activity.CommentActivity">
 
 
-    <LinearLayout
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
         android:id="@+id/ln1"
-        android:gravity="center|left"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_alignParentTop="true"
-        android:orientation="horizontal">
+        android:background="?android:attr/windowBackground">
 
-        <TextView
-            android:id="@+id/btnCC"
-            android:layout_width="@dimen/_20sdp"
-            android:layout_height="@dimen/_20sdp"
-            android:layout_margin="@dimen/_5sdp"
-            android:background="@drawable/left"
-            android:backgroundTint="@color/green"
-            android:gravity="center" />
-
-        <TextView
-            android:layout_width="wrap_content"
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginLeft="10dp"
-            android:text="Comment"
-            android:textColor="@color/green"
-            android:textSize="20dp"
-            android:textStyle="bold" />
+            android:background="?android:attr/windowBackground">
 
-    </LinearLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:gravity="center|left">
 
-    <LinearLayout
-        android:id="@+id/ln2"
-        android:orientation="vertical"
-        android:layout_alignBottom="@+id/ln1"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#65015A06"
-        android:outlineAmbientShadowColor="@color/black"
-        android:outlineSpotShadowColor="@color/black" />
+                <TextView
+                    android:id="@+id/btnCC"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_alignParentLeft="true"
+                    android:background="@drawable/left"
+                    android:backgroundTint="@color/green"
+                    android:gravity="center" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="Comment"
+                    android:textColor="@color/black"
+                    android:textSize="16dp"
+                    android:paddingLeft="-20dp"
+                    android:textStyle="bold" />
+
+            </RelativeLayout>
+        </androidx.appcompat.widget.Toolbar>
+    </com.google.android.material.appbar.AppBarLayout>
 
 
     <androidx.recyclerview.widget.RecyclerView
 
         android:id="@+id/list_cmt"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/ln2"
-        android:layout_marginTop="@dimen/_10sdp"
-        android:layout_marginBottom="70dp" />
+        android:layout_height="match_parent"
+        android:layout_below="@+id/ln1"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="50dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -125,7 +130,7 @@
             android:layout_weight="1"
             android:background="@drawable/custom_send_comment"
             android:hint="Add a comment"
-            android:padding="15dp"
+            android:padding="10dp"
             android:textColor="@color/black"
             android:textColorHint="@color/colorAccent"
             android:textSize="14sp"></EditText>
@@ -137,7 +142,7 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:background="@drawable/sent_100px"
-            android:backgroundTint="@color/green"></ImageView>
+            android:backgroundTint="@color/black"></ImageView>
     </LinearLayout>
 
     </LinearLayout>

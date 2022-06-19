@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".PostActivity">
+    tools:context=".Controller.Activity.PostActivity"
+    android:id="@+id/ln_hide">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -19,15 +20,15 @@
             android:layout_height="30dp"
             android:layout_alignParentLeft="true"
             android:background="@drawable/left"
-            android:backgroundTint="@color/green" />
+            android:backgroundTint="@color/black" />
 
         <TextView
+            android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="New post"
             android:textColor="@color/black"
-            android:textSize="22dp"
+            android:textSize="20dp"
             android:textStyle="bold" />
 
         <TextView
@@ -46,7 +47,7 @@
             android:id="@+id/image_post"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@drawable/logo_app_green" />
+            android:src="@drawable/camera" />
 
         <androidx.cardview.widget.CardView
             android:layout_width="wrap_content"
@@ -79,7 +80,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Add a caption"
-            android:maxLines="10"/>
+            android:maxLines="10"
+            android:inputType="text"/>
 
     </com.google.android.material.textfield.TextInputLayout>
     <Space

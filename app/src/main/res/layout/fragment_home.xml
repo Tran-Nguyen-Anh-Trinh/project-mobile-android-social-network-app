@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Fragment.HomeFragment">
+    android:background="@color/white"
+    android:id="@+id/homeFragment"
+    tools:context=".Controller.Fragment.HomeFragment">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:id="@+id/bar"
         android:background="?android:attr/windowBackground">
         <androidx.appcompat.widget.Toolbar
@@ -18,27 +21,53 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
-                >
+                android:layout_height="40dp"
+                android:gravity="center">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginTop="20dp"
                     android:fontFamily="cursive"
                     android:gravity="center"
                     android:text="NaoneTeam"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/_25sdp" />
+                    android:textSize="26dp" />
+
 
                 <ImageView
+                    android:id="@+id/add_post"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
                     android:layout_marginRight="10dp"
-                    android:src="@drawable/ic_inbox"
-                    android:layout_centerVertical="true"></ImageView>
+                    android:src="@drawable/ic_add" />
+
+            <RelativeLayout
+                android:layout_width="23dp"
+                android:layout_height="23dp"
+                android:gravity="center"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="15dp"
+                android:layout_toLeftOf="@+id/add_post">
+
+                <ImageView
+                    android:id="@+id/add_chat"
+                    android:layout_width="23dp"
+                    android:layout_height="23dp"
+                    android:src="@drawable/chat_32px" />
+
+                <TextView
+                    android:id="@+id/noti"
+                    android:layout_width="6dp"
+                    android:layout_height="6dp"
+                    android:layout_alignParentRight="true"
+                    android:background="@drawable/red_dot"
+                    android:visibility="invisible" />
+
+            </RelativeLayout>
+
             </RelativeLayout>
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
@@ -57,7 +86,7 @@
                 android:id="@+id/recycler_view_story"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp">
+                android:layout_marginTop="5dp">
 
             </androidx.recyclerview.widget.RecyclerView>
 
@@ -72,13 +101,21 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:text="No post to display"
+                android:text="No posts to display"
                 android:textColor="@color/green"
                 android:textSize="14dp"
                 android:visibility="gone" />
+
         </androidx.appcompat.widget.LinearLayoutCompat>
     </androidx.core.widget.NestedScrollView>
 
 
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/heart_zoom"
+        android:layout_centerInParent="true"
+        android:visibility="gone"/>
 
 </RelativeLayout>

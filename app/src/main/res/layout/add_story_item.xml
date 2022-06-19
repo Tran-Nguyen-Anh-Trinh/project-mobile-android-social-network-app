@@ -3,34 +3,51 @@
     android:layout_width="wrap_content"
     android:layout_height="100dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
     android:layout_marginStart="10dp"
-    android:layout_marginBottom="10dp"
-    android:orientation="vertical">
-    <RelativeLayout
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:layout_gravity="center"
-        android:layout_marginTop="5dp">
+    android:gravity="center">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center">
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/story_photo"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:src="@drawable/placeholder"
-            app:civ_border_color="#858585"
-            app:civ_border_width="1dp"></de.hdodenhof.circleimageview.CircleImageView>
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            android:src="@drawable/ic_add_story"
-            android:id="@+id/story_plus"
-            >
-        </de.hdodenhof.circleimageview.CircleImageView>
-    </RelativeLayout>
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_view_for_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            app:cardCornerRadius="100dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/story_photo"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:scaleType="centerCrop" />
+        </androidx.cardview.widget.CardView>
+
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/card_view_for_image"
+            android:layout_toEndOf="@+id/card_view_for_image"
+            app:cardCornerRadius="10dp"
+            app:layout_constraintBottom_toBottomOf="@+id/card_view_for_image"
+            app:layout_constraintEnd_toEndOf="@+id/card_view_for_image">
+
+            <ImageView
+                android:id="@+id/story_plus"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:background="@color/white"
+                android:backgroundTint="@color/black"
+                android:src="@drawable/ic_baseline_add_24" />
+        </androidx.cardview.widget.CardView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
         android:layout_width="wrap_content"

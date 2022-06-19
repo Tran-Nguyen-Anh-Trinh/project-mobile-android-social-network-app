@@ -10,6 +10,7 @@ public class Post implements Serializable {
     private Users users;
     private Like like;
     private Comment comment;
+    private String date;
 
     public Post(String postid, String postimage, String description, String publisher) {
         this.postid = postid;
@@ -18,7 +19,26 @@ public class Post implements Serializable {
         this.publisher = publisher;
     }
 
+    public Post(String postid, String postimage, String description, String publisher, Users users, Like like, Comment comment, String date) {
+        this.postid = postid;
+        this.postimage = postimage;
+        this.description = description;
+        this.publisher = publisher;
+        this.users = users;
+        this.like = like;
+        this.comment = comment;
+        this.date = date;
+    }
+
     public Post() {
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 
     public Users getUsers() {

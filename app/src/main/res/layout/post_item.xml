@@ -2,26 +2,29 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_marginBottom="20dp">
+        android:layout_marginBottom="10dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginBottom="5dp">
             <TextView
                 android:id="@+id/back"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:background="@drawable/left"
                 android:backgroundTint="@color/green"
                 android:layout_gravity="center"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="5dp"
                 android:visibility="gone"/>
 
             <de.hdodenhof.circleimageview.CircleImageView
@@ -29,9 +32,11 @@
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_marginLeft="10dp"
-                android:layout_marginBottom="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="10dp"></de.hdodenhof.circleimageview.CircleImageView>
+                android:layout_marginBottom="5dp"
+                android:layout_marginRight="8dp"
+                app:civ_border_color="@color/black"
+                app:civ_border_width="1dp"
+                android:layout_marginTop="5dp"></de.hdodenhof.circleimageview.CircleImageView>
 
             <TextView
                 android:id="@+id/username"
@@ -47,27 +52,27 @@
                 android:id="@+id/btn_delete_post"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:layout_margin="10dp"
+                android:layout_margin="5dp"
                 android:layout_gravity="center"
                 android:visibility="gone"
                 android:backgroundTint="@color/green"
-                android:background="@drawable/ic_baseline_close_24"></TextView>
+                android:background="@drawable/delete_48px"></TextView>
         </LinearLayout>
 
         <ImageView
             android:id="@+id/post_image"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="@dimen/_300sdp"
-            android:layout_weight="1"
             android:scaleType="centerCrop"
-            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            android:layout_marginTop="0dp"
             android:layout_marginBottom="10dp"></ImageView>
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="8dp">
+            android:paddingLeft="8dp"
+            android:paddingRight="10dp">
             <ImageView
                 android:id="@+id/likeed"
                 android:layout_width="30dp"
@@ -83,7 +88,7 @@
 
             <ImageView
                 android:id="@+id/comment"
-                android:layout_width="30dp"
+                android:layout_width="25dp"
                 android:layout_height="30dp"
                 android:layout_marginStart="20dp"
                 android:layout_toEndOf="@+id/like"
@@ -103,8 +108,7 @@
             android:id="@+id/likes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:text="10 likes"
+            android:layout_marginStart="10dp"
             android:textColor="@color/colorPrimaryDark"
             android:textStyle="bold"></TextView>
 
@@ -112,8 +116,7 @@
             android:id="@+id/publisher"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:text="username"
+            android:layout_marginStart="10dp"
             android:textColor="@color/colorPrimaryDark"
             android:textStyle="bold"></TextView>
 
@@ -121,18 +124,28 @@
             android:id="@+id/description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:text="oh yeah baby"
+            android:layout_marginStart="10dp"
+            android:maxWidth="120dp"
+            android:maxLines="1"
+            android:ellipsize="end"
             android:textColor="@color/colorPrimaryDark"></TextView>
 
         <TextView
-            android:id="@+id/comments"
+        android:id="@+id/comments"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginBottom="0dp"
+        android:text="View All Comments"
+        android:visibility="gone"
+        android:textColor="@color/colorAccent"></TextView>
+        <TextView
+            android:id="@+id/date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="10dp"
-            android:text="View All Comments"
+            android:layout_marginStart="10dp"
+            android:layout_marginBottom="5dp"
+            android:textSize="10dp"
             android:textColor="@color/colorAccent"></TextView>
     </LinearLayout>
 </LinearLayout>
