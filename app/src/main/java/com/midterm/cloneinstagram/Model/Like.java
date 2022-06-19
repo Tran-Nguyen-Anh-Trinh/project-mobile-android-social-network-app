@@ -1,4 +1,4 @@
-package com.midterm.cloneinstagram.Adapter;
+package com.midterm.cloneinstagram.Model;
 
 public class Like {
     String like;

@@ -18,7 +18,8 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_alignParentLeft="true"
-            android:background="@drawable/ic_baseline_close_24" />
+            android:background="@drawable/left"
+            android:backgroundTint="@color/green" />
 
         <TextView
             android:layout_width="wrap_content"

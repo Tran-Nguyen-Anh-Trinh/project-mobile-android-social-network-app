@@ -54,7 +54,7 @@ public class HomeFragment extends Fragment {
         linearLayoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(linearLayoutManager);
         postLists = new ArrayList<>();
-        postAdapter = new PostAdapter(getContext(), postLists);
+        postAdapter = new PostAdapter(getContext(), postLists, getActivity());
         recyclerView.setAdapter(postAdapter);
 
         recyclerView_story = view.findViewById(R.id.recycler_view_story);

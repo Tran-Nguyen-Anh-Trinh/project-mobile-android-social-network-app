@@ -51,8 +51,6 @@ public class MainActivity extends AppCompatActivity {
                 Users.getInstance().setEmail(users.getEmail());
                 Users.getInstance().setName(users.getName());
                 Users.getInstance().setImageUri(users.getImageUri());
-                Users.getInstance().setFollower(users.getFollower());
-                Users.getInstance().setFollowing(users.getFollowing());
                 Users.getInstance().setStatus(users.getStatus());
 
             }

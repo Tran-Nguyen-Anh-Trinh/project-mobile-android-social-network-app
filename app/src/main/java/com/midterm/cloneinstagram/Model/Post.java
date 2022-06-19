@@ -1,11 +1,8 @@
 package com.midterm.cloneinstagram.Model;
 
-import com.midterm.cloneinstagram.Adapter.Like;
+import java.io.Serializable;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class Post {
+public class Post implements Serializable {
     private String postid;
     private String postimage;
     private String description;

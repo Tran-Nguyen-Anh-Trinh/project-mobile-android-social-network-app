@@ -1,16 +1,17 @@
 package com.midterm.cloneinstagram.Model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Users {
+public class Users implements Serializable {
     String uid;
     String name;
     String email;
     String imageUri;
     String status;
-     List<String> following = new ArrayList<>();
-     List<String > follower = new ArrayList<>();
+    ManagerFollow follower;
+    ManagerFollow following;
 
     public Users(){
 
@@ -24,29 +25,20 @@ public class Users {
         return instance;
     }
 
-    public void setFollowing(List<String> following) {
-        this.following.clear();
-        this.following.addAll(following);
+    public ManagerFollow getFollower() {
+        return follower;
     }
 
-    public void setFollower(List<String> follower) {
-        this.follower.clear();
-        this.follower.addAll(follower);
+    public void setFollower(ManagerFollow follower) {
+        this.follower = follower;
     }
 
-    public List<String> getFollowing() {
+    public ManagerFollow getFollowing() {
         return following;
     }
-    public void setOneFollower(String follower) {
-        this.follower.add(follower);
-    }
-    public void setOneFollowing(String following) {
-        this.following.add(following);
-    }
 
-
-    public List<String> getFollower() {
-        return follower;
+    public void setFollowing(ManagerFollow following) {
+        this.following = following;
     }
 
     public static void setInstance(Users instance) {
