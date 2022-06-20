@@ -88,9 +88,7 @@ public class StoryAdapter extends RecyclerView.Adapter<StoryAdapter.ViewHolder>{
                                                 }
 
                                                 @Override
-                                                public void onCancelled(@NonNull DatabaseError error) {
-
-                                                }
+                                                public void onCancelled(@NonNull DatabaseError error) {}
                                             });
                                 }
                             } else {
@@ -105,17 +103,13 @@ public class StoryAdapter extends RecyclerView.Adapter<StoryAdapter.ViewHolder>{
                                             }
 
                                             @Override
-                                            public void onCancelled(@NonNull DatabaseError error) {
-
-                                            }
+                                            public void onCancelled(@NonNull DatabaseError error) {}
                                         });
                             }
                         }
 
                         @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-
-                        }
+                        public void onCancelled(@NonNull DatabaseError error) {}
                     });
             holder.cardView.setForeground(mContext.getDrawable(R.drawable.shape_1));
         }else {
