@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class SearchUserChatAdapter extends RecyclerView.Adapter<SearchUserChatAdapter.Viewholder> {
+
     Context homeActivity;
     ArrayList<Users> arrayListUser;
     Activity activity;
@@ -37,7 +38,6 @@ public class SearchUserChatAdapter extends RecyclerView.Adapter<SearchUserChatAd
     FirebaseAuth auth;
     ArrayList<String> listRoom;
 
-
     String idSend;
     String nameSend;
     String avaSend;
@@ -45,12 +45,11 @@ public class SearchUserChatAdapter extends RecyclerView.Adapter<SearchUserChatAd
     public SearchUserChatAdapter(Context homeActivity, Activity activity, ArrayList<Users> arrayListUser, String idSend, String nameSend, String avaSend) {
         this.homeActivity = homeActivity;
         this.activity = activity;
-        this.arrayListUser = arrayListUser;
         this.idSend = idSend;
         this.nameSend = nameSend;
         this.avaSend = avaSend;
+        this.arrayListUser = arrayListUser;
     }
-
     @NonNull
     @Override
     public Viewholder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -60,14 +59,16 @@ public class SearchUserChatAdapter extends RecyclerView.Adapter<SearchUserChatAd
 
     @Override
     public void onBindViewHolder(@NonNull Viewholder holder, int position) {
+        listRoom = new ArrayList<>();
         auth = FirebaseAuth.getInstance();
         database = FirebaseDatabase.getInstance();
-        listRoom = new ArrayList<>();
 
         Users users = arrayListUser.get(position);
-        if (auth.getUid().equals(users.getUid())) {
+        if (auth.getUid().equals(users.getUid()))
+        {
             holder.user_name.setText("You");
-        } else {
+        } else
+        {
             holder.user_name.setText(users.getName());
         }
         Picasso.get().load(users.getImageUri()).into(holder.user_profile);
@@ -76,6 +77,7 @@ public class SearchUserChatAdapter extends RecyclerView.Adapter<SearchUserChatAd
         } else {
             holder.status.setImageResource(R.drawable.color_offline);
         }
+        // binding data from home to chat activity
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -91,7 +93,7 @@ public class SearchUserChatAdapter extends RecyclerView.Adapter<SearchUserChatAd
             }
         });
     }
-
+    // get size array object
     @Override
     public int getItemCount() {
         return arrayListUser.size();
@@ -102,10 +104,8 @@ public class SearchUserChatAdapter extends RecyclerView.Adapter<SearchUserChatAd
         TextView user_name;
         CircleImageView status;
 
-
         public Viewholder(@NonNull View itemView) {
             super(itemView);
-
             user_profile = itemView.findViewById(R.id.profileImg);
             user_name = itemView.findViewById(R.id.user_name);
             status = itemView.findViewById(R.id.status);
