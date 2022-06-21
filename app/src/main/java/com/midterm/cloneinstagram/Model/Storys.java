@@ -13,8 +13,7 @@ public class Storys implements Serializable {
     private String date;
     private String userID;
 
-    public Storys() {
-    }
+    public Storys() {}
 
     public String getUserID() {
         return userID;
