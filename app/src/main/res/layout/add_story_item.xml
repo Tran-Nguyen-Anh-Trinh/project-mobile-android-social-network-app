@@ -58,5 +58,4 @@
         android:text="Your story"
         android:textSize="12dp"
         android:maxLines="1"></TextView>
-
 </LinearLayout>
