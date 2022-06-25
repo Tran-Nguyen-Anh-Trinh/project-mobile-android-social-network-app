@@ -1,0 +1,69 @@
+{
+  "project_info": {
+    "project_number": "584463920330",
+    "firebase_url": "https://tinstagram-82874-default-rtdb.firebaseio.com",
+    "project_id": "tinstagram-82874",
+    "storage_bucket": "tinstagram-82874.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:584463920330:android:b4edf3b75b3c54de165833",
+        "android_client_info": {
+          "package_name": "com.example.tinstagram"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "584463920330-cdj2gd2oqgtt00v94594c5pkf5h7oibl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBZaWE_13U26wKnXubd2gdqY1j-mob0Va8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "584463920330-cdj2gd2oqgtt00v94594c5pkf5h7oibl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:584463920330:android:0c57ce590149fbf9165833",
+        "android_client_info": {
+          "package_name": "com.midterm.cloneinstagram"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "584463920330-cdj2gd2oqgtt00v94594c5pkf5h7oibl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBZaWE_13U26wKnXubd2gdqY1j-mob0Va8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "584463920330-cdj2gd2oqgtt00v94594c5pkf5h7oibl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

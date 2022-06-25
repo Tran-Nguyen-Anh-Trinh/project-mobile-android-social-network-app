@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:paddingTop="10dp">
+
+    <LinearLayout
+        android:id="@+id/lo2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone">
+        <ImageView
+            android:layout_width="52dp"
+            android:layout_height="80dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_baseline_person_24"></ImageView>
+
+        <TextView
+            android:id="@+id/tv2"
+            android:layout_width="225dp"
+            android:layout_height="80dp"
+            android:textSize="18sp"
+            android:text="Người liên hệ Dũ đang sử dụng instagram dưới tên Valentines. 4 tuần"
+            android:lines="4"
+            android:ellipsize="end"
+            android:paddingBottom="3sp"
+            android:gravity="center_vertical"
+            android:paddingLeft="5sp">
+        </TextView>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="Theo dõi"
+            android:textSize="14dp"
+            android:layout_gravity="center"></Button>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/lo3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:visibility="visible"
+        android:backgroundTint="#5ED5D5D5"
+        android:background="@drawable/edit_text"
+        android:padding="10dp">
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profile"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            app:civ_border_color="@color/black"
+            app:civ_border_width="1dp"
+            android:layout_marginRight="5dp"/>
+
+
+        <TextView
+            android:id="@+id/content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:textColor="@color/black"
+            android:paddingLeft="5sp"/>
+        <TextView
+            android:id="@+id/btn_follow"
+            android:layout_width="100dp"
+            android:layout_height="30dp"
+            android:layout_margin="10dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/bg_edit_profile"
+            android:gravity="center"
+            android:backgroundTint="@color/green"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:visibility="gone"
+            android:textAlignment="center"/>
+    </LinearLayout>
+</LinearLayout>
