@@ -35,6 +35,12 @@ public class ForgotPassWordActivity extends AppCompatActivity {
         relativeLayout = findViewById(R.id.hide_kb);
 
         addEvent();
+
+        String email = getIntent().getStringExtra("email");
+        if(email!=null){
+            email_reset.setEnabled(false);
+            email_reset.setText(email);
+        }
     }
 
     private void addEvent() {

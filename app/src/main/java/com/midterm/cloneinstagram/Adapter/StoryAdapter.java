@@ -62,6 +62,7 @@ public class StoryAdapter extends RecyclerView.Adapter<StoryAdapter.ViewHolder>{
         activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         int height = displayMetrics.heightPixels;
         holder.story_photo.getLayoutParams().height = (int)Math.round(height/10.24);
+        holder.story_photo.getLayoutParams().width = (int)Math.round(height/10.24);
         if (position==0){
             String timeStamp = new SimpleDateFormat("dd/MM/yyyy").format(Calendar.getInstance().getTime());
             FirebaseDatabase.getInstance().getReference()

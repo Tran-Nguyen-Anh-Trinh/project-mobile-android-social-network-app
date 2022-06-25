@@ -64,7 +64,6 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.ViewHo
                 String content = users.getName() + " " + notification.getContent()+". On "+ notification.getDate();
                 holder.content.setText(content);
                 Glide.with(context).load(users.getImageUri())
-                        .transition(DrawableTransitionOptions.withCrossFade())
                         .placeholder(context.getDrawable(R.drawable.accent)).into(holder.profile);
             }
 

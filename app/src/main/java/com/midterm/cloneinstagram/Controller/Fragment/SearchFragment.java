@@ -131,8 +131,10 @@ public class SearchFragment extends Fragment {
                 mUsers.clear();
                 for (DataSnapshot dataSnapshot: snapshot.getChildren()){
                     Users users = dataSnapshot.getValue(Users.class);
-                    if(users.getName().toLowerCase().contains(key)){
-                        mUsers.add(users);
+                    if(users.getName().toLowerCase()!=null){
+                        if(users.getName().toLowerCase().contains(key)){
+                            mUsers.add(users);
+                        }
                     }
                 }
                 userAdapter.notifyDataSetChanged();

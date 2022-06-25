@@ -12,6 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -178,7 +179,7 @@ public class UserChatAdapter  extends RecyclerView.Adapter<UserChatAdapter.Viewh
         } else {
             holder.user_name.setText(users.getName());
         }
-        Picasso.get().load(users.getImageUri()).into(holder.user_profile);
+        Glide.with(homeActivity).load(users.getImageUri()).into(holder.user_profile);
         if ("online".equals(users.getStatus())) {
             holder.status.setImageResource(R.drawable.color_online);
         } else {

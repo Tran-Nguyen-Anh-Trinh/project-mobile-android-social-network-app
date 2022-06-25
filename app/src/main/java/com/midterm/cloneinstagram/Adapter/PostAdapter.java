@@ -108,7 +108,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             }
         });
         holder.username.setText(post.getUsers().getName());
-        Glide.with(mContext).load(post.getPostimage()).placeholder(mContext.getDrawable(R.drawable.accent)).into(holder.image_profile);
+        Glide.with(mContext).load(post.getUsers().getImageUri()).placeholder(mContext.getDrawable(R.drawable.accent)).into(holder.image_profile);
         DisplayMetrics displayMetrics = new DisplayMetrics();
         fragmentActivity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         int height = displayMetrics.heightPixels;

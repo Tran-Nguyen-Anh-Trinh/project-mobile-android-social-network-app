@@ -135,13 +135,14 @@ public class HomeFragment extends Fragment {
                 postLists.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Post post = snapshot.getValue(Post.class);
-                    if (followingList.contains(post.getUsers().getUid())) {
-                        postLists.add(post);
+                    if(post.getUsers().getUid()!=null){
+                        if (followingList.contains(post.getUsers().getUid())) {
+                            postLists.add(post);
+                        }
+                        if (post.getUsers().getUid().equals(FirebaseAuth.getInstance().getUid())) {
+                            postLists.add(post);
+                        }
                     }
-                    if (post.getUsers().getUid().equals(FirebaseAuth.getInstance().getUid())) {
-                        postLists.add(post);
-                    }
-//                    postLists.add(post);
                 }
                 if (postLists.isEmpty()) {
                     notify.setVisibility(View.VISIBLE);
@@ -170,9 +171,11 @@ public class HomeFragment extends Fragment {
                 storyLists.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Storys storys = snapshot.getValue(Storys.class);
-                    if (followingList.contains(storys.getUsers().getUid())) {
-                        if (timeStamp.equals(storys.getDate())) {
-                            storyLists.add(0, storys);
+                    if(storys!=null){
+                        if (followingList.contains(storys.getUsers().getUid())) {
+                            if (timeStamp.equals(storys.getDate())) {
+                                storyLists.add(0, storys);
+                            }
                         }
                     }
                 }

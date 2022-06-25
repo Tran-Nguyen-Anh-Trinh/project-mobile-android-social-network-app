@@ -9,6 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.midterm.cloneinstagram.Model.Comment;
 import com.midterm.cloneinstagram.R;
 import com.squareup.picasso.Picasso;
@@ -37,7 +38,8 @@ public class userAdapterFeedback extends RecyclerView.Adapter<userAdapterFeedbac
     @Override
     public void onBindViewHolder(@NonNull viewHolder holder, int position) {
         Comment u = listCmtRep.get(position);
-        Picasso.get().load(u.getUsers().getImageUri()).into(holder.img_user_rep);
+        Glide.with(mContext).load(u.getUsers().getImageUri())
+                .placeholder(mContext.getDrawable(R.drawable.accent)).into(holder.img_user_rep);
         holder.name_rep.setText(u.getUsers().getName());
         holder.content_rep.setText(u.getComment());
         holder.fb.setVisibility(View.GONE);
