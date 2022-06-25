@@ -86,7 +86,6 @@ public class StoryAdapter extends RecyclerView.Adapter<StoryAdapter.ViewHolder>{
                                                             .transition(DrawableTransitionOptions.withCrossFade())
                                                             .placeholder(mContext.getDrawable(R.drawable.accent)).into(holder.story_photo);
                                                 }
-
                                                 @Override
                                                 public void onCancelled(@NonNull DatabaseError error) {}
                                             });
@@ -172,7 +171,6 @@ public class StoryAdapter extends RecyclerView.Adapter<StoryAdapter.ViewHolder>{
             super(itemView);
             story_photo = itemView.findViewById(R.id.story_photo);
             story_plus = itemView.findViewById(R.id.story_plus);
-//            story_photo_seen = itemView.findViewById(R.id.story_photo_seen);
             story_username = itemView.findViewById(R.id.story_username);
             addstory_text = itemView.findViewById(R.id.add_story_text);
             cardView = itemView.findViewById(R.id.card_view_for_image);
