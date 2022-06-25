@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,7 +34,7 @@ public class LoginActivity extends AppCompatActivity {
     TextView signUp, signIn, forgot_pass;
     EditText email, password;
     ProgressDialog progressDialog;
-    LinearLayout linearLayout;
+    ScrollView scrollView;
 
     String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
     @Override
@@ -60,7 +61,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         }
 
-        linearLayout = findViewById(R.id.linear_hide);
+        scrollView = findViewById(R.id.scroll_hide);
         signUp  = findViewById(R.id.signup);
         signIn = findViewById(R.id.signIn);
         email = findViewById(R.id.email);
@@ -71,7 +72,7 @@ public class LoginActivity extends AppCompatActivity {
         progressDialog.setMessage("Please wait...");
 
 
-        linearLayout.setOnTouchListener(new View.OnTouchListener() {
+        scrollView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 InputMethodManager input = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);

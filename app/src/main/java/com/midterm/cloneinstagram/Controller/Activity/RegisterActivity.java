@@ -19,6 +19,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -55,7 +56,7 @@ public class RegisterActivity extends AppCompatActivity {
     EditText email, username, password, confirm_password;
     TextView signUp, signIn;
     CircleImageView profile;
-    LinearLayout linearLayout;
+    ScrollView scrollView;
     CardView cardView;
 
     Uri uri;
@@ -77,7 +78,7 @@ public class RegisterActivity extends AppCompatActivity {
         signUp = findViewById(R.id.signUp);
         profile = findViewById(R.id.profile);
         signIn = findViewById(R.id.signIn);
-        linearLayout = findViewById(R.id.lnnnnnn);
+        scrollView = findViewById(R.id.scroll_hide);
         progressDialog = new ProgressDialog(this);
         progressDialog.setCancelable(false);
         cardView = findViewById(R.id.cv_image);
@@ -91,7 +92,7 @@ public class RegisterActivity extends AppCompatActivity {
         });
 
 
-        linearLayout.setOnTouchListener(new View.OnTouchListener() {
+        scrollView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 InputMethodManager input = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);

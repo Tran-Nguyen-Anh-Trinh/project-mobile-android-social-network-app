@@ -222,8 +222,10 @@ public class HomeChatActivity extends AppCompatActivity implements LifecycleObse
                 tmpUserList.clear();
                 for (DataSnapshot dataSnapshot: snapshot.getChildren()){
                     Users users = dataSnapshot.getValue(Users.class);
-                    if(users.getName().toLowerCase().contains(key)){
-                        tmpUserList.add(users);
+                    if(users.getName()!=null){
+                        if(users.getName().toLowerCase().contains(key)){
+                            tmpUserList.add(users);
+                        }
                     }
                 }
                 if(tmpUserList.isEmpty()){

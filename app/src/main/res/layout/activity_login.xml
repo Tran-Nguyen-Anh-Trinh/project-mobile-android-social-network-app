@@ -12,6 +12,7 @@
     tools:context=".Controller.Activity.LoginActivity">
 
     <ScrollView
+        android:id="@+id/scroll_hide"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerInParent="true"

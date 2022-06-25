@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -70,7 +71,8 @@ public class userAdapter extends RecyclerView.Adapter<userAdapter.Viewholder> {
         Comment u = listCmt.get(position);
         holder.name.setText(u.getUsers().getName());
         holder.content.setText(u.getComment());
-        Picasso.get().load(u.getUsers().getImageUri()).into(holder.imgUser);
+        Glide.with(mainActivity).load(u.getUsers().getImageUri())
+                .placeholder(mainActivity.getDrawable(R.drawable.accent)).into(holder.imgUser);
         holder.recyclerView.setLayoutManager(new LinearLayoutManager(mainActivity));
         ArrayList<Comment> list = new ArrayList<>();
         userAdapterFeedback adapterFeedback = new userAdapterFeedback(mainActivity, list);

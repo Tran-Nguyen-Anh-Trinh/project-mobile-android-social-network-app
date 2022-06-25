@@ -100,7 +100,9 @@ public class UpdateInformationActivity extends AppCompatActivity {
         forgot_pass.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(UpdateInformationActivity.this, ForgotPassWordActivity.class));
+                Intent intent = new Intent(UpdateInformationActivity.this, ForgotPassWordActivity.class);
+                intent.putExtra("email", Users.getInstance().getEmail());
+                startActivity(intent);
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left_1);
             }
         });
@@ -136,9 +138,14 @@ public class UpdateInformationActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         dialog.dismiss();
-                        updateStatus("offline");
-                        FirebaseDatabase.getInstance().getReference("User/" + FirebaseAuth.getInstance().getUid() + "/token").removeValue();
-                        FirebaseAuth.getInstance().signOut();
+                        FirebaseDatabase.getInstance().getReference("User/" + FirebaseAuth.getInstance().getUid() + "/token").removeValue()
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        updateStatus("offline");
+                                        FirebaseAuth.getInstance().signOut();
+                                    }
+                                });
                         Intent intent = new Intent(UpdateInformationActivity.this, LoginActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);

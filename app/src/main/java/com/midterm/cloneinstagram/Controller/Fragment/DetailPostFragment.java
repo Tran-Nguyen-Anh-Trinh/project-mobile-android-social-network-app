@@ -8,6 +8,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -152,7 +153,7 @@ public class DetailPostFragment extends Fragment {
         username.setText(post.getUsers().getName());
         Picasso.get().load(post.getUsers().getImageUri()).into(image_profile);
 
-        Picasso.get().load(post.getPostimage()).placeholder(getContext().getDrawable(R.drawable.accent)).into(post_image);
+        Picasso.get().load(post.getPostimage()).into(post_image);
 
         username.setOnClickListener(new View.OnClickListener() {
             @Override
